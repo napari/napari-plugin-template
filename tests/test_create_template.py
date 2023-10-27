@@ -22,7 +22,7 @@ def run_tox(plugin):
 
 def test_run_cookiecutter_and_plugin_tests(copie, capsys):
     """Create a new plugin via cookiecutter and run its tests."""
-    result = copie.copy(extra_context={"plugin_name": "foo-bar"})
+    result = copie.copy(extra_answers={"plugin_name": "foo-bar"})
 
     assert result.exit_code == 0
     assert result.exception is None
@@ -37,7 +37,7 @@ def test_run_cookiecutter_and_plugin_tests(copie, capsys):
 
 def test_run_cookiecutter_and_plugin_tests_with_napari_prefix(copie, capsys):
     """make sure it's also ok to use napari prefix."""
-    result = copie.copy(extra_context={"plugin_name": "napari-foo"})
+    result = copie.copy(extra_answers={"plugin_name": "napari-foo"})
 
     assert result.exit_code == 0
     assert result.exception is None
@@ -51,7 +51,7 @@ def test_run_cookiecutter_and_plugin_tests_with_napari_prefix(copie, capsys):
 def test_run_cookiecutter_select_plugins(copie, capsys):
     """make sure it's also ok to use napari prefix."""
     result = copie.copy(
-        extra_context={
+        extra_answers={
             "plugin_name": "anything",
             "include_widget_plugin": "n",
             "include_writer_plugin": "n",
@@ -82,7 +82,7 @@ def test_run_cookiecutter_select_plugins(copie, capsys):
 @pytest.mark.parametrize("include_widget_plugin", [True, False])
 def test_pre_commit_validity(copie, include_reader_plugin, include_writer_plugin, include_sample_data_plugin, include_widget_plugin):
     result = copie.copy(
-        extra_context={
+        extra_answers={
             "plugin_name": "anything",
             "include_reader_plugin": include_reader_plugin,
             "include_writer_plugin": include_writer_plugin,
