@@ -26,8 +26,9 @@ def test_run_plugin_tests(copie, capsys):
 
     assert result.exit_code == 0
     assert result.exception is None
-    # assert result.project_dir.name == "foo-bar"
     assert result.project_dir.is_dir()
+    with open(result.project_dir/"README.md") as f:
+        assert f.readline() == "# foo-bar\n"
     assert result.project_dir.joinpath("src").is_dir()
     assert result.project_dir.joinpath("src", "foo_bar", "__init__.py").is_file()
     assert result.project_dir.joinpath("src", "foo_bar", "_tests", "test_reader.py").is_file()
@@ -41,8 +42,9 @@ def test_run_plugin_tests_with_napari_prefix(copie, capsys):
 
     assert result.exit_code == 0
     assert result.exception is None
-    # assert result.project_dir.name == "napari-foo"
     assert result.project_dir.is_dir()
+    with open(result.project_dir/"README.md") as f:
+        assert f.readline() == "# napari-foo\n"
     assert result.project_dir.joinpath("src").is_dir()
     assert result.project_dir.joinpath("src", "napari_foo", "__init__.py").is_file()
     assert result.project_dir.joinpath("src", "napari_foo", "_tests", "test_reader.py").is_file()
@@ -60,8 +62,9 @@ def test_run_select_plugins(copie, capsys):
 
     assert result.exit_code == 0
     assert result.exception is None
-    # assert result.project_dir.name == "anything"
     assert result.project_dir.is_dir()
+    with open(result.project_dir/"README.md") as f:
+        assert f.readline() == "# anything\n"
     assert result.project_dir.joinpath("src").is_dir()
     assert result.project_dir.joinpath("src", "anything", "__init__.py").is_file()
     assert result.project_dir.joinpath("src", "anything", "_tests", "test_reader.py").is_file()

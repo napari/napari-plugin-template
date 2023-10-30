@@ -1,5 +1,9 @@
 name: {{plugin_name}}
 display_name: {{display_name}}
+# use 'hidden' to remove plugin from napari hub search results
+visibility: public
+# see https://napari.org/stable/plugins/manifest.html for valid categories
+categories: ["Annotation", "Segmentation", "Acquisition"]
 contributions:
   commands:{% if include_reader_plugin %}
     - id: {{plugin_name}}.get_reader
@@ -14,15 +18,18 @@ contributions:
     - id: {{plugin_name}}.make_sample_data
       python_name: {{module_name}}._sample_data:make_sample_data
       title: Load sample data from {{display_name}}{% endif %}{% if include_widget_plugin %}
-    - id: {{plugin_name}}.make_qwidget
-      python_name: {{module_name}}._widget:ExampleQWidget
-      title: Make example QWidget
+    - id: {{plugin_name}}.make_container_widget
+      python_name: {{module_name}}:ImageThreshold
+      title: Make threshold Container widget
     - id: {{plugin_name}}.make_magic_widget
-      python_name: {{module_name}}._widget:example_magic_widget
-      title: Make example magic widget
-    - id: {{plugin_name}}.make_func_widget
-      python_name: {{module_name}}._widget:example_function_widget
-      title: Make example function widget{% endif %}{% if include_reader_plugin %}
+      python_name: {{module_name}}:threshold_magic_widget
+      title: Make threshold magic widget
+    - id: {{plugin_name}}.make_function_widget
+      python_name: {{module_name}}:threshold_autogenerate_widget
+      title: Make threshold function widget{% endif %}{% if include_reader_plugin %}
+    - id: {{plugin_name}}.make_qwidget
+      python_name: {{module_name}}:ExampleQWidget
+      title: Make example QWidget
   readers:
     - command: {{plugin_name}}.get_reader
       accepts_directories: false
@@ -39,10 +46,12 @@ contributions:
       display_name: {{display_name}}
       key: unique_id.1{% endif %}{% if include_widget_plugin %}
   widgets:
-    - command: {{plugin_name}}.make_qwidget
-      display_name: Example QWidget
+    - command: {{plugin_name}}.make_container_widget
+      display_name: Container Threshold
     - command: {{plugin_name}}.make_magic_widget
-      display_name: Example Magic Widget
-    - command: {{plugin_name}}.make_func_widget
+      display_name: Magic Threshold
+    - command: {{plugin_name}}.make_function_widget
       autogenerate: true
-      display_name: Example Function Widget{% endif %}
+      display_name: Autogenerate Threshold
+    - command: {{plugin_name}}.make_qwidget
+      display_name: Example QWidget{% endif %}
