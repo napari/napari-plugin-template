@@ -2,4 +2,6 @@ copier
 jinja2-time
 npe2
 pytest
-pytest-copier
+pytest-copie
+jinja2-time
+tox
