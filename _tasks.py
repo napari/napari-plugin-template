@@ -205,13 +205,13 @@ if __name__=="__main__":
                         default='githubuser')
     args = parser.parse_args()
 
-    module_name_pep8_compliance(args.module_name)
-    pypi_package_name_compliance(args.plugin_name)
-    validate_manifest(args.module_name, args.project_directory)
-    msg = initialize_new_repository(
-        install_precommit=bool(args.install_precommit),
-        plugin_name=args.plugin_name,
-        github_repository_url=args.github_repository_url,
-        github_username_or_organization=args.github_username_or_organization,
-    )
-    print(msg)
+    # module_name_pep8_compliance(args.module_name)
+    # pypi_package_name_compliance(args.plugin_name)
+    # validate_manifest(args.module_name, args.project_directory)
+    # msg = initialize_new_repository(
+    #     install_precommit=bool(args.install_precommit),
+    #     plugin_name=args.plugin_name,
+    #     github_repository_url=args.github_repository_url,
+    #     github_username_or_organization=args.github_username_or_organization,
+    # )
+    # print(msg)
