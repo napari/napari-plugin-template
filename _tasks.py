@@ -167,7 +167,7 @@ Your plugin template is ready!  Next steps:
             User Support = https://github.com/your-repo-username/your-repo-name/issues"""
 
     msg += """
-    5. Read the README for more info: https://github.com/napari/cookiecutter-napari-plugin
+    5. Read the README for more info: https://github.com/napari/napari-plugin-template
 
     6. We've provided a template description for your plugin page on the napari hub at `.napari-hub/DESCRIPTION.md`.
     You'll likely want to edit this before you publish your plugin.

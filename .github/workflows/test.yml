@@ -1,4 +1,4 @@
-name: Test cookiecutter
+name: Test plugin template
 
 on:
   pull_request:

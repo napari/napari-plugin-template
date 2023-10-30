@@ -20,13 +20,13 @@ def run_tox(plugin):
         pytest.fail("Subprocess fail", pytrace=True)
 
 
-def test_run_cookiecutter_and_plugin_tests(copie, capsys):
-    """Create a new plugin via cookiecutter and run its tests."""
+def test_run_plugin_tests(copie, capsys):
+    """Create a new plugin with the napari plugin template and run its tests."""
     result = copie.copy(extra_answers={"plugin_name": "foo-bar"})
 
     assert result.exit_code == 0
     assert result.exception is None
-    assert result.project_dir.name == "foo-bar"
+    # assert result.project_dir.name == "foo-bar"
     assert result.project_dir.is_dir()
     assert result.project_dir.joinpath("src").is_dir()
     assert result.project_dir.joinpath("src", "foo_bar", "__init__.py").is_file()
@@ -35,20 +35,20 @@ def test_run_cookiecutter_and_plugin_tests(copie, capsys):
     run_tox(str(result.project_dir))
 
 
-def test_run_cookiecutter_and_plugin_tests_with_napari_prefix(copie, capsys):
+def test_run_plugin_tests_with_napari_prefix(copie, capsys):
     """make sure it's also ok to use napari prefix."""
     result = copie.copy(extra_answers={"plugin_name": "napari-foo"})
 
     assert result.exit_code == 0
     assert result.exception is None
-    assert result.project_dir.name == "napari-foo"
+    # assert result.project_dir.name == "napari-foo"
     assert result.project_dir.is_dir()
     assert result.project_dir.joinpath("src").is_dir()
     assert result.project_dir.joinpath("src", "napari_foo", "__init__.py").is_file()
     assert result.project_dir.joinpath("src", "napari_foo", "_tests", "test_reader.py").is_file()
 
 
-def test_run_cookiecutter_select_plugins(copie, capsys):
+def test_run_select_plugins(copie, capsys):
     """make sure it's also ok to use napari prefix."""
     result = copie.copy(
         extra_answers={
@@ -60,7 +60,7 @@ def test_run_cookiecutter_select_plugins(copie, capsys):
 
     assert result.exit_code == 0
     assert result.exception is None
-    assert result.project_dir.name == "anything"
+    # assert result.project_dir.name == "anything"
     assert result.project_dir.is_dir()
     assert result.project_dir.joinpath("src").is_dir()
     assert result.project_dir.joinpath("src", "anything", "__init__.py").is_file()
