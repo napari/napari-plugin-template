@@ -120,6 +120,10 @@ Your plugin template is ready!  Next steps:
     # you probably want to install your new package into your env
     pip install -e .
 """
+    # Ensure full reqd/write/execute permissions for .git files
+    if os.name == 'nt':  # if on Windows OS
+        # Avoid permission denied errors on Github Actions CI
+        subprocess.run(["icacls", ".git", "/grant", "Users:F," "/t", "/q"])
 
     if install_precommit is True:
         # try to install and update pre-commit
