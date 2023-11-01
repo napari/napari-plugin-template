@@ -123,7 +123,7 @@ Your plugin template is ready!  Next steps:
     # Ensure full reqd/write/execute permissions for .git files
     if os.name == 'nt':  # if on Windows OS
         # Avoid permission denied errors on Github Actions CI
-        subprocess.run(["icacls", ".git", "/grant", "Users:F," "/t", "/q"])
+        subprocess.run(["attrib", "-h", "+r", "+w", "+x", ".git", "/s", "/d"])
 
     if install_precommit is True:
         # try to install and update pre-commit
