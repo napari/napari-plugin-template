@@ -64,6 +64,14 @@ def initialize_new_repository(
     """Initialize new plugin repository with git, and optionally pre-commit."""
 
     msg = ""
+
+    # Configure git line ending settings
+    # https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration
+    if os.name == 'nt':  # if on Windows, configure git line ending characters
+        subprocess.run(["git", "config", "--global", "core.autocrlf", "true"])
+    else:  # for Linux and Mac
+        subprocess.run(["git", "config", "--global", "core.autocrlf", "input"])
+
     # try to run git init
     try:
         subprocess.run(["git", "init", "-q"])
