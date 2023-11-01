@@ -206,7 +206,7 @@ if __name__=="__main__":
     parser.add_argument("--install_precommit",
                         dest="install_precommit",
                         help="Install pre-commit",
-                        default=False)
+                        default="False")
     parser.add_argument("--github_repository_url",
                         dest="github_repository_url",
                         help="Github repository URL",
@@ -217,11 +217,17 @@ if __name__=="__main__":
                         default='githubuser')
     args = parser.parse_args()
 
+    # Since bool("False") returns True, we need to check the actual string value
+    if args.install_precommit.lower() == "true":
+        install_precommit = True
+    else:
+        install_precommit = False
+
     module_name_pep8_compliance(args.module_name)
     pypi_package_name_compliance(args.plugin_name)
     validate_manifest(args.module_name, args.project_directory)
     msg = initialize_new_repository(
-        install_precommit=bool(args.install_precommit),
+        install_precommit=install_precommit,
         plugin_name=args.plugin_name,
         github_repository_url=args.github_repository_url,
         github_username_or_organization=args.github_username_or_organization,
