@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 def write_single_image(path: str, data: Any, meta: dict) -> List[str]:
     """Writes a single image layer.
-    
+
     Parameters
     ----------
     path : str
@@ -41,7 +41,7 @@ def write_single_image(path: str, data: Any, meta: dict) -> List[str]:
 
 def write_multiple(path: str, data: List[FullLayerData]) -> List[str]:
     """Writes multiple layers of different types.
-    
+
     Parameters
     ----------
     path : str

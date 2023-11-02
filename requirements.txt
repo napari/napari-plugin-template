@@ -1,0 +1,7 @@
+copier
+jinja2-time
+npe2
+pytest
+pytest-copie
+jinja2-time
+tox
