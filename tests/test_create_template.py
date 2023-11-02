@@ -17,7 +17,6 @@ def run_tox(plugin):
             ["tox", "-c", os.path.join(plugin, "tox.ini"), "-e", "py", "--", plugin]
         )
     except subprocess.CalledProcessError as e:
-        import pdb; pdb.set_trace()
         pytest.fail("Subprocess fail", pytrace=True)
 
 
