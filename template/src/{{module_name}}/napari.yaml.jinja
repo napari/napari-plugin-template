@@ -26,10 +26,10 @@ contributions:
       title: Make threshold magic widget
     - id: {{plugin_name}}.make_function_widget
       python_name: {{module_name}}:threshold_autogenerate_widget
-      title: Make threshold function widget{% endif %}{% if include_reader_plugin %}
+      title: Make threshold function widget
     - id: {{plugin_name}}.make_qwidget
       python_name: {{module_name}}:ExampleQWidget
-      title: Make example QWidget
+      title: Make example QWidget{% endif %}{% if cookiecutter.include_reader_plugin %}
   readers:
     - command: {{plugin_name}}.get_reader
       accepts_directories: false
