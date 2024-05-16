@@ -42,7 +42,7 @@ def test_run_plugin_tests(copie, capsys, include_reader_plugin, include_writer_p
     assert result.project_dir.joinpath("src").is_dir()
     assert result.project_dir.joinpath("src", "foo_bar", "__init__.py").is_file()
 
-    test_path = result.project_path.joinpath("src", "foo_bar", "_tests")
+    test_path = result.project_dir.joinpath("src", "foo_bar", "_tests")
     if include_reader_plugin is True:
         assert (test_path / "test_reader.py").is_file()
     if include_writer_plugin is True:
