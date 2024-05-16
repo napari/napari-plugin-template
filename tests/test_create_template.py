@@ -19,10 +19,20 @@ def run_tox(plugin):
     except subprocess.CalledProcessError as e:
         pytest.fail("Subprocess fail", pytrace=True)
 
-
-def test_run_cookiecutter_and_plugin_tests(cookies, capsys):
+@pytest.mark.parametrize("include_reader_plugin", ["y", "n"])
+@pytest.mark.parametrize("include_writer_plugin", ["y", "n"])
+@pytest.mark.parametrize("include_sample_data_plugin", ["y", "n"])
+@pytest.mark.parametrize("include_widget_plugin", ["y", "n"])
+def test_run_cookiecutter_and_plugin_tests(cookies, capsys, include_reader_plugin, include_writer_plugin, include_sample_data_plugin, include_widget_plugin):
     """Create a new plugin via cookiecutter and run its tests."""
-    result = cookies.bake(extra_context={"plugin_name": "foo-bar"})
+    result = cookies.bake(extra_context={
+            "plugin_name": "foo-bar",
+            "include_reader_plugin": include_reader_plugin,
+            "include_writer_plugin": include_writer_plugin,
+            "include_sample_data_plugin": include_sample_data_plugin,
+            "include_widget_plugin": include_widget_plugin,
+        }
+    )
 
     assert result.exit_code == 0
     assert result.exception is None
@@ -30,9 +40,20 @@ def test_run_cookiecutter_and_plugin_tests(cookies, capsys):
     assert result.project_path.is_dir()
     assert result.project_path.joinpath("src").is_dir()
     assert result.project_path.joinpath("src", "foo_bar", "__init__.py").is_file()
-    assert result.project_path.joinpath("src", "foo_bar", "_tests", "test_reader.py").is_file()
 
-    run_tox(str(result.project_path))
+    test_path = result.project_path.joinpath("src", "foo_bar", "_tests")
+    if include_reader_plugin == "y":
+        assert (test_path / "test_reader.py").is_file()
+    if include_writer_plugin == "y":
+        assert (test_path / "test_writer.py").is_file()
+    if include_sample_data_plugin == "y":
+        assert (test_path / "test_sample_data.py").is_file()
+    if include_widget_plugin == "y":
+        assert (test_path / "test_widget.py").is_file()
+
+    # if all are `n` there are no modules or tests
+    if "y" in {include_reader_plugin, include_writer_plugin, include_sample_data_plugin, include_widget_plugin}:
+        run_tox(str(result.project_path))
 
 
 def test_run_cookiecutter_and_plugin_tests_with_napari_prefix(cookies, capsys):
@@ -95,4 +116,4 @@ def test_pre_commit_validity(cookies, include_reader_plugin, include_writer_plug
     try:
         subprocess.run(["pre-commit", "run", "--all", "--show-diff-on-failure"], cwd=str(result.project_path), check=True, capture_output=True)
     except subprocess.CalledProcessError as e:
-        pytest.fail(f"pre-commit failed with output:\n{e.stdout.decode()}\nerrror:\n{e.stderr.decode()}")
+        pytest.fail(f"pre-commit failed with output:\n{e.stdout.decode()}\nerror:\n{e.stderr.decode()}")
