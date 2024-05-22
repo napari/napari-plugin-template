@@ -1,30 +1,24 @@
 plugin_name:
-    default: 
     placeholder: napari-foobar
     help: The name of your plugin
     type: str
 display_name:
-    default: 
     placeholder: FooBar Segmentation
     help: Display name for your plugin
     type: str
 short_description:
-    default: 
     placeholder: A simple plugin to use FooBar segmentation within napari
     help: Short description of what your plugin does
     type: str
 full_name:
-    default: 
     placeholder: Napari Developer
     help: Developer name
     type: str
 email:
-    default: 
     placeholder: yourname@example.com
     help: Email address
     type: str
 github_username_or_organization:
-    default: 
     placeholder: githubuser
     help: Github user or organisation name
     type: str
