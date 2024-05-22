@@ -28,6 +28,11 @@ def test_run_plugin_tests(copie, capsys, include_reader_plugin, include_writer_p
     """Create a new plugin with the napari plugin template and run its tests."""
     result = copie.copy(extra_answers={
         "plugin_name": "foo-bar",
+        "display_name": "Foo Bar",
+        "short_description": "Super fast foo for all the bars",
+        "full_name": "napari bot",
+        "email": "etal@example.com",
+        "github_username_or_organization": "napari",
         "include_reader_plugin": include_reader_plugin,
         "include_writer_plugin": include_writer_plugin,
         "include_sample_data_plugin": include_sample_data_plugin,
@@ -59,13 +64,21 @@ def test_run_plugin_tests(copie, capsys, include_reader_plugin, include_writer_p
 
 def test_run_plugin_tests_with_napari_prefix(copie, capsys):
     """make sure it's also ok to use napari prefix."""
-    result = copie.copy(extra_answers={"plugin_name": "napari-foo"})
+    name = "napari-foo"
+    result = copie.copy(extra_answers={
+        "plugin_name": name,
+        "display_name": "napari Foo",
+        "short_description": "Super fast foo for all the bars",
+        "full_name": "napari bot",
+        "email": "etal@example.com",
+        "github_username_or_organization": "napari",
+        })
 
     assert result.exit_code == 0
     assert result.exception is None
     assert result.project_dir.is_dir()
     with open(result.project_dir/"README.md") as f:
-        assert f.readline() == "# napari-foo\n"
+        assert f.readline() == f"# {name}\n"
     assert result.project_dir.joinpath("src").is_dir()
     assert result.project_dir.joinpath("src", "napari_foo", "__init__.py").is_file()
     assert result.project_dir.joinpath("src", "napari_foo", "_tests", "test_reader.py").is_file()
@@ -73,9 +86,15 @@ def test_run_plugin_tests_with_napari_prefix(copie, capsys):
 
 def test_run_select_plugins(copie, capsys):
     """make sure it's also ok to use napari prefix."""
+    name = "anything"
     result = copie.copy(
         extra_answers={
-            "plugin_name": "anything",
+            "plugin_name": name,
+            "display_name": "Foo Bar",
+            "short_description": "Super fast foo for all the bars",
+            "full_name": "napari bot",
+            "email": "etal@example.com",
+            "github_username_or_organization": "napari",
             "include_widget_plugin": "n",
             "include_writer_plugin": "n",
         }
@@ -85,10 +104,10 @@ def test_run_select_plugins(copie, capsys):
     assert result.exception is None
     assert result.project_dir.is_dir()
     with open(result.project_dir/"README.md") as f:
-        assert f.readline() == "# anything\n"
+        assert f.readline() == f"# {name}\n"
     assert result.project_dir.joinpath("src").is_dir()
-    assert result.project_dir.joinpath("src", "anything", "__init__.py").is_file()
-    assert result.project_dir.joinpath("src", "anything", "_tests", "test_reader.py").is_file()
+    assert result.project_dir.joinpath("src", name, "__init__.py").is_file()
+    assert result.project_dir.joinpath("src", name, "_tests", "test_reader.py").is_file()
 
     assert not result.project_dir.joinpath("src", "anything", "_widget.py").is_file()
     assert not result.project_dir.joinpath(
@@ -108,6 +127,11 @@ def test_pre_commit_validity(copie, include_reader_plugin, include_writer_plugin
     result = copie.copy(
         extra_answers={
             "plugin_name": "anything",
+            "display_name": "Foo Bar",
+            "short_description": "Super fast foo for all the bars",
+            "full_name": "napari bot",
+            "email": "etal@example.com",
+            "github_username_or_organization": "napari",
             "include_reader_plugin": include_reader_plugin,
             "include_writer_plugin": include_writer_plugin,
             "include_sample_data_plugin": include_sample_data_plugin,
