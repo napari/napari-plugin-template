@@ -59,7 +59,7 @@ install_precommit:
     type: bool
 license:
     default: BSD-3
-    help: Which licence do you your plugin code to have?
+    help: Which licence do you want your plugin code to have?
     type: str
     choices:
         - BSD-3
