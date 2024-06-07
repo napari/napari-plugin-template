@@ -1,10 +1,14 @@
 plugin_name:
-    placeholder: napari-foobar
+    default: napari-foobar
     help: The name of your plugin
     type: str
 display_name:
-    placeholder: FooBar Segmentation
+    deafult: FooBar Segmentation
     help: Display name for your plugin
+    type: str
+module_name:
+    default: "{{ plugin_name|lower|replace('-', '_') }}"
+    help: Plugin module name
     type: str
 short_description:
     placeholder: A simple plugin to use FooBar segmentation within napari
@@ -23,16 +27,12 @@ github_username_or_organization:
     help: Github user or organisation name
     type: str
 github_repository_url:
-    default: https://github.com/{{github_username_or_organization}}/{{plugin_name}}
+    default: provide later
     help: Github repository URL
     type: str
     choices:
-        - https://github.com/{{github_username_or_organization}}/{{plugin_name}}
         - provide later
-module_name:
-    default: "{{ plugin_name|lower|replace('-', '_') }}"
-    help: Plugin module name
-    type: str
+        - https://github.com/{{github_username_or_organization}}/{{plugin_name}}
 include_reader_plugin:
     default: true
     help: Include reader plugin?
@@ -55,7 +55,11 @@ use_git_tags_for_versioning:
     type: bool
 install_precommit:
     default: false
-    help: Install pre-commit?
+    help: Install pre-commit? (Code formatting checks)
+    type: bool
+install_dependabot:
+    default: false
+    help: Install dependabot? (Automatic security updates of dependency versions)
     type: bool
 license:
     default: BSD-3

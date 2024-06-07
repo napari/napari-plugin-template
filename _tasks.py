@@ -218,11 +218,10 @@ if __name__=="__main__":
     args = parser.parse_args()
 
     # Since bool("False") returns True, we need to check the actual string value
-    if args.install_precommit.lower() == "true":
+    if str(args.install_precommit).lower() == "true":
         install_precommit = True
     else:
         install_precommit = False
-
     module_name_pep8_compliance(args.module_name)
     pypi_package_name_compliance(args.plugin_name)
     validate_manifest(args.module_name, args.project_directory)
