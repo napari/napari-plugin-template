@@ -65,7 +65,7 @@ testing = [
 {%- endif %}
 
 [build-system]
-{% if use_git_tags_for_versioning and plugin_name != "foo-bar" -%}
+{% if use_git_tags_for_versioning -%}
 requires = ["setuptools>=42.0.0", "wheel", "setuptools_scm"]
 {%- else -%}
 requires = ["setuptools>=42.0.0", "wheel"]
@@ -75,18 +75,18 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 include-package-data = true
 
-[tool.setuptools.dynamic]
-version = {attr = "{{module_name}}.__init__.__version__"}
-
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 "*" = ["*.yaml"]
 
-{% if use_git_tags_for_versioning and plugin_name != "foo-bar" %}
+{% if use_git_tags_for_versioning %}
 [tool.setuptools_scm]
 write_to = "src/{{module_name}}/_version.py"
+{% else %}
+[tool.setuptools.dynamic]
+version = {attr = "{{module_name}}.__init__.__version__"}
 {%- endif %}
 
 [tool.black]
