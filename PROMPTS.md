@@ -1,6 +1,6 @@
 # napari Plugin Prompt Reference
 
-When you first run cookiecutter to build a napari plugin, you will be prompted
+When you first run the template to build a napari plugin, you will be prompted
 for some configuration options. Your answers to these prompts will determine
 some aspects of your plugin package including its name, versioning behaviour,
 license, etc. None of these configuration options are set in stone - you
@@ -127,7 +127,7 @@ add `version = 0.0.1` to your `setup.cfg`.
 If you choose `"y"` for this prompt, your package will be set up to have
 [`setuptools_scm`](https://github.com/pypa/setuptools_scm) manage versions for
 you based on your git tags. See the
-[readme](https://github.com/napari/cookiecutter-napari-plugin#automatic-deployment-and-version-management)
+[readme](https://github.com/napari/napari-plugin-template#automatic-deployment-and-version-management)
 for details.
 
 This option typically requires the least effort to manage versioning for your
@@ -142,6 +142,22 @@ installing from a pre-packaged wheel file.)
 In order to use this option, you must run `git init` once in
 your package's root directory.
 ```
+
+## install_precommit
+
+The default for this prompt is `"n"`.
+
+If you choose "y" for this prompt, then [pre-commit](ttps://pre-commit.com/) will be installed.
+Among other things, it includes checks for code linting and best practices in napari plugins.
+
+## install_dependabot
+
+The default for this prompt is `"n"`.
+
+If you choose "y" for this prompt, then a [Dependabot](https://docs.github.com/en/code-security/dependabot) configuration file will be created at `.github/dependabot.yml`.
+
+You will still need to enable Dependabot in your github settings, [see the instructions at this link](https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/configuring-dependabot-security-updates#managing-dependabot-security-updates-for-your-repositories).
+
 
 ## license
 
