@@ -65,7 +65,7 @@ testing = [
 {%- endif %}
 
 [build-system]
-{% if cookiecutter.use_git_tags_for_versioning == 'y' and cookiecutter.plugin_name != "foo-bar" -%}
+{% if cookiecutter.use_git_tags_for_versioning == 'y' -%}
 requires = ["setuptools>=42.0.0", "wheel", "setuptools_scm"]
 {%- else -%}
 requires = ["setuptools>=42.0.0", "wheel"]
@@ -75,18 +75,18 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 include-package-data = true
 
-[tool.setuptools.dynamic]
-version = {attr = "{{cookiecutter.module_name}}.__init__.__version__"}
-
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 "*" = ["*.yaml"]
 
-{% if cookiecutter.use_git_tags_for_versioning == 'y' and cookiecutter.plugin_name != "foo-bar" %}
+{% if cookiecutter.use_git_tags_for_versioning == 'y' %}
 [tool.setuptools_scm]
 write_to = "src/{{cookiecutter.module_name}}/_version.py"
+{% else %}
+[tool.setuptools.dynamic]
+version = {attr = "{{cookiecutter.module_name}}.__init__.__version__"}
 {%- endif %}
 
 [tool.black]
