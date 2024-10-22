@@ -8,7 +8,7 @@
 
 ### Create your plugin package
 
-nstall [Copier](https://copier.readthedocs.io/en/stable/) and the [jinja2-time](https://pypi.org/project/jinja2-time/) extension.
+Install [Copier](https://copier.readthedocs.io/en/stable/) and the [jinja2-time](https://pypi.org/project/jinja2-time/) extension.
 Optionally install the napari plugin engine [npe2](https://github.com/napari/npe2), to help validate your new plugin is configured correctly.
 
 Then you can generate a new napari plugin project:
