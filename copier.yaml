@@ -7,7 +7,7 @@ plugin_name:
         plugin_name must be lowercase, no spaces, and may contain hyphens.
         {% endif %}
 display_name:
-    placeholder: FooBar Segmentation
+    default: "{{ plugin_name|lower|replace('napari-', '')|title|replace('-', ' ') }}"
     help: Display name for your plugin
     type: str
     validator: >-
@@ -15,7 +15,7 @@ display_name:
         display_name must not be empty
         {% endif %}
 module_name:
-    placeholder: "{{ plugin_name|lower|replace('-', '_') }}"
+    default: "{{ plugin_name|lower|replace('-', '_') }}"
     help: Plugin module name
     type: str
     validator: >-
@@ -23,7 +23,7 @@ module_name:
         module_name must be lowercase, and may contain underscores
         {% endif %}
 short_description:
-    placeholder: A simple plugin to use FooBar segmentation within napari
+    placeholder: A simple plugin to use {{display_name}} within napari
     help: Short description of what your plugin does
     type: str
     validator: >-
@@ -50,19 +50,19 @@ github_repository_url:
         - provide later
         - https://github.com/{{github_username_or_organization}}/{{plugin_name}}
 include_reader_plugin:
-    default: true
+    default: false
     help: Include reader plugin?
     type: bool
 include_writer_plugin:
-    default: true
+    default: false
     help: Include writer plugin?
     type: bool
 include_sample_data_plugin:
-    default: true
+    default: false
     help: Include sample data plugin?
     type: bool
 include_widget_plugin:
-    default: true
+    default: false
     help: Include widget plugin?
     type: bool
 use_git_tags_for_versioning:
