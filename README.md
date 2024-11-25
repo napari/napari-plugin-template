@@ -16,6 +16,7 @@ Then you can generate a new napari plugin project:
 ```bash
 python -m pip install copier jinja2-time
 python -m pip install npe2
+# new-plugin-name will not be used automatically so when prompted, enter new-plugin-name as the name of your plugin.
 copier copy --trust https://github.com/napari/napari-plugin-template new-plugin-name
 ```
 
