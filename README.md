@@ -1,49 +1,115 @@
 # napari-plugin-template
 
-[Copier](https://copier.readthedocs.io/en/stable/) template for authoring ([npe2](https://github.com/napari/npe2)-based) [napari](https://napari.org/) plugins.
+[![Test plugin template](https://github.com/napari/napari-plugin-template/actions/workflows/test.yml/badge.svg)](https://github.com/napari/napari-plugin-template/actions/workflows/test.yml)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/napari.svg)](https://python.org)  <!-- Use the versions supported by napari core -->
+[![License](https://img.shields.io/pypi/l/napari.svg)](https://github.com/napari/napari-plugin-template/raw/main/LICENSE)
 
-**NOTE: This repo is not meant to be cloned/forked directly! Please read "Getting Started" below**
+**napari-plugin-template** is a convenient [copier](https://copier.readthedocs.io/en/stable/) template for authoring ([npe2](https://github.com/napari/npe2)-based) [napari](https://napari.org/) plugins.
+
+Creating a plugin is a great way to extend napari's functionality. This repo provides a template to
+simplify the development and distribution your plugin. After creating a new plugin, we encourage you to send a
+post on our [Zulip forum](napari.zulipchat.com) to notify the napari community.
+
+---
+
+📣 **NOTE: This repo is not meant to be cloned/forked directly!** Instead, the copier application will be used to execute
+the template and ask you for configuration information (or you may accept the template's sensible defaults).
+Please read [Getting Started](#getting-started) below. 📣
+
+---
+
+## Features
+
+Using the napari-plugin-template offers the following benefits:
+
+- 🚀Installable [PyPI] package
+- 🧪[tox] test suite, testing various python versions and platforms.
+- 🗒️`README.md` file that contains useful information about your plugin
+- ⚙️Continuous integration configuration for [github actions] that handles testing
+  and deployment of tagged releases
+- 🔋git-tag-based version management with [setuptools_scm]
+- 🪪Choose from several licenses, including [BSD-3], [MIT], [MPL v2.0], [Apache
+  v2.0], [GNU GPL v3.0], or [GNU LGPL v3.0]
 
 ## Getting Started
 
-### Create your plugin package
+These instructions will walk you through how to create a napari plugin. It uses an application called copier
+to prompt you for configuration input and does the work of creating a functioning, distributable plugin from your
+plugin's source code.
 
-Install [Copier](https://copier.readthedocs.io/en/stable/) and the [jinja2-time](https://pypi.org/project/jinja2-time/) extension.
-Optionally install the napari plugin engine [npe2](https://github.com/napari/npe2), to help validate your new plugin is configured correctly.
+### Step 1: Install the template tools.
 
-Then you can generate a new napari plugin project:
+This step installs the [Copier](https://copier.readthedocs.io/en/stable/) application and the [jinja2-time](https://pypi.org/project/jinja2-time/) extension.
+It also installs the napari plugin engine [npe2](https://github.com/napari/npe2), to help validate your new plugin is configured correctly.
+
+Using `pip`:
 
 ```bash
-python -m pip install copier jinja2-time
-python -m pip install npe2
-copier copy --trust https://github.com/napari/napari-plugin-template new-plugin-name
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install copier jinja2-time npe2
 ```
 
-Copier prompts you for information regarding your plugin
-(A new folder will be created in your current working directory):
+### Step 2: Create a new napari plugin project.
+ 
+The next command will use copier to use the napari-plugin-template to generate a new napari plugin project:
 
 ```bash
-full_name [Napari Developer]: Ramon y Cajal
-email [yourname@example.com]: ramon@cajal.es
-github_username_or_organization [githubuser]: neuronz52
-# NOTE: for packages whose primary purpose is to be a napari plugin, we
-# recommend using the 'napari-' prefix in the package name.
-# If your package provides functionality outside of napari, you may
-# choose to leave napari out of the name.
-plugin_name [napari-foobar]: napari-growth-cone-finder
-Select github_repository_url:
-1 - https://github.com/neuronz52/napari-growth-cone-finder
-2 - provide later
-Choose from 1, 2 [1]:
-module_name [growth_cone_finder]: napari_growth_cone_finder
-display_name [napari FooBar]: Growth Cone Finder
-short_description [A simple plugin to use with napari]:
-# you can select from various plugin template examples
-include_reader_plugin [y]:
-include_writer_plugin [y]:
-include_sample_data_plugin [y]:
-include_dock_widget_plugin [y]:
-use_git_tags_for_versioning [n]:
+copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
+```
+
+For example, if you want to create a new plugin with the name, `napari-growth-cone-finder`, you would enter:
+
+```bash
+copier copy --trust https://github.com/napari/napari-plugin-template napari-growth-cone-finder
+```
+
+Copier will create a new folder in your current working directory named `napari-growth-cone-finder`.
+It will also prompt you to begin entering configuration information.
+
+### Step 3: Enter plugin configuration information.
+
+Copier prompts you to enter information about your plugin. For more detailed information on each prompt see
+the [prompts reference](./PROMPTS.md).
+
+<details open>
+<summary>Configuration prompts</summary>
+
+```sh
+copier copy --trust https://github.com/napari/napari-plugin-template napari-growth-cone-finder
+
+🎤 The name of your plugin
+   napari-growth-cone-finder
+🎤 Display name for your plugin
+   Growth Cone Finder
+🎤 Plugin module name
+   napari_growth_cone_finder
+🎤 Short description of what your plugin does
+   A simple plugin for napari
+🎤 Email address
+   creator@example.com
+🎤 Developer name
+   Ramon y Cajal
+🎤 Github user or organisation name
+   creator
+🎤 Github repository URL
+   https://github.com/creator/napari-growth-cone-finder
+🎤 Include reader plugin?
+   Yes
+🎤 Include writer plugin?
+   Yes
+🎤 Include sample data plugin?
+   Yes
+🎤 Include widget plugin?
+   Yes
+🎤 Use git tags for versioning?
+   No
+🎤 Install pre-commit? (Code formatting checks)
+   Yes
+🎤 Install dependabot? (Automatic security updates of dependency versions)
+   Yes
+🎤 Which licence do you want your plugin code to have?
+   BSD-3
 Select license:
 1 - BSD-3
 2 - MIT
@@ -51,14 +117,86 @@ Select license:
 4 - Apache Software License 2.0
 5 - GNU LGPL v3.0
 6 - GNU GPL v3.0
-Choose from 1, 2, 3, 4, 5, 6 (1, 2, 3, 4, 5, 6) [1]:
-
+Choose from 1, 2, 3, 4, 5, 6 (1, 2, 3, 4, 5, 6) [1]: 1
 ```
 
-You just created a minimal napari plugin, complete with tests
-and ready for automatic deployment!
+</details>
 
-For more detailed information on each prompt see the [prompts reference](./PROMPTS.md).
+After entering the configuration information, the following output will be displayed:
+
+<details open>
+<summary>Output</summary>
+
+```sh
+Copying from template version 0.0.0.post126.dev0+95d5ece
+    create  .napari-hub
+    create  .napari-hub/DESCRIPTION.md
+    create  .napari-hub/config-yml
+    create  .pre-commit-config.yaml
+    create  README.md
+    create  MANIFEST.in
+    create  LICENSE
+    create  .gitignore
+    create  .github
+    create  .github/workflows
+    create  .github/workflows/test_and_deploy
+    create  .github/dependabot.yml
+    create  tox.ini
+    create  pyproject.toml
+    create  src
+    create  src/napari_growth_cone_finder
+    create  src/napari_growth_cone_finder/_writer.py
+    create  src/napari_growth_cone_finder/_tests
+    create  src/napari_growth_cone_finder/_tests/test_sample_data.py
+    create  src/napari_growth_cone_finder/_tests/test_writer.py
+    create  src/napari_growth_cone_finder/_tests/__init__.py
+    create  src/napari_growth_cone_finder/_tests/test_widget.py
+    create  src/napari_growth_cone_finder/_tests/test_reader.py
+    create  src/napari_growth_cone_finder/_sample_data.py
+    create  src/napari_growth_cone_finder/napari.yaml
+    create  src/napari_growth_cone_finder/__init__.py
+    create  src/napari_growth_cone_finder/_reader.py
+    create  src/napari_growth_cone_finder/_widget.py
+
+ > Running task 1 of 1: ['/Users/creator/Code/repos-napari/.venv/bin/python3', '/private/var/folders/hg/l3v3xynd45sbvd141f3rqh600000gn/T/copier.vcs.clone.i5ou6e_q/_tasks.py', '--plugin_name=napari-growth-cone-finder', '--module_name=napari_growth_cone_finder', '--project_directory=napari-growth-cone-finder', '--install_precommit=True', '--github_repository_url=https://github.com/creator/napari-growth-cone-finder', '--github_username_or_organization=creator']
+INFO:pre_gen_project:b"\xe2\x9c\x94 Manifest for 'Growth Cone Finder' valid!"
+Switched to a new branch 'main'
+install pre-commit ...
+/Users/creator/Code/repos-napari/.venv/bin/python: No module named pip
+updating pre-commit...
+install pre-commit hook...
+pre-commit installed at .git/hooks/pre-commit
+
+Your plugin template is ready!  Next steps:
+1. `cd` into your new directory
+    cd napari-growth-cone-finder
+    # you probably want to install your new package into your env
+    pip install -e .
+
+    2. Create a github repository with the name 'napari-growth-cone-finder':
+    https://github.com/creator/napari-growth-cone-finder.git
+    3. Add your newly created github repo as a remote and push:
+        git remote add origin https://github.com/creator/napari-growth-cone-finder.git
+        git push -u origin main
+    4. The following default URLs have been added to `setup.cfg`:
+        Bug Tracker = https://github.com/creator/napari-growth-cone-finder/issues
+        Documentation = https://github.com/creator/napari-growth-cone-finder#README.md
+        Source Code = https://github.com/creator/napari-growth-cone-finder
+        User Support = https://github.com/creator/napari-growth-cone-finder/issues
+        These URLs will be displayed on your plugin's napari hub page.
+        You may wish to change these before publishing your plugin!
+    5. Read the README for more info: https://github.com/napari/napari-plugin-template
+    6. We've provided a template description for your plugin page on the napari hub at `.napari-hub/DESCRIPTION.md`.
+    You'll likely want to edit this before you publish your plugin.
+    7. Consider customizing the rest of your plugin metadata for display on the napari hub:
+    https://github.com/chanzuckerberg/napari-hub/blob/main/docs/customizing-plugin-listing.md
+```
+
+</details>
+
+:tada: You just created a minimal napari plugin, complete with tests
+and ready for automatic deployment! :tada:
+
 
 ```no-highlight
 napari-growth-cone-finder/
@@ -82,6 +220,7 @@ napari-growth-cone-finder/
 ├── setup.cfg
 └── tox.ini
 ```
+
 
 ### Initialize a git repository in your package
 
@@ -224,16 +363,7 @@ This template also includes a default yaml configuration for [Dependabot](https:
 
 You will still need to enable Dependabot in your github settings, [see the instructions at this link](https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/configuring-dependabot-security-updates#managing-dependabot-security-updates-for-your-repositories). Your Dependabot configuration file is located at `.github/dependabot.yml`.
 
-## Features
-
-- Installable [PyPI] package
-- [tox] test suite, testing various python versions and platforms.
-- `README.md` file that contains useful information about your plugin
-- Continuous integration configuration for [github actions] that handles testing
-  and deployment of tagged releases
-- git-tag-based version management with [setuptools_scm]
-- Choose from several licenses, including [BSD-3], [MIT], [MPL v2.0], [Apache
-  v2.0], [GNU GPL v3.0], or [GNU LGPL v3.0]
+---
 
 ## Resources
 
@@ -253,6 +383,21 @@ along with a detailed description.
 
 Distributed under the terms of the [BSD-3] license, `napari-plugin-template`
 is free and open source software.
+
+## Using uv for getting started
+
+:bulb: **Optional** :bulb:
+
+[uv](https://docs.astral.sh/uv/) can reduce complexity since it will automatically install and manage a version of Python.
+
+If you prefer using uv, the following commands are used for getting started:
+
+```bash
+uv venv
+source .venv/bin/activate
+uv pip install copier jinja2-time npe2
+uv run copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
+```
 
 [napari organization]: https://github.com/napari/
 [gitter_badge]: https://badges.gitter.im/Join%20Chat.svg
