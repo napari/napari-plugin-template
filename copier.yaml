@@ -70,7 +70,7 @@ use_git_tags_for_versioning:
     help: Use git tags for versioning?
     type: bool
 install_precommit:
-    default: false
+    default: true
     help: Install pre-commit? (Code formatting checks)
     type: bool
 install_dependabot:
