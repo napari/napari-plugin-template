@@ -35,7 +35,7 @@ Using the napari-plugin-template offers the following benefits:
 
 These instructions will walk you through how to create a napari plugin. It uses an application called copier
 to prompt you for configuration input and does the work of creating a functioning, distributable plugin from your
-plugin's source code.
+source code.
 
 ### Step 1: Install the template tools.
 
