@@ -67,7 +67,7 @@ include_widget_plugin:
     type: bool
 use_git_tags_for_versioning:
     default: true
-    help: Use git tags for versioning? (Automatic versioning based on git tags)
+    help: Use git tags for automatic versioning?
     type: bool
 install_precommit:
     default: false
