@@ -152,7 +152,7 @@ Among other things, it includes checks for code linting and best practices in na
 
 ## install_dependabot
 
-The default for this prompt is `"n"`.
+The default for this prompt is `"y"`.
 
 If you choose "y" for this prompt, then a [Dependabot](https://docs.github.com/en/code-security/dependabot) configuration file will be created at `.github/dependabot.yml`.
 

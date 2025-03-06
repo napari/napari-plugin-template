@@ -74,7 +74,7 @@ install_precommit:
     help: Install pre-commit? (Code formatting checks)
     type: bool
 install_dependabot:
-    default: false
+    default: true
     help: Install dependabot? (Automatic security updates of dependency versions)
     type: bool
 license:
