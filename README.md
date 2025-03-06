@@ -102,7 +102,7 @@ copier copy --trust https://github.com/napari/napari-plugin-template napari-grow
    Yes
 🎤 Include widget plugin?
    Yes
-🎤 Use git tags for versioning?
+🎤 Use git tags for automatic versioning?
    Yes
 🎤 Install pre-commit? (Code formatting checks)
    Yes
