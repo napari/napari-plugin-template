@@ -35,7 +35,7 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Image Processing",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "numpy",
 {% if include_widget_plugin %}    "magicgui",
@@ -91,7 +91,7 @@ version = {attr = "{{module_name}}.__init__.__version__"}
 
 [tool.black]
 line-length = 79
-target-version = ['py10', 'py11', 'py312', 'py313']
+target-version = ['py310', 'py311', 'py312', 'py313']
 
 [tool.ruff]
 line-length = 79
