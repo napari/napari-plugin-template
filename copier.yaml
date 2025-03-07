@@ -24,7 +24,7 @@ display_name:
         {% endif %}
 module_name:
     default: "{{ plugin_name|lower|replace('-', '_') }}"
-    help: Plugin module name. Usually the same as the name of the plugin package, but lowercase and with underscores
+    help: Plugin module name, usually the same as the name of the plugin package, but lowercase and with underscores
     type: str
     validator: >-
         {% if not (module_name | regex_search("^[a-z][_a-z0-9]+$")) %}

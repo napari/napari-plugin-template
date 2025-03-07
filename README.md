@@ -78,11 +78,17 @@ the [prompts reference](./PROMPTS.md).
 ```sh
 copier copy --trust https://github.com/napari/napari-plugin-template napari-growth-cone-finder
 
-🎤 The name of your plugin
+Welcome to the napari plugin template!
+This template will help you create a new napari plugin with all the necessary structure of a Python package. 
+
+For more detailed information about each prompt, see:
+https://github.com/napari/napari-plugin-template/blob/main/PROMPTS.md
+
+🎤 The name of your plugin, used to name the package and repository
    napari-growth-cone-finder
-🎤 Display name for your plugin
+🎤 Display name for your plugin in the napari GUI
    Growth Cone Finder
-🎤 Plugin module name
+🎤 Plugin module name, usually the same as the name of the package, but lowercase and with underscores
    napari_growth_cone_finder
 🎤 Short description of what your plugin does
    A simple plugin for napari
