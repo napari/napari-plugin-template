@@ -326,7 +326,7 @@ Tests are automatically setup to run on github when you push to your repository.
 
 You can run your tests locally with [pytest](https://docs.pytest.org/en/7.1.x/).
 You'll need to make sure that your package is installed in your environment,
-along with testing requirements (specified in the pyrpoject.toml `project.optional-dependencies` section):
+along with testing requirements (specified in the pyproject.toml `project.optional-dependencies` section):
 
 ```bash
 pip install -e ".[testing]"
