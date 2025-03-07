@@ -145,7 +145,7 @@ your package's root directory.
 
 ## install_precommit
 
-The default for this prompt is `"n"`.
+The default for this prompt is `"y"`.
 
 If you choose "y" for this prompt, then [pre-commit](ttps://pre-commit.com/) will be installed.
 Among other things, it includes checks for code linting and best practices in napari plugins.
