@@ -117,7 +117,7 @@ more information on dock widgets see the
 
 ## use_git_tags_for_versioning
 
-The default for this prompt is `"n"`. If you choose `"n"` for this prompt, you
+The default for this prompt is `"y"`. If you choose `"n"` for this prompt, you
 will have to manually manage your version numbers when you create new releases
 of your package. You can do this in `setup.cfg` under the `version` field (you
 will also need to update the version string wherever else you may have used it

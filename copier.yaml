@@ -66,8 +66,8 @@ include_widget_plugin:
     help: Include widget plugin?
     type: bool
 use_git_tags_for_versioning:
-    default: false
-    help: Use git tags for versioning?
+    default: true
+    help: Use git tags for automatic versioning?
     type: bool
 install_precommit:
     default: false
