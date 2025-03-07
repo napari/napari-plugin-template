@@ -171,7 +171,7 @@ def test_pre_commit_validity(
     result.project_dir.joinpath("setup.cfg").is_file()
     try:
         subprocess.run(
-            ["pre-commit", "run", "--all", "--show-diff-on-failure"],
+            ["pre-commit", "run", "--all-files", "--show-diff-on-failure"],
             cwd=str(result.project_dir),
             check=True,
             capture_output=True,
