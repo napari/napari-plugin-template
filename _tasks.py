@@ -61,6 +61,7 @@ def validate_manifest(module_name, project_directory):
 def initialize_new_repository(
     install_precommit=False,
     plugin_name='napari-foobar',
+    plugin_directory='napari-foobar',
     github_repository_url='provide later',
     github_username_or_organization='githubuser',
 ):
@@ -106,7 +107,7 @@ def initialize_new_repository(
 Your plugin template is ready!  Next steps:
 1. `cd` into your new directory and initialize a git repo
 (this is also important for version control!)
-    cd {plugin_name}
+    cd {plugin_directory}
     git init -b main
     git add .
     git commit -m 'initial commit'
@@ -117,7 +118,7 @@ Your plugin template is ready!  Next steps:
         msg += f"""
 Your plugin template is ready!  Next steps:
 1. `cd` into your new directory
-    cd {plugin_name}
+    cd {plugin_directory}
     # you probably want to install your new package into your env
     pip install -e .
 """
@@ -220,6 +221,7 @@ if __name__ == '__main__':
     msg = initialize_new_repository(
         install_precommit=install_precommit,
         plugin_name=args.plugin_name,
+        plugin_directory=args.project_directory,
         github_repository_url=args.github_repository_url,
         github_username_or_organization=args.github_username_or_organization,
     )
