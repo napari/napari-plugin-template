@@ -397,7 +397,7 @@ If you prefer using uv, the following commands are used for getting started:
 uv venv
 source .venv/bin/activate
 uv pip install copier jinja2-time npe2
-uv run copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
+copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
 ```
 
 [napari organization]: https://github.com/napari/
