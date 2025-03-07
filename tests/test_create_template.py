@@ -168,7 +168,7 @@ def test_pre_commit_validity(
             'install_precommit': True,
         }
     )
-    result.project_dir.joinpath('setup.cfg').is_file()
+    result.project_dir.joinpath('pyproject.toml').is_file()
     try:
         subprocess.run(
             ['pre-commit', 'run', '--all-files', '--show-diff-on-failure'],

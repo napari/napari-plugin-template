@@ -128,7 +128,7 @@ Your plugin template is ready!  Next steps:
 
     if install_precommit is True:
         # try to install and update pre-commit
-        # installing after commit to avoid problem with comments in setup.cfg.
+        # installing after commit to avoid problem with comments in pyproject.toml.
         try:
             print('install pre-commit hook...')
             subprocess.run(['pre-commit', 'install'])
@@ -142,7 +142,7 @@ Your plugin template is ready!  Next steps:
     3. Add your newly created github repo as a remote and push:
         git remote add origin https://github.com/{github_username_or_organization}/{plugin_name}.git
         git push -u origin main
-    4. The following default URLs have been added to `setup.cfg`:
+    4. The following default URLs have been added to `pyproject.toml`:
         Bug Tracker = https://github.com/{github_username_or_organization}/{plugin_name}/issues
         Documentation = https://github.com/{github_username_or_organization}/{plugin_name}#README.md
         Source Code = https://github.com/{github_username_or_organization}/{plugin_name}
@@ -156,17 +156,13 @@ Your plugin template is ready!  Next steps:
     3. Add your newly created github repo as a remote and push:
         git remote add origin https://github.com/your-repo-username/your-repo-name.git
         git push -u origin main
-    Don't forget to add this url to setup.cfg!
-        [metadata]
-        url = https://github.com/your-repo-username/your-repo-name.git
-    4. Consider adding additional links for documentation and user support to setup.cfg
+    4. Consider adding additional links for documentation and user support to pyproject.toml
     using the project_urls key e.g.
-        [metadata]
-        project_urls =
-            Bug Tracker = https://github.com/your-repo-username/your-repo-name/issues
-            Documentation = https://github.com/your-repo-username/your-repo-name#README.md
-            Source Code = https://github.com/your-repo-username/your-repo-name
-            User Support = https://github.com/your-repo-username/your-repo-name/issues"""
+        [project.urls]
+        Bug Tracker = https://github.com/your-repo-username/your-repo-name/issues
+        Documentation = https://github.com/your-repo-username/your-repo-name#README.md
+        Source Code = https://github.com/your-repo-username/your-repo-name
+        User Support = https://github.com/your-repo-username/your-repo-name/issues"""
 
     msg += """
     5. Read the README for more info: https://github.com/napari/napari-plugin-template

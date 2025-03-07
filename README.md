@@ -179,7 +179,7 @@ Your plugin template is ready!  Next steps:
     3. Add your newly created github repo as a remote and push:
         git remote add origin https://github.com/creator/napari-growth-cone-finder.git
         git push -u origin main
-    4. The following default URLs have been added to `setup.cfg`:
+    4. The following default URLs have been added to `pyproject.toml`:
         Bug Tracker = https://github.com/creator/napari-growth-cone-finder/issues
         Documentation = https://github.com/creator/napari-growth-cone-finder#README.md
         Source Code = https://github.com/creator/napari-growth-cone-finder
@@ -203,8 +203,9 @@ and ready for automatic deployment! :tada:
 napari-growth-cone-finder/
 │
 ├── .github
-│   └── workflows
-│      └── test_and_deploy.yml
+│   |── workflows
+│   |  └── test_and_deploy.yml
+|   └── dependabot.yml
 ├── LICENSE
 ├── MANIFEST.in
 ├── napari_growth_cone_finder
@@ -218,7 +219,6 @@ napari-growth-cone-finder/
 │       └── test_reader.py
 ├── pyproject.toml
 ├── README.md
-├── setup.cfg
 └── tox.ini
 ```
 
@@ -326,7 +326,7 @@ Tests are automatically setup to run on github when you push to your repository.
 
 You can run your tests locally with [pytest](https://docs.pytest.org/en/7.1.x/).
 You'll need to make sure that your package is installed in your environment,
-along with testing requirements (specified in the setup.cfg `extras_require` section):
+along with testing requirements (specified in the pyproject.toml `project.optional-dependencies` section):
 
 ```bash
 pip install -e ".[testing]"
