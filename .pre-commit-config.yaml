@@ -5,6 +5,8 @@ repos:
   hooks:
   - id: ruff-format
     exclude: examples
+    args:
+      - "--quote-style=single"
   - id: ruff
 #    args:
 #      - "--unsafe-fixes"
