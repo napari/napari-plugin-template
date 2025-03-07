@@ -117,7 +117,7 @@ more information on dock widgets see the
 
 ## use_git_tags_for_versioning
 
-The default for this prompt is `"n"`. If you choose `"n"` for this prompt, you
+The default for this prompt is `"y"`. If you choose `"n"` for this prompt, you
 will have to manually manage your version numbers when you create new releases
 of your package. You can do this in `setup.cfg` under the `version` field (you
 will also need to update the version string wherever else you may have used it
@@ -145,14 +145,14 @@ your package's root directory.
 
 ## install_precommit
 
-The default for this prompt is `"n"`.
+The default for this prompt is `"y"`.
 
 If you choose "y" for this prompt, then [pre-commit](ttps://pre-commit.com/) will be installed.
 Among other things, it includes checks for code linting and best practices in napari plugins.
 
 ## install_dependabot
 
-The default for this prompt is `"n"`.
+The default for this prompt is `"y"`.
 
 If you choose "y" for this prompt, then a [Dependabot](https://docs.github.com/en/code-security/dependabot) configuration file will be created at `.github/dependabot.yml`.
 

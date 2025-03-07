@@ -110,6 +110,7 @@ copier copy --trust https://github.com/napari/napari-plugin-template napari-grow
    Yes
 🎤 Which licence do you want your plugin code to have?
    BSD-3
+
 Select license:
 1 - BSD-3
 2 - MIT
