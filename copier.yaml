@@ -1,35 +1,43 @@
+_message_before_copy: |
+
+    Welcome to the napari plugin template!
+    This template will help you create a new napari plugin with all the necessary structure of a Python package. 
+
+    For more detailed information about each prompt, see:
+    https://github.com/napari/napari-plugin-template/blob/main/PROMPTS.md
+
 plugin_name:
-    placeholder: napari-foobar
-    help: The name of your plugin
+    default: "{{ _copier_conf.dst_path | basename }}"
+    help: The name of your plugin, used to name the package and repository
     type: str
     validator: >-
         {% if not (plugin_name | regex_search('^[a-z][a-z0-9\-]+$')) %}
         plugin_name must be lowercase, no spaces, and may contain hyphens.
         {% endif %}
 display_name:
-    placeholder: FooBar Segmentation
-    help: Display name for your plugin
+    default: "{{ plugin_name|lower|replace('napari-', '')|title|replace('-', ' ') }}"
+    help: Display name for your plugin in the napari GUI
     type: str
     validator: >-
         {% if not (display_name | regex_search('(.|\s)*\S(.|\s)*')) %}
         display_name must not be empty
         {% endif %}
 module_name:
-    placeholder: "{{ plugin_name|lower|replace('-', '_') }}"
-    help: Plugin module name
+    default: "{{ plugin_name|lower|replace('-', '_') }}"
+    help: Plugin module name, usually the same as the name of the plugin package, but lowercase and with underscores
     type: str
     validator: >-
         {% if not (module_name | regex_search("^[a-z][_a-z0-9]+$")) %}
         module_name must be lowercase, and may contain underscores
         {% endif %}
 short_description:
-    placeholder: A simple plugin to use FooBar segmentation within napari
+    placeholder: A simple plugin to use {{ display_name }} within napari
     help: Short description of what your plugin does
     type: str
     validator: >-
         {% if not (short_description | regex_search('(.|\s)*\S(.|\s)*')) %}
         short_description must not be empty
-        {% endif %}
+        {% endif %} 
 email:
     placeholder: yourname@example.com
     help: Email address
