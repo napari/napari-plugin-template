@@ -232,7 +232,7 @@ napari-growth-cone-finder/
 ### Step 4: Initialize a git repository in your source code
 
 After Step 3, your system has a file tree in a directory with the source files for your package.
-This step will initialize the file directory as a git repo and commit your files to the repo.
+This step will initialize the file directory as a git repo and commit your files to the repo. When in the command line a single `.` is equivalent to 'perform this action in the current directory'. So, `git add .` would stage the changes (i.e., the new file tree) in the current directory to the newly initalized git repo. This `.` will be used in other steps, too.
 
 NOTE: This is important not only for version management, but also if you want to
 pip install your package locally for testing with `pip install -e .`. (because
