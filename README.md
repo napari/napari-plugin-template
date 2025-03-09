@@ -229,7 +229,14 @@ napari-growth-cone-finder/
 ```
 
 
-### Initialize a git repository in your package
+### Step 4: Initialize a git repository in your source code
+
+After Step 3, your system has a file tree in a directory with the source files for your package.
+If you haven't already, be sure to [set up Git](https://docs.github.com/en/get-started/git-basics/set-up-git) so that git can be used from the command line or from a GUI such as Github Desktop or VSCode.
+This step will initialize the file directory as a git repo and commit your files to the repo. 
+When in the command line a single `.` is equivalent to 'perform this action in the current directory'. 
+So, `git add .` would stage the changes (i.e., the new file tree) in the current directory to the newly initalized git repo. 
+This `.` will be used in other steps, too.
 
 NOTE: This is important not only for version management, but also if you want to
 pip install your package locally for testing with `pip install -e .`. (because
@@ -243,11 +250,11 @@ git add .
 git commit -m 'initial commit'
 ```
 
-### Upload it to github
+### Step 5: Upload your repo to GitHub
 
-1. Create a [new github repository]
+1. Create a [new repository on GitHub](https://help.github.com/en/github/getting-started-with-github/create-a-repo).
 
-2. Add your newly created github repo as a remote and push:
+2. Add your newly created GitHub repo as a git remote and push the commited files to GitHub:
 
    ```bash
    # here, continuing with the example above...
@@ -256,22 +263,40 @@ git commit -m 'initial commit'
    git remote add origin https://github.com/neuronz52/napari-growth-cone-finder.git
    git push -u origin main
    ```
+3. You should see your files in the GitHub repo now.
 
-### Monitor testing and coverage
+## Understanding and maintaining the generated plugin
+
+### Running tests locally
+
+Tests are automatically setup to run on GitHub when you push changes to your repository.
+
+You may also run your tests locally with [pytest](https://docs.pytest.org/en/7.1.x/).
+You'll need to make sure that your package is installed in your environment,
+along with testing requirements (specified in the pyproject.toml `project.optional-dependencies` section):
+
+```bash
+pip install -e ".[testing]"
+pytest
+```
+
+### Automated testing and coverage
 
 The repository should already be setup to run your tests each time you push an
 update (configuration is in `.github/workflows/test_and_deploy.yml`). You can
 monitor them in the "Actions" tab of your github repository. If you're
 following along, go have a look... they should be running right now!
 
-Currently, the timeout for these runs is set to 30 minutes to save resources. You can modify the settings if necessary. Here you can find information on [GitHub workflows](https://docs.github.com/en/actions/learn-github-actions) and the [timeout parameter](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idtimeout-minutes).
+Currently, the timeout for these runs is set to 30 minutes to save resources.
+You can modify the settings if necessary.
+Here you can find information on [GitHub workflows](https://docs.github.com/en/actions/learn-github-actions) and the [timeout parameter](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idtimeout-minutes).
 
 When the tests are done, test coverage will be viewable at
 [codecov.io](https://codecov.io/) (assuming your repository is public):
 `https://codecov.io/gh/<your-github-username>/<your-package-name>`
 
 You will need to enable the [codecov](https://github.com/apps/codecov) github app
-for this to work. See [here](https://github.com/apps/codecov/installations/new)
+for this to work. See [codecov installation docs](https://github.com/apps/codecov/installations/new)
 to install the codecov github app and give it access to your napari plugin repository.
 
 ### Set up automatic deployments
@@ -326,29 +351,7 @@ and available for pip install with:
 pip install napari-growth-cone-finder
 ```
 
-### Running tests locally
-
-Tests are automatically setup to run on github when you push to your repository.
-
-You can run your tests locally with [pytest](https://docs.pytest.org/en/7.1.x/).
-You'll need to make sure that your package is installed in your environment,
-along with testing requirements (specified in the pyproject.toml `project.optional-dependencies` section):
-
-```bash
-pip install -e ".[testing]"
-pytest
-```
-
-### Create your documentation
-
-Documentation generation is not included in this template.
-We recommend following the getting started guides for one of the following documentation generation tools:
-
-1. [Sphinx]
-2. [MkDocs]
-3. [JupyterBook]
-
-### Pre-commit
+### Check code style with Pre-commit
 
 This template includes a default yaml configuration for [pre-commit](https://pre-commit.com/).
 Among other things, it includes checks for best practices in napari plugins.
@@ -364,11 +367,20 @@ pre-commit install
 You can also have these checks run automatically for you when you push to github
 by installing [pre-commit ci](https://pre-commit.ci/) on your repository.
 
-## Dependabot
+### Receive Dependabot notifications about dependencies
 
 This template also includes a default yaml configuration for [Dependabot](https://docs.github.com/en/code-security/dependabot). This can help you check for security updates to easily update vulnerable dependencies.
 
 You will still need to enable Dependabot in your github settings, [see the instructions at this link](https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/configuring-dependabot-security-updates#managing-dependabot-security-updates-for-your-repositories). Your Dependabot configuration file is located at `.github/dependabot.yml`.
+
+### Create your user documentation
+
+Documentation generation is not included in this template.
+We recommend following the getting started guides for one of the following documentation generation tools:
+
+1. [Sphinx]
+2. [MkDocs]
+3. [JupyterBook]
 
 ---
 
