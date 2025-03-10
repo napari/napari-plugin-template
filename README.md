@@ -49,12 +49,11 @@ source code.
 This step installs the [Copier](https://copier.readthedocs.io/en/stable/) application and the [jinja2-time](https://pypi.org/project/jinja2-time/) extension.
 It also installs the napari plugin engine [npe2](https://github.com/napari/npe2), to help validate your new plugin is configured correctly.
 
-Using `conda` and `pip`:
+Using `conda`:
 
 ```bash
-conda create -y --name copier-env python=3.12
+conda create -y --name copier-env python=3.12 copier jinja2-time npe2
 conda activate copier-env
-python -m pip install copier jinja2-time npe2
 ```
 
 Or using `venv` and `pip`:
