@@ -1,4 +1,5 @@
-copier
+# pin copier to a sha until they do next release
+copier@git+https://github.com/copier-org/copier@4fb26fe25bd01b210e77def622cf0de3b354875a
 jinja2-time
 npe2
 pytest
