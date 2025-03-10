@@ -7,7 +7,7 @@ _message_before_copy: |
     https://github.com/napari/napari-plugin-template/blob/main/PROMPTS.md
 
 plugin_name:
-    default: "{{ _copier_conf.dst_path | basename }}"
+    default: "{{ _copier_conf.dst_path | basename if _copier_conf is defined else 'my-napari-plugin' }}"
     help: The name of your plugin, used to name the package and repository
     type: str
     validator: >-
