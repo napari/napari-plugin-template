@@ -3,8 +3,8 @@
 [![Test plugin template](https://github.com/napari/napari-plugin-template/actions/workflows/test.yml/badge.svg)](https://github.com/napari/napari-plugin-template/actions/workflows/test.yml)
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/napari.svg)](https://python.org)  <!-- Use the versions supported by napari core -->
 [![License](https://img.shields.io/pypi/l/napari.svg)](https://github.com/napari/napari-plugin-template/raw/main/LICENSE)
-[![npe2](https://img.shields.io/badge/plugin-npe2-brightgreen?style=flat&label=plugin)](https://github.com/napari/npe2)
-[![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-orange.json)](https://github.com/copier-org/copier)
+[![npe2](https://img.shields.io/badge/plugin-npe2-blue?link=https://napari.org/stable/plugins/index.html)](https://napari.org/stable/plugins/index.html)
+[![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-purple.json)](https://github.com/copier-org/copier)
 
 **napari-plugin-template** is a convenient [copier](https://copier.readthedocs.io/en/stable/) template for authoring ([npe2](https://github.com/napari/npe2)-based) [napari](https://napari.org/) plugins.
 
