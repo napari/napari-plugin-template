@@ -3,6 +3,8 @@
 [![Test plugin template](https://github.com/napari/napari-plugin-template/actions/workflows/test.yml/badge.svg)](https://github.com/napari/napari-plugin-template/actions/workflows/test.yml)
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/napari.svg)](https://python.org)  <!-- Use the versions supported by napari core -->
 [![License](https://img.shields.io/pypi/l/napari.svg)](https://github.com/napari/napari-plugin-template/raw/main/LICENSE)
+[![npe2](https://img.shields.io/badge/plugin-npe2-blue?link=https://napari.org/stable/plugins/index.html)](https://napari.org/stable/plugins/index.html)
+[![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-purple.json)](https://github.com/copier-org/copier)
 
 **napari-plugin-template** is a convenient [copier](https://copier.readthedocs.io/en/stable/) template for authoring ([npe2](https://github.com/napari/npe2)-based) [napari](https://napari.org/) plugins.
 
@@ -31,6 +33,11 @@ Using the napari-plugin-template offers the following benefits:
 - 🪪Choose from several licenses, including [BSD-3], [MIT], [MPL v2.0], [Apache
   v2.0], [GNU GPL v3.0], or [GNU LGPL v3.0]
 
+The napari-plugin-template can be [applied to pre-existing Python projects](https://copier.readthedocs.io/en/stable/faq/#can-copier-be-applied-over-a-preexisting-project);
+consider using this template to add any of the above features, including plugin functionality, to your project.
+Conflicts between your current project and the template will be recognized after the template is complete,
+allowing you to choose what files to overwrite.
+
 ## Getting Started
 
 These instructions will walk you through how to create a napari plugin. It uses an application called copier
@@ -42,7 +49,14 @@ source code.
 This step installs the [Copier](https://copier.readthedocs.io/en/stable/) application and the [jinja2-time](https://pypi.org/project/jinja2-time/) extension.
 It also installs the napari plugin engine [npe2](https://github.com/napari/npe2), to help validate your new plugin is configured correctly.
 
-Using `pip`:
+Using `conda`:
+
+```bash
+conda create -y --name copier-env python=3.12 copier jinja2-time npe2
+conda activate copier-env
+```
+
+Or using `venv` and `pip`:
 
 ```bash
 python -m venv .venv
