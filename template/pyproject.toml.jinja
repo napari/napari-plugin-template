@@ -84,6 +84,7 @@ where = ["src"]
 {% if use_git_tags_for_versioning %}
 [tool.setuptools_scm]
 write_to = "src/{{module_name}}/_version.py"
+fallback_version = "0.0.1+nogit"
 {% else %}
 [tool.setuptools.dynamic]
 version = {attr = "{{module_name}}.__init__.__version__"}
