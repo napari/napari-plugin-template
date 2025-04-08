@@ -12,7 +12,7 @@ from warnings import warn
 def check_qt_bindings():
     """Check if Qt bindings are available and compatible."""
     try:
-        from qtpy import API_NAME, QT_VERSION, QtCore
+        from qtpy import API_NAME, QtCore
     except Exception as e:
         if 'No Qt bindings could be found' in str(e):
             from inspect import cleandoc
@@ -21,7 +21,7 @@ def check_qt_bindings():
             installed_with_conda = list(
                 Path(sys.prefix, 'conda-meta').glob('*qt*.json')
             )
-            
+
             raise ImportError(
                 cleandoc(
                     """
@@ -45,13 +45,6 @@ def check_qt_bindings():
                 )
             ) from e
         raise
-        
-    # Set plugin path appropriately if using PySide2
-    if API_NAME == 'PySide2':
-        import PySide2
-        os.environ['QT_PLUGIN_PATH'] = str(
-            Path(PySide2.__file__).parent / 'Qt' / 'plugins'
-        )
 
     # Check for minimum recommended Qt version
     # Just a simple check since we don't need the full complexity
@@ -60,7 +53,8 @@ def check_qt_bindings():
         if version_info < (5, 12, 3):
             warn(
                 f"\nWARNING: You are using Qt version {QtCore.__version__}. "
-                f"Version 5.12.3 or higher is recommended.\n"
+                f"Version 5.12.3 or higher is recommended.\n",
+                stacklevel=2
             )
     except (AttributeError, ValueError):
         # If we can't determine the version, just continue
