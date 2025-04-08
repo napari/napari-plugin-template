@@ -7,6 +7,17 @@ except ImportError:
 __version__ = "0.0.1"
 {% endif -%}
 
+{% if include_widget_plugin -%}
+# Check Qt binding availability when widget plugin is included
+try:
+    from ._qt_binding_check import check_qt_bindings
+    check_qt_bindings()
+except ImportError:
+    # If Qt bindings aren't available when importing the package,
+    # the widget functionality won't work but other plugin functionality should
+    pass
+{% endif %}
+
 {% if include_reader_plugin %}
 from ._reader import napari_get_reader
 {% endif %}{% if include_sample_data_plugin -%}

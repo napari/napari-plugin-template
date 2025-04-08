@@ -1,0 +1,69 @@
+"""
+This module checks for Qt binding availability and compatibility.
+It is based on napari's Qt binding checking logic from napari._qt.__init__
+"""
+
+import os
+import sys
+from pathlib import Path
+from warnings import warn
+
+
+def check_qt_bindings():
+    """Check if Qt bindings are available and compatible."""
+    try:
+        from qtpy import API_NAME, QT_VERSION, QtCore
+    except Exception as e:
+        if 'No Qt bindings could be found' in str(e):
+            from inspect import cleandoc
+
+            # Check if we're running in a conda environment
+            installed_with_conda = list(
+                Path(sys.prefix, 'conda-meta').glob('*qt*.json')
+            )
+            
+            raise ImportError(
+                cleandoc(
+                    """
+                No Qt bindings could be found.
+                
+                This plugin requires either PyQt5 (default), PySide2, or PyQt6 to be installed.
+                
+                With pip, you can install either with:
+                  $ pip install -U 'pyqt5'
+                  $ pip install -U 'pyside2'
+                  $ pip install -U 'pyqt6'
+                
+                With conda, you need to do:
+                  $ conda install -c conda-forge pyqt
+                  $ conda install -c conda-forge pyside2
+                
+                Our heuristics suggest you are using '{tool}' to manage your packages.
+                """
+                ).format(
+                    tool='conda' if installed_with_conda else 'pip'
+                )
+            ) from e
+        raise
+        
+    # Set plugin path appropriately if using PySide2
+    if API_NAME == 'PySide2':
+        import PySide2
+        os.environ['QT_PLUGIN_PATH'] = str(
+            Path(PySide2.__file__).parent / 'Qt' / 'plugins'
+        )
+
+    # Check for minimum recommended Qt version
+    # Just a simple check since we don't need the full complexity
+    try:
+        version_info = tuple(int(x) for x in QtCore.__version__.split('.')[:3])
+        if version_info < (5, 12, 3):
+            warn(
+                f"\nWARNING: You are using Qt version {QtCore.__version__}. "
+                f"Version 5.12.3 or higher is recommended.\n"
+            )
+    except (AttributeError, ValueError):
+        # If we can't determine the version, just continue
+        pass
+
+    return API_NAME
