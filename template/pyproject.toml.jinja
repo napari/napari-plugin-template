@@ -65,11 +65,7 @@ testing = [
 {%- endif %}
 
 [build-system]
-{% if use_git_tags_for_versioning -%}
 requires = ["setuptools>=42.0.0", "wheel", "setuptools_scm"]
-{%- else -%}
-requires = ["setuptools>=42.0.0", "wheel"]
-{%- endif %}
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -81,14 +77,9 @@ where = ["src"]
 [tool.setuptools.package-data]
 "*" = ["*.yaml"]
 
-{% if use_git_tags_for_versioning %}
 [tool.setuptools_scm]
 write_to = "src/{{module_name}}/_version.py"
 fallback_version = "0.0.1+nogit"
-{% else %}
-[tool.setuptools.dynamic]
-version = {attr = "{{module_name}}.__init__.__version__"}
-{%- endif %}
 
 [tool.black]
 line-length = 79
