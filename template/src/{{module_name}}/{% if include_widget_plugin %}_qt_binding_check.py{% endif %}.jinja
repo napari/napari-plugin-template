@@ -26,18 +26,18 @@ def check_qt_bindings():
                 cleandoc(
                     """
                 No Qt bindings could be found.
-                
+
                 This plugin requires either PyQt5 (default), PySide2, or PyQt6 to be installed.
-                
+
                 With pip, you can install either with:
                   $ pip install -U 'pyqt5'
                   $ pip install -U 'pyside2'
                   $ pip install -U 'pyqt6'
-                
+
                 With conda, you need to do:
                   $ conda install -c conda-forge pyqt
                   $ conda install -c conda-forge pyside2
-                
+
                 Our heuristics suggest you are using '{tool}' to manage your packages.
                 """
                 ).format(
