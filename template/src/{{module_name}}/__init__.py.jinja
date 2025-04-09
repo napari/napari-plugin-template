@@ -1,11 +1,7 @@
-{% if use_git_tags_for_versioning %}
 try:
     from ._version import version as __version__
 except ImportError:
     __version__ = "unknown"
-{% else -%}
-__version__ = "0.0.1"
-{% endif -%}
 
 {% if include_reader_plugin %}
 from ._reader import napari_get_reader

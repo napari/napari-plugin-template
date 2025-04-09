@@ -122,8 +122,6 @@ https://github.com/napari/napari-plugin-template/blob/main/PROMPTS.md
    Yes
 🎤 Include widget plugin?
    Yes
-🎤 Use git tags for automatic versioning?
-   Yes
 🎤 Install pre-commit? (Code formatting checks)
    Yes
 🎤 Install dependabot? (Automatic security updates of dependency versions)
