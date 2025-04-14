@@ -44,7 +44,7 @@ dependencies = [
 {% endif %}]
 
 [project.optional-dependencies]
-all = ["napari[all]"]
+all = ["napari[all]"]  # napari may be moved to dependencies, but should not include qt bindings, i.e. not napari[all], napari[pyqt], etc
 testing = [
     "tox",
     "pytest",  # https://docs.pytest.org/en/latest/contents.html
