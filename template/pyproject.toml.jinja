@@ -50,7 +50,7 @@ testing = [
     "pytest",  # https://docs.pytest.org/en/latest/contents.html
     "pytest-cov",  # https://pytest-cov.readthedocs.io/en/latest/
 {% if include_widget_plugin %}    "pytest-qt",  # https://pytest-qt.readthedocs.io/en/latest/
-    "napari[pyqt]",  # test with napari's default Qt bindings
+    "napari[qt]",  # test with napari's default Qt bindings
 {% endif %}]
 
 [project.entry-points."napari.manifest"]
