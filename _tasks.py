@@ -121,9 +121,8 @@ Your plugin template is ready!  Next steps:
 Your plugin template is ready!  Next steps:
 1. `cd` into your new directory
     cd {plugin_directory}
-    # you probably want to install your new package into your env
-    # the below command will install the package in editable mode with
-    # napari and Qt bindings
+    # Use the following command to install your package in editable mode,
+    # as well as napari and Qt bindings into your existing environment.
     pip install -e .[all]
 """
     # Ensure full reqd/write/execute permissions for .git files

@@ -189,9 +189,8 @@ pre-commit installed at .git/hooks/pre-commit
 Your plugin template is ready!  Next steps:
 1. `cd` into your new directory
     cd napari-growth-cone-finder
-    # you probably want to install your new package into your existing environment
-    # the below command will install the package in editable mode with
-    # napari and Qt bindings
+    # Use the following command to install your package in editable mode,
+    # as well as napari and Qt bindings into your existing environment.
     pip install -e .[all]
 
     2. Create a github repository with the name 'napari-growth-cone-finder':
