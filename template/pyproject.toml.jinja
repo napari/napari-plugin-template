@@ -37,7 +37,7 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 # napari can be included in dependencies if napari imports are required.
-# However, you should not include napari[all], napari[pyqt],
+# However, you should not include napari[all], napari[qt],
 # or any other Qt bindings directly (e.g. PyQt5, PySide2).
 # See best practices: https://napari.org/stable/plugins/building_a_plugin/best_practices.html
 dependencies = [
@@ -49,7 +49,7 @@ dependencies = [
 
 [project.optional-dependencies]
 # Allow easily installation with the full, default napari installation
-# (including Qt backend) using my_plugin[all].
+# (including Qt backend) using {{plugin_name}}[all].
 all = ["napari[all]"]
 testing = [
     "tox",
