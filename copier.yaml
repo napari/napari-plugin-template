@@ -1,7 +1,7 @@
 _message_before_copy: |
 
     Welcome to the napari plugin template!
-    This template will help you create a new napari plugin with all the necessary structure of a Python package. 
+    This template will help you create a new napari plugin with all the necessary structure of a Python package.
 
     For more detailed information about each prompt, see:
     https://github.com/napari/napari-plugin-template/blob/main/PROMPTS.md
@@ -37,7 +37,7 @@ short_description:
     validator: >-
         {% if not (short_description | regex_search('(.|\s)*\S(.|\s)*')) %}
         short_description must not be empty
-        {% endif %} 
+        {% endif %}
 email:
     placeholder: yourname@example.com
     help: Email address
