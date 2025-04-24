@@ -422,13 +422,13 @@ is free and open source software.
 
 [uv](https://docs.astral.sh/uv/) can reduce complexity since it will automatically install and manage a version of Python.
 
-If you prefer using uv, the following commands are used for getting started:
+If you prefer using uv, the following command is all you need to get started:
 
 ```bash
-uv venv
-source .venv/bin/activate
-uv pip install copier jinja2-time npe2
-copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
+uv tool run \
+  --with jinja2-time \
+  --with npe2 \
+  copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
 ```
 
 [napari organization]: https://github.com/napari/
