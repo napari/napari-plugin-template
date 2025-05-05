@@ -43,7 +43,7 @@ allowing you to choose what files to overwrite.
 These instructions will walk you through how to create a napari plugin. It uses an application called copier
 to prompt you for configuration input and does the work of creating a functioning, distributable plugin from your
 source code.
-Both options installs the [Copier](https://copier.readthedocs.io/en/stable/) application,
+Both options install the [Copier](https://copier.readthedocs.io/en/stable/) application,
 the [jinja2-time](https://pypi.org/project/jinja2-time/) extension,
 and the napari plugin engine [npe2](https://github.com/napari/npe2) to help validate your new plugin is configured correctly.
 
