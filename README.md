@@ -43,11 +43,13 @@ allowing you to choose what files to overwrite.
 These instructions will walk you through how to create a napari plugin. It uses an application called copier
 to prompt you for configuration input and does the work of creating a functioning, distributable plugin from your
 source code.
+Both options installs the [Copier](https://copier.readthedocs.io/en/stable/) application,
+the [jinja2-time](https://pypi.org/project/jinja2-time/) extension,
+and the napari plugin engine [npe2](https://github.com/napari/npe2) to help validate your new plugin is configured correctly.
 
-### Step 1: Install the template tools.
+### [Option A]:  Use an environment to manage and utilize copier
 
-This step installs the [Copier](https://copier.readthedocs.io/en/stable/) application and the [jinja2-time](https://pypi.org/project/jinja2-time/) extension.
-It also installs the napari plugin engine [npe2](https://github.com/napari/npe2), to help validate your new plugin is configured correctly.
+#### Step 1: Install the template tools
 
 Using `conda`:
 
@@ -64,8 +66,8 @@ source .venv/bin/activate
 python -m pip install copier jinja2-time npe2
 ```
 
-### Step 2: Create a new napari plugin project.
- 
+#### Step 2: Create a new napari plugin project.
+
 The next command will use copier to use the napari-plugin-template to generate a new napari plugin project:
 
 ```bash
@@ -80,6 +82,19 @@ copier copy --trust https://github.com/napari/napari-plugin-template napari-grow
 
 Copier will create a new folder in your current working directory named `napari-growth-cone-finder`.
 It will also prompt you to begin entering configuration information.
+
+### [Option B]: Use uv for an up-to-date, no environment utilization of copier
+
+#### Step 1 and 2: Run copier and create a new napari plugin project.
+
+[uv](https://docs.astral.sh/uv/) can reduce complexity since it will
+automatically install and manage a version of Python.
+
+The following command is all you need to get started:
+
+```bash
+uv tool run --with jinja2-time --with npe2 copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
+```
 
 ### Step 3: Enter plugin configuration information.
 
@@ -276,6 +291,7 @@ git commit -m 'initial commit'
    git remote add origin https://github.com/neuronz52/napari-growth-cone-finder.git
    git push -u origin main
    ```
+
 3. You should see your files in the GitHub repo now.
 
 ## Understanding and maintaining the generated plugin
@@ -415,21 +431,6 @@ along with a detailed description.
 
 Distributed under the terms of the [BSD-3] license, `napari-plugin-template`
 is free and open source software.
-
-## Using uv for getting started
-
-:bulb: **Optional** :bulb:
-
-[uv](https://docs.astral.sh/uv/) can reduce complexity since it will automatically install and manage a version of Python.
-
-If you prefer using uv, the following command is all you need to get started:
-
-```bash
-uv tool run \
-  --with jinja2-time \
-  --with npe2 \
-  copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
-```
 
 [napari organization]: https://github.com/napari/
 [gitter_badge]: https://badges.gitter.im/Join%20Chat.svg
