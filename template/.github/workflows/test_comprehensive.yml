@@ -1,0 +1,17 @@
+# This workflow runs tests for the project on different events such as push, pull request, or manual dispatch.
+# For more information see: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    uses: ./.github/workflows/reusable_run_tox_test.yml
+    with:
+      coverage: true

@@ -1,0 +1,12 @@
+---
+title: "{{ env.TITLE }}"
+labels: [bug]
+---
+The {% raw %}{{ workflow }}{% endraw %} workflow failed on {% raw %}{{ date | date("YYYY-MM-DD HH:mm") }}{% endraw %} UTC
+
+The most recent failing test was on {% raw %}{{ env.PLATFORM }}{% endraw %} py{% raw %}{{ env.PYTHON_VERSION }}{% endraw %}
+with commit: {% raw %}{{ sha }}{% endraw %}
+
+Full run: https://github.com/{{github_username_or_organization}}/{{plugin_name}}/actions/runs/{% raw %}{{ env.RUN_ID }}{% endraw %}
+
+(This post will be updated if another test fails, as long as this issue remains open.)
