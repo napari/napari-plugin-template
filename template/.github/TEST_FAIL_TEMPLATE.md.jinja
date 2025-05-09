@@ -1,5 +1,5 @@
 ---
-title: "{{ env.TITLE }}"
+title: "{% raw %}{{ env.TITLE }}{% endraw %}"
 labels: [bug]
 ---
 The {% raw %}{{ workflow }}{% endraw %} workflow failed on {% raw %}{{ date | date("YYYY-MM-DD HH:mm") }}{% endraw %} UTC
