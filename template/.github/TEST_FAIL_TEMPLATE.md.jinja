@@ -7,6 +7,8 @@ The {% raw %}{{ workflow }}{% endraw %} workflow failed on {% raw %}{{ date | da
 The most recent failing test was on {% raw %}{{ env.PLATFORM }}{% endraw %} py{% raw %}{{ env.PYTHON_VERSION }}{% endraw %}
 with commit: {% raw %}{{ sha }}{% endraw %}
 
+{% if github_repository_url != 'provide later' %}
 Full run: https://github.com/{{github_username_or_organization}}/{{plugin_name}}/actions/runs/{% raw %}{{ env.RUN_ID }}{% endraw %}
+{% endif %}
 
 (This post will be updated if another test fails, as long as this issue remains open.)
