@@ -47,9 +47,42 @@ Both options install the [Copier](https://copier.readthedocs.io/en/stable/) appl
 the [jinja2-time](https://pypi.org/project/jinja2-time/) extension,
 and the napari plugin engine [npe2](https://github.com/napari/npe2) to help validate your new plugin is configured correctly.
 
-### [Option A]:  Use an environment to manage and utilize copier
+### Step 1: Navigate to the parent directory of your plugin.
 
-#### Step 1: Install the template tools
+In your shell (i.e. CLI, command prompt, terminal, bash), navigate to the directory where your plugin should live
+(or, if you are runnign the template on a previous plugin, does live) using `cd`.
+You can navigate in your file explorer to the parent directory and copy the full path
+if you are unfamiliar with managing file directories from the shell.
+
+For example, if you want to create a new plugin inside your Documents folder,
+you could enter into the command line the equivalent to:
+
+```bash
+cd C:/Users/<username>/Documents
+```
+
+### Step 2: Install and run copier with the napari-plugin template
+
+In the below instructions, replace `<new-plugin-name>` with the name of the plugin;
+copier will create (or re-use) the folder in the parent directory with this `<new-plugin-name>`.
+
+#### [Option 2A]: Use uv for an up-to-date, no environment utilization of copier
+
+[uv](https://docs.astral.sh/uv/) can reduce complexity since it will
+automatically install and manage a version of Python;
+[install uv](https://docs.astral.sh/uv/getting-started/installation/) if needed.
+
+First, navigate to the source directory that you would like 
+
+The following command is then all you need to get started:
+
+```bash
+uv tool run --with jinja2-time --with npe2 copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
+```
+
+#### [Option 2B]: Use a virtual or conda environment to run the plugin template
+
+##### Step 2a: Set up the copier environment
 
 Using `conda`:
 
@@ -66,7 +99,7 @@ source .venv/bin/activate
 python -m pip install copier jinja2-time npe2
 ```
 
-#### Step 2: Create a new napari plugin project.
+##### Step 2b: Create a new napari plugin project
 
 The next command will use copier to use the napari-plugin-template to generate a new napari plugin project:
 
@@ -82,19 +115,6 @@ copier copy --trust https://github.com/napari/napari-plugin-template napari-grow
 
 Copier will create a new folder in your current working directory named `napari-growth-cone-finder`.
 It will also prompt you to begin entering configuration information.
-
-### [Option B]: Use uv for an up-to-date, no environment utilization of copier
-
-#### Step 1 and 2: Run copier and create a new napari plugin project.
-
-[uv](https://docs.astral.sh/uv/) can reduce complexity since it will
-automatically install and manage a version of Python.
-
-The following command is all you need to get started:
-
-```bash
-uv tool run --with jinja2-time --with npe2 copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
-```
 
 ### Step 3: Enter plugin configuration information.
 
