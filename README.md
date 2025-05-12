@@ -16,9 +16,12 @@ post on our [Zulip forum](napari.zulipchat.com) to notify the napari community.
 
 📣 **NOTE: This repo is not meant to be cloned/forked directly!** Instead, the copier application will be used to execute
 the template and ask you for configuration information (or you may accept the template's sensible defaults).
+
 Please read [Getting Started](#getting-started) below. 📣
 
----
+By default, copier will use the most recently tagged version of the `napari-plugin-template`;
+to use the latest version in the main or development branch read the
+[copier instructions](https://copier.readthedocs.io/en/stable/generating/#templates-versions)
 
 ## Features
 
@@ -65,6 +68,8 @@ cd C:/Users/<username>/Documents
 
 In the below instructions, replace `<new-plugin-name>` with the name of the plugin;
 copier will create (or re-use) the folder in the parent directory with this `<new-plugin-name>`.
+For example if you want to create `napari-growth-cone-finder` replace
+`<new-plugin-name>` with `napari-growth-cone-finder`.
 
 #### [Option 2A]: Use uv for an up-to-date, no environment utilization of copier
 
@@ -80,9 +85,7 @@ The following command is then all you need to get started:
 uv tool run --with jinja2-time --with npe2 copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
 ```
 
-#### [Option 2B]: Use a virtual or conda environment to run the plugin template
-
-##### Step 2a: Set up the copier environment
+#### [Option 2B]: Use a conda or virtual environment to run the plugin template
 
 Using `conda`:
 
@@ -99,22 +102,11 @@ source .venv/bin/activate
 python -m pip install copier jinja2-time npe2
 ```
 
-##### Step 2b: Create a new napari plugin project
-
 The next command will use copier to use the napari-plugin-template to generate a new napari plugin project:
 
 ```bash
 copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
 ```
-
-For example, if you want to create a new plugin with the name, `napari-growth-cone-finder`, you would enter:
-
-```bash
-copier copy --trust https://github.com/napari/napari-plugin-template napari-growth-cone-finder
-```
-
-Copier will create a new folder in your current working directory named `napari-growth-cone-finder`.
-It will also prompt you to begin entering configuration information.
 
 ### Step 3: Enter plugin configuration information.
 
