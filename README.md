@@ -311,6 +311,9 @@ When the tests are done, test coverage will be viewable at
 You will need to enable the [codecov](https://github.com/apps/codecov) github app
 for this to work. See [codecov installation docs](https://github.com/apps/codecov/installations/new)
 to install the codecov github app and give it access to your napari plugin repository.
+You may also need to set up [codecov upload without a token](https://docs.codecov.com/docs/codecov-tokens#uploading-without-a-token) for the repository, depending on the age
+of the organization. You can manage these settings by logging in to codecov
+and managing Settings and Repos.
 
 ### Set up automatic deployments
 
