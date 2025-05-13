@@ -53,7 +53,7 @@ and the napari plugin engine [npe2](https://github.com/napari/npe2) to help vali
 ### Step 1: Navigate to the parent directory of your plugin.
 
 In your shell (i.e. CLI, command prompt, terminal, bash), navigate to the directory where your plugin should live
-(or, if you are runnign the template on a previous plugin, does live) using `cd`.
+(or, if you are running the template on a previous plugin, does live) using `cd`.
 You can navigate in your file explorer to the parent directory and copy the full path
 if you are unfamiliar with managing file directories from the shell.
 
