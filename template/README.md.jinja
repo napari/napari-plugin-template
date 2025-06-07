@@ -27,16 +27,23 @@ https://napari.org/stable/plugins/index.html
 
 You can install `{{plugin_name}}` via [pip]:
 
-    pip install {{plugin_name}}
+```
+pip install {{plugin_name}}
+```
 
 If napari is not already installed, you can install `{{plugin_name}}` with napari and Qt via:
 
-    pip install "{{plugin_name}}[all]"
+```
+pip install "{{plugin_name}}[all]"
+```
 
 {% if github_repository_url != 'provide later' %}
 To install latest development version :
 
-    pip install git+https://github.com/{{github_username_or_organization}}/{{plugin_name}}.git
+```
+pip install git+https://github.com/{{github_username_or_organization}}/{{plugin_name}}.git
+```
+
 {% endif %}
 
 ## Contributing
