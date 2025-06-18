@@ -246,23 +246,32 @@ and ready for automatic deployment! :tada:
 
 
 ```no-highlight
-napari-growth-cone-finder/
-│
+napari-growth-cone-finder
 ├── .github
-│   |── workflows
-│   |  └── test_and_deploy.yml
-|   └── dependabot.yml
+|   ├── ISSUE TEMPLATE
+|   |   ├── bug_report.yml
+│   |   ├── documentation.md
+│   |   ├── feature_request.md
+│   |   └── task.md
+│   ├── workflows
+│   |   └── test_and_deploy.yml
+|   ├── PULL_REQUEST_TEMPLATE.md
+│   └── dependabot.yml
+├── .napari-hub
+│   ├── DESCRIPTION.md
+|   └── config.yml
+├── src
+│   └── napari_growth_cone_finder
+│       ├── _tests
+│       │   ├── __init__.py
+│       │   └── test_widget.py
+│       ├── __init__.py
+│       ├── napari.yaml
+│       └── _widget.py
+├── .gitignore
+├── .pre-commit-config.yaml
 ├── LICENSE
 ├── MANIFEST.in
-├── napari_growth_cone_finder
-│   ├── __init__.py
-│   ├── _widget.py
-│   ├── _reader.py
-│   ├── napari.yaml
-│   └── _tests
-│       ├── __init__.py
-│       ├── test_widget.py
-│       └── test_reader.py
 ├── pyproject.toml
 ├── README.md
 └── tox.ini
