@@ -9,15 +9,20 @@
 **napari-plugin-template** is a convenient [copier](https://copier.readthedocs.io/en/stable/) template for authoring ([npe2](https://github.com/napari/npe2)-based) [napari](https://napari.org/) plugins.
 
 Creating a plugin is a great way to extend napari's functionality. This repo provides a template to
-simplify the development and distribution your plugin. After creating a new plugin, we encourage you to send a
-post on our [Zulip forum](napari.zulipchat.com) to notify the napari community.
+simplify the development and distribution your plugin.
+
+> [!TIP]
+> If you are interested in creating a plugin, have any questions about the process, or simply want to show
+off your progress, we encourage you to post on the [Zulip chat](napari.zulipchat.com), where the core team
+and the napari community are always active and happy to give you feedback!
 
 ---
 
-📣 **NOTE: This repo is not meant to be cloned/forked directly!** Instead, the copier application will be used to execute
+> [!IMPORTANT]
+> This repo is not meant to be cloned/forked directly! Instead, the copier application will be used to execute
 the template and ask you for configuration information (or you may accept the template's sensible defaults).
-
-Please read [Getting Started](#getting-started) below. 📣
+> 
+> Please read [Getting Started](#getting-started) below.
 
 By default, copier will use the most recently tagged version of the `napari-plugin-template`;
 to use the latest version in the main or development branch read the
