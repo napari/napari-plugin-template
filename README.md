@@ -15,6 +15,10 @@ simplify the development and distribution your plugin.
 > If you are interested in creating a plugin, have any questions about the process, or simply want to show
 off your progress, we encourage you to post on the [Zulip chat](napari.zulipchat.com), where the core team
 and the napari community are always active and happy to give you feedback!
+> Would you rather directly talk to some of the core team to maybe solve some of your issues live or get answers 
+directly? We have the napari community meetings for that! Check [here](https://napari.org/stable/community/meeting_schedule.html)
+for the schedule to see which meeting time suits you. Don't worry, you can also just join even though your plugin
+is not complete. We are there to help!
 
 ---
 
