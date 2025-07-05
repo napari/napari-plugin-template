@@ -355,24 +355,24 @@ When the tests are done, test coverage will be viewable at
 You will need to enable the [codecov](https://github.com/apps/codecov) github app
 for this to work. See [codecov installation docs](https://github.com/apps/codecov/installations/new)
 to install the codecov github app and give it access to your napari plugin repository.
+You may also need to set up [codecov upload without a token](https://docs.codecov.com/docs/codecov-tokens#uploading-without-a-token) for the repository, depending on the age
+of the organization. You can manage these settings by logging in to codecov
+and managing Settings and Repos.
 
 ### Set up automatic deployments
 
 Your new package is also nearly ready to automatically deploy to [PyPI]
-(whenever you create a tagged release), so that your users can simply `pip install` your package. You just need to create an [API token to authenticate
-with PyPi](https://pypi.org/help/#apitoken), and then add it to your github
-repository:
+(whenever you create a tagged release), so that your users can simply `pip install` your package.
+You need to set up [Trusted Published (OIDC) through PyPI](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/).
 
 1. If you don't already have one, [create an
    account](https://pypi.org/account/register/) at [PyPI]
 2. Verify your email address with PyPI, (if you haven't already)
-3. Generate an [API token](https://pypi.org/help/#apitoken) at PyPi: In your
-   [account settings](https://pypi.org/manage/account/) go to the API tokens
-   section and select "Add API token". Make sure to copy it somewhere safe!
-4. [Create a new encrypted
-   secret](https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets#creating-encrypted-secrets)"
-   in your github repository with the name "TWINE_API_KEY", and paste in your
-   API token.
+   and set up two factor authentication.
+3. On PyPI, go to Username -> Your Projects -> Publishing
+4. Follow the prompts for "Add a new pending publisher"
+   1. Project name is plugin name
+   2. Workflow name is 'make_release.yml'
 
 You are now setup for automatic deployment!
 

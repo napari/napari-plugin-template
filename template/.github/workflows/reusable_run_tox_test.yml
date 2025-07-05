@@ -1,0 +1,83 @@
+name: Base Test Workflow
+
+on:
+  workflow_call:
+    inputs:
+      platforms:
+        description: 'JSON array of platforms to test on. e.g. ["ubuntu-latest"]'
+        type: string
+        default: '["ubuntu-latest", "windows-latest", "macos-latest"]'
+      python-versions:
+        description: 'JSON array of Python versions to test. e.g. ["3.9", "3.10"]'
+        type: string
+        default: '["3.10", "3.11", "3.12", "3.13"]'
+      pre_release:
+        description: 'Whether to run tests with --pre flag for pip install'
+        type: boolean
+        default: false
+      coverage:
+        description: 'Whether to run and upload coverage'
+        type: boolean
+        default: false
+    outputs:
+      test_outcome:
+        value: ${{ jobs.test.outputs.outcome }}
+      test_platform:
+        value: ${{ jobs.test.outputs.platform }}
+      test_python_version:
+        value: ${{ jobs.test.outputs.python-version }}
+
+jobs:
+  test:
+    name: ${{ matrix.platform }} py${{ matrix.python-version }} ${{ inputs.pre_release && '--pre' || '' }}
+    runs-on: ${{ matrix.platform }}
+    timeout-minutes: 30
+    outputs:
+      outcome: ${{ job.status }}
+      platform: ${{ matrix.platform }}
+      python-version: ${{ matrix.python-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: ${{ fromJson(inputs.platforms) }}
+        python-version: ${{ fromJson(inputs.python-versions) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache-dependency-path: pyproject.toml
+
+      - name: Enable Qt on Linux
+        uses: tlambert03/setup-qt-libs@v1
+
+      - name: Install Windows OpenGL
+        if: runner.os == 'Windows'
+        run: |
+          git clone --depth 1 https://github.com/pyvista/gl-ci-helpers.git
+          powershell gl-ci-helpers/appveyor/install_opengl.ps1
+        shell: powershell
+
+      # note: if you need dependencies from conda, considering using
+      # setup-miniconda: https://github.com/conda-incubator/setup-miniconda
+      # and tox-conda: https://github.com/tox-dev/tox-conda
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install setuptools tox tox-uv tox-gh-actions codecov
+
+      - name: Run tests
+        uses: aganders3/headless-gui@v2
+        with:
+          run: python -m tox ${{ inputs.pre_release && '-v --pre' || '' }}
+        env:
+          PLATFORM: ${{ matrix.platform }}
+          PYTHON_VERSION: ${{ matrix.python-version }}
+
+      - name: Coverage
+        if: ${{ inputs.coverage }}
+        uses: codecov/codecov-action@v5
