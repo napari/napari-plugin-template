@@ -87,6 +87,14 @@ where = ["src"]
 write_to = "src/{{module_name}}/_version.py"
 fallback_version = "0.0.1+nogit"
 
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
+xfail_strict = true
+# filterwarnings = ["error"] # recommended by PP309, but deprecation warnings cause failures
+log_cli_level = "INFO"
+testpaths = ["tests"]
+
 [tool.black]
 line-length = 79
 target-version = ['py310', 'py311', 'py312', 'py313']
