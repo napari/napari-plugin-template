@@ -52,7 +52,7 @@ dependencies = [
 # (including Qt backend) using {{plugin_name}}[all].
 all = ["napari[all]"]
 testing = [
-    "tox",
+    "tox-uv",
     "pytest",  # https://docs.pytest.org/en/latest/contents.html
     "pytest-cov",  # https://pytest-cov.readthedocs.io/en/latest/
 {% if include_widget_plugin %}    "pytest-qt",  # https://pytest-qt.readthedocs.io/en/latest/
