@@ -3,22 +3,21 @@
 # https://til.simonwillison.net/github/dependabot-python-setup
 version: 2
 updates:
-  # Monitor Python dependencies
-  - package-ecosystem: pip
-    directory: "/"
-    schedule:
-      interval: monthly
-    groups:
-      python-packages:
-        patterns:
-          - "*"
-  
-  # Monitor GitHub Actions
-  - package-ecosystem: github-actions
-    directory: "/"
-    schedule:
-      interval: monthly
-    groups:
-      github-actions:
-        patterns:
-          - "*"
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: monthly
+  groups:
+    python-packages:
+      patterns:
+        - "*"
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+      interval: "monthly"
+  commit-message:
+    prefix: "ci(dependabot):"
+  groups:
+    github-actions:
+      patterns:
+        - "*"
