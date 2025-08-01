@@ -50,7 +50,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install setuptools tox tox-gh-actions
+          python -m pip install hatch tox tox-gh-actions
 
       # this runs the platform-specific tests declared in tox.ini
       - name: Test with tox
@@ -81,8 +81,8 @@ jobs:
       - name: Build package
         run: |
           python -m pip install --upgrade pip
-          pip install -U setuptools setuptools_scm wheel twine build
+          pip install hatch
           git tag
-          python -m build .
+          hatch build
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
