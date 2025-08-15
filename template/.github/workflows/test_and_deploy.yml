@@ -37,7 +37,10 @@ jobs:
       - uses: tlambert03/setup-qt-libs@v1
 
       - name: Install Windows OpenGL
-        uses: pyvista/setup-headless-display-action@v4.2
+        uses: pyvista/setup-headless-display-action@v4.v2
+        with:
+          qt: true
+          wm: herbstluftwm
 
 
       # note: if you need dependencies from conda, considering using
@@ -51,9 +54,7 @@ jobs:
 
       # this runs the platform-specific tests declared in tox.ini
       - name: Test with tox
-        uses: aganders3/headless-gui@v2
-        with:
-          run: python -m tox
+        run: python -m tox
         env:
           PLATFORM: ${{ matrix.platform }}
 
