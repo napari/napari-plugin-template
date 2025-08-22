@@ -27,8 +27,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      # these libraries enable testing on Qt on linux
-      - uses: tlambert03/setup-qt-libs@19e4ef2d781d81f5f067182e228b54ec90d23b76 # v1.8
+      - name: Setup headless screenL
+        uses: pyvista/setup-headless-display-action@7d84ae825e6d9297a8e99bdbbae20d1b919a0b19 # v4.2
+        with:
+          qt: true
+          wm: herbstluftwm
 
       - name: Install dependencies
         run: |
@@ -36,6 +39,4 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Test
-        uses: aganders3/headless-gui@f85dd6316993505dfc5f21839d520ae440c84816 # v2.2
-        with:
-          run: python -m pytest -s -v --color=yes
+        run: python -m pytest -s -v --color=yes
