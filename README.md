@@ -330,10 +330,10 @@ Tests are automatically setup to run on GitHub when you push changes to your rep
 
 You may also run your tests locally with [pytest](https://docs.pytest.org/en/7.1.x/).
 You'll need to make sure that your package is installed in your environment,
-along with testing requirements (specified in the pyproject.toml `project.optional-dependencies` section):
+along with testing requirements (specified in the pyproject.toml `[dependency-groups]` section):
 
 ```bash
-pip install -e ".[testing]"
+pip install -e ". --dependency-groups=testing"
 pytest
 ```
 

@@ -51,6 +51,8 @@ dependencies = [
 # Allow easily installation with the full, default napari installation
 # (including Qt backend) using {{plugin_name}}[all].
 all = ["napari[all]"]
+
+[dependency-groups]
 testing = [
     "tox-uv",
     "pytest",  # https://docs.pytest.org/en/latest/contents.html
@@ -71,7 +73,7 @@ testing = [
 {%- endif %}
 
 [build-system]
-requires = ["setuptools>=42.0.0", "wheel", "setuptools_scm"]
+requires = ["setuptools>=42.0.0", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -140,6 +142,4 @@ exclude = [
     "*vendored*",
     "*_vendor*",
 ]
-
-target-version = "py310"
 fix = true
