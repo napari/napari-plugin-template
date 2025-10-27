@@ -56,7 +56,7 @@ def test_run_plugin_tests(
     assert result.project_dir.joinpath('src').is_dir()
     assert result.project_dir.joinpath('src', 'foo_bar', '__init__.py').is_file()
 
-    test_path = result.project_dir.joinpath('src', 'foo_bar', '_tests')
+    test_path = result.project_dir.joinpath('tests')
     if include_reader_plugin is True:
         assert (test_path / 'test_reader.py').is_file()
     if include_writer_plugin is True:
@@ -99,7 +99,7 @@ def test_run_plugin_tests_with_napari_prefix(copie, capsys):
     assert result.project_dir.joinpath('src').is_dir()
     assert result.project_dir.joinpath('src', 'napari_foo', '__init__.py').is_file()
     assert result.project_dir.joinpath(
-        'src', 'napari_foo', '_tests', 'test_reader.py'
+        'tests', 'test_reader.py'
     ).is_file()
 
 
@@ -128,16 +128,16 @@ def test_run_select_plugins(copie, capsys):
     assert result.project_dir.joinpath('src').is_dir()
     assert result.project_dir.joinpath('src', name, '__init__.py').is_file()
     assert result.project_dir.joinpath(
-        'src', name, '_tests', 'test_reader.py'
+        'tests', 'test_reader.py'
     ).is_file()
 
     assert not result.project_dir.joinpath('src', 'anything', '_widget.py').is_file()
     assert not result.project_dir.joinpath(
-        'src', 'anything', '_tests', 'test_widget.py'
+        'tests', 'test_widget.py'
     ).is_file()
     assert not result.project_dir.joinpath('src', 'anything', '_writer.py').is_file()
     assert not result.project_dir.joinpath(
-        'src', 'anything', '_tests', 'test_writer.py'
+        'tests', 'test_writer.py'
     ).is_file()
 
 
