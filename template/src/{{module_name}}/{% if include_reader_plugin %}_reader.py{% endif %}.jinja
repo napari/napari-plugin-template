@@ -28,10 +28,6 @@ def napari_get_reader(path):
         # so we are only going to look at the first file.
         path = path[0]
 
-    # if we know we cannot read the file, we immediately return None.
-    if not path.endswith(".npy"):
-        return None
-    
     # the get_reader function should make as many checks as possible
     # (without loading the full file) to determine if it can read
     # the path. Here, we check the dtype of the array by loading
