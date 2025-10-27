@@ -333,7 +333,7 @@ You'll need to make sure that your package is installed in your environment,
 along with testing requirements (specified in the pyproject.toml `[dependency-groups]` section):
 
 ```bash
-pip install -e ". --dependency-groups=testing"
+pip install -e . --group dev
 pytest
 ```
 
