@@ -10,7 +10,7 @@ def test_reader(tmp_path):
     # write some fake data using your supported file format
     # we make the array an integer type to be compatible with the reader
     my_test_file = str(tmp_path / "myfile.npy")
-    original_data = np.random.rand(20, 20).astype(np.uint8)
+    original_data = np.random.rand(20, 20).astype(np.int_)
     np.save(my_test_file, original_data)
 
     reader = napari_get_reader(my_test_file)
