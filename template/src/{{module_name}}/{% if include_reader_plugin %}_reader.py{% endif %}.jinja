@@ -37,7 +37,9 @@ def napari_get_reader(path):
         arr = np.load(path, mmap_mode='r')
         if arr.dtype != np.int_:
             return None
-    # napari_get_reader should never raise an exception, so we catch
+    # napari_get_reader should never raise an exception, because napari
+    # raises its own specific errors depending on what plugins are
+    # available for the given path, so we catch
     # the OSError that np.load might raise if the file is malformed
     except OSError:
         return None

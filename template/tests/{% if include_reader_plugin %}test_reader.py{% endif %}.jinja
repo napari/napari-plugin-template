@@ -8,11 +8,11 @@ def test_reader(tmp_path):
     """An example of how you might test your plugin."""
 
     # write some fake data using your supported file format
+    # we make the array an integer type to be compatible with the reader
     my_test_file = str(tmp_path / "myfile.npy")
-    original_data = np.random.rand(20, 20)
+    original_data = np.random.rand(20, 20).astype(np.uint8)
     np.save(my_test_file, original_data)
 
-    # try to read it back in
     reader = napari_get_reader(my_test_file)
     assert callable(reader)
 
@@ -26,6 +26,14 @@ def test_reader(tmp_path):
     np.testing.assert_allclose(original_data, layer_data_tuple[0])
 
 
-def test_get_reader_pass():
+def test_get_reader_pass(tmp_path):
     reader = napari_get_reader("fake.file")
+    assert reader is None
+
+    # the original_data is a float type, so the reader should return None
+    my_test_file = str(tmp_path / "myfile.npy")
+    original_data = np.random.rand(20, 20)
+    np.save(my_test_file, original_data)
+
+    reader = napari_get_reader(my_test_file)
     assert reader is None
