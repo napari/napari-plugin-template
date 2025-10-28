@@ -37,7 +37,9 @@ def napari_get_reader(path):
         arr = np.load(path, mmap_mode='r')
         if arr.dtype != np.int_:
             return None
-    except Exception:
+    # napari_get_reader should never raise an exception, so we catch
+    # the OSError that np.load might raise if the file is malformed
+    except OSError:
         return None
 
     # otherwise we return the *function* that can read ``path``.
