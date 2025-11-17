@@ -54,4 +54,10 @@ contributions:
       autogenerate: true
       display_name: Autogenerate Threshold
     - command: {{plugin_name}}.make_qwidget
-      display_name: Example QWidget{% endif %}
+      display_name: Example QWidget
+  menus:
+    napari/layers/segment:
+      - command: {{plugin_name}}.make_container_widget
+      - command: {{plugin_name}}.make_magic_widget
+      - command: {{plugin_name}}.make_function_widget
+      - command: {{plugin_name}}.make_qwidget{% endif %}
