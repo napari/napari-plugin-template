@@ -12,7 +12,11 @@ updates:
       patterns:
         - "*"
 - package-ecosystem: "github-actions"
-  directory: "/"
+  directories:
+    # project root gh actions workflows
+    - "/"
+    # template gh actions workflows
+    - "/template/.github/workflows"
   schedule:
       interval: "monthly"
   commit-message:
