@@ -1,8 +1,14 @@
 line-length = 79
 
+
 # Treat .py.jinja files as Python for formatting/linting, 
-# Jinja syntax inside a .py file will raise a parsing error, so these must still be manually checked. (i.e. __init__.py.jinja)
+# Jinja syntax ({% if %}, etc.) inside a .py file will raise a parsing error, so these must still be manually checked. (i.e. __init__.py.jinja)
 include = ["*.py", "*.pyi", "*.py*.jinja"]
+exclude = [
+    "template/src/{{module_name}}/__init__.py.jinja",
+    "template/tests/{% if include_reader_plugin %}test_reader.py{% endif %}.jinja",
+    "template/tests/{% if include_widget_plugin %}test_widget.py{% endif %}.jinja",
+]
 
 [format]
 quote-style = "single"
