@@ -1,4 +1,3 @@
-exclude: _vendor|vendored
 repos:
 - repo: https://github.com/astral-sh/ruff-pre-commit
   rev: v0.14.6
@@ -6,18 +5,12 @@ repos:
   - id: ruff-check
     args: [--fix]
   - id: ruff-format
-- repo: https://github.com/seddonym/import-linter
-  rev: v2.2
-  hooks:
-  - id: import-linter
-    stages: [manual]
 - repo: https://github.com/python-jsonschema/check-jsonschema
   rev: 0.31.2
   hooks:
   - id: check-github-workflows
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v5.0.0
-  # .py files are skipped cause already checked by other hooks
   hooks:
   - id: check-yaml
   - id: check-toml
