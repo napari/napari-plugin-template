@@ -100,17 +100,23 @@ def initialize_new_repository(
             subprocess.run(['git', 'add', '.'])
             # Run both ruff hooks to match template pre-commit config
             subprocess.run(
-                ['pre-commit', 'run', 'ruff-check', '-a'], capture_output=True, check=False
+                ['pre-commit', 'run', 'ruff-check', '-a'],
+                capture_output=True,
+                check=False,
             )
             subprocess.run(
-                ['pre-commit', 'run', 'ruff-format', '-a'], capture_output=True, check=False
+                ['pre-commit', 'run', 'ruff-format', '-a'],
+                capture_output=True,
+                check=False,
             )
         except (subprocess.CalledProcessError, FileNotFoundError, OSError):
             logger.error('Error pip installing then running pre-commit.')
 
     try:
         subprocess.run(['git', 'add', '.'], check=True)
-        subprocess.run(['git', 'commit', '-q', '-m', 'initial commit'], check=True)
+        subprocess.run(
+            ['git', 'commit', '-q', '-m', 'initial commit'], check=True
+        )
     except (subprocess.CalledProcessError, FileNotFoundError, OSError):
         logger.error('Error creating initial git commit.')
         msg += f"""
