@@ -9,17 +9,17 @@ import sys
 
 def module_name_pep8_compliance(module_name):
     """Validate that the plugin module name is PEP8 compliant."""
-    if not re.match(r"^[a-z][_a-z0-9]+$", module_name):
-        link = "https://www.python.org/dev/peps/pep-0008/#package-and-module-names"
-        logger.error("Module name should be pep-8 compliant.")
-        logger.error(f"  More info: {link}")
+    if not re.match(r'^[a-z][_a-z0-9]+$', module_name):
+        link = 'https://www.python.org/dev/peps/pep-0008/#package-and-module-names'
+        logger.error('Module name should be pep-8 compliant.')
+        logger.error(f'  More info: {link}')
         sys.exit(1)
 
 
 def pypi_package_name_compliance(plugin_name):
     """Check there are no underscores in the plugin name"""
-    if re.search(r"_", plugin_name):
-        logger.error("PyPI.org and pip discourage package names with underscores.")
+    if re.search(r'_', plugin_name):
+        logger.error('PyPI.org and pip discourage package names with underscores.')
         sys.exit(1)
 
 
@@ -28,81 +28,81 @@ def validate_manifest(module_name, project_directory):
     try:
         from npe2 import PluginManifest
     except ImportError:
-        logger.error("npe2 is not installed. Skipping manifest validation.")
+        logger.error('npe2 is not installed. Skipping manifest validation.')
         return True
 
-    current_directory = Path(".").absolute()
+    current_directory = Path('.').absolute()
     if (
         current_directory.match(project_directory)
         and not Path(project_directory).is_absolute()
     ):
         project_directory = current_directory
 
-    path = Path(project_directory) / "src" / Path(module_name) / "napari.yaml"
+    path = Path(project_directory) / 'src' / Path(module_name) / 'napari.yaml'
 
     valid = False
     try:
         pm = PluginManifest.from_file(path)
-        msg = f"✔ Manifest for {(pm.display_name or pm.name)!r} valid!"
+        msg = f'✔ Manifest for {(pm.display_name or pm.name)!r} valid!'
         valid = True
     except PluginManifest.ValidationError as err:
-        msg = f"🅇 Invalid! {err}"
-        logger.error(msg.encode("utf-8"))
+        msg = f'🅇 Invalid! {err}'
+        logger.error(msg.encode('utf-8'))
         sys.exit(1)
     except Exception as err:
-        msg = f"🅇 Failed to read {path!r}. {type(err).__name__}: {err}"
-        logger.error(msg.encode("utf-8"))
+        msg = f'🅇 Failed to read {path!r}. {type(err).__name__}: {err}'
+        logger.error(msg.encode('utf-8'))
         sys.exit(1)
     else:
-        logger.info(msg.encode("utf-8"))
+        logger.info(msg.encode('utf-8'))
         return valid
 
 
 def initialize_new_repository(
     install_precommit=False,
-    plugin_name="napari-foobar",
-    plugin_directory="napari-foobar",
-    github_repository_url="provide later",
-    github_username_or_organization="githubuser",
+    plugin_name='napari-foobar',
+    plugin_directory='napari-foobar',
+    github_repository_url='provide later',
+    github_username_or_organization='githubuser',
 ):
     """Initialize new plugin repository with git, and optionally pre-commit."""
 
-    msg = ""
+    msg = ''
 
     # Configure git line ending settings
     # https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration
-    if os.name == "nt":  # if on Windows, configure git line ending characters
-        subprocess.run(["git", "config", "--global", "core.autocrlf", "true"])
+    if os.name == 'nt':  # if on Windows, configure git line ending characters
+        subprocess.run(['git', 'config', '--global', 'core.autocrlf', 'true'])
     else:  # for Linux and Mac
-        subprocess.run(["git", "config", "--global", "core.autocrlf", "input"])
+        subprocess.run(['git', 'config', '--global', 'core.autocrlf', 'input'])
 
     # try to run git init
     try:
-        subprocess.run(["git", "init", "-q"])
-        subprocess.run(["git", "checkout", "-b", "main"])
+        subprocess.run(['git', 'init', '-q'])
+        subprocess.run(['git', 'checkout', '-b', 'main'])
     except Exception:
-        logger.error("Error in git initialization.")
+        logger.error('Error in git initialization.')
 
     if install_precommit is True:
         # try to install and update pre-commit
         try:
-            print("install pre-commit ...")
+            print('install pre-commit ...')
             subprocess.run(
-                ["python", "-m", "pip", "install", "pre-commit"],
+                ['python', '-m', 'pip', 'install', 'pre-commit'],
                 stdout=subprocess.DEVNULL,
             )
-            print("updating pre-commit...")
-            subprocess.run(["pre-commit", "autoupdate"], stdout=subprocess.DEVNULL)
-            subprocess.run(["git", "add", "."])
-            subprocess.run(["pre-commit", "run", "black", "-a"], capture_output=True)
+            print('updating pre-commit...')
+            subprocess.run(['pre-commit', 'autoupdate'], stdout=subprocess.DEVNULL)
+            subprocess.run(['git', 'add', '.'])
+            subprocess.run(['pre-commit', 'run', 'black', '-a'], capture_output=True)
         except Exception:
-            logger.error("Error pip installing then running pre-commit.")
+            logger.error('Error pip installing then running pre-commit.')
 
     try:
-        subprocess.run(["git", "add", "."])
-        subprocess.run(["git", "commit", "-q", "-m", "initial commit"])
+        subprocess.run(['git', 'add', '.'])
+        subprocess.run(['git', 'commit', '-q', '-m', 'initial commit'])
     except Exception:
-        logger.error("Error creating initial git commit.")
+        logger.error('Error creating initial git commit.')
         msg += f"""
 Your plugin template is ready!  Next steps:
 1. `cd` into your new directory and initialize a git repo
@@ -126,20 +126,20 @@ Your plugin template is ready!  Next steps:
     pip install -e .[all]
 """
     # Ensure full reqd/write/execute permissions for .git files
-    if os.name == "nt":  # if on Windows OS
+    if os.name == 'nt':  # if on Windows OS
         # Avoid permission denied errors on Github Actions CI
-        subprocess.run(["attrib", "-h", "rr", ".git", "/s", "/d"])
+        subprocess.run(['attrib', '-h', 'rr', '.git', '/s', '/d'])
 
     if install_precommit is True:
         # try to install and update pre-commit
         # installing after commit to avoid problem with comments in pyproject.toml.
         try:
-            print("install pre-commit hook...")
-            subprocess.run(["pre-commit", "install"])
+            print('install pre-commit hook...')
+            subprocess.run(['pre-commit', 'install'])
         except Exception:
-            logger.error("Error at pre-commit install, skipping pre-commit")
+            logger.error('Error at pre-commit install, skipping pre-commit')
 
-    if github_repository_url != "provide later":
+    if github_repository_url != 'provide later':
         msg += f"""
     2. Create a github repository with the name '{plugin_name}':
     https://github.com/{github_username_or_organization}/{plugin_name}.git
@@ -178,39 +178,39 @@ Your plugin template is ready!  Next steps:
     return msg
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    logger = logging.getLogger("pre_gen_project")
+    logger = logging.getLogger('pre_gen_project')
     parser = ArgumentParser()
     parser.add_argument(
-        "--plugin_name", dest="plugin_name", help="The name of your plugin"
+        '--plugin_name', dest='plugin_name', help='The name of your plugin'
     )
-    parser.add_argument("--module_name", dest="module_name", help="Plugin module name")
+    parser.add_argument('--module_name', dest='module_name', help='Plugin module name')
     parser.add_argument(
-        "--project_directory", dest="project_directory", help="Project directory"
-    )
-    parser.add_argument(
-        "--install_precommit",
-        dest="install_precommit",
-        help="Install pre-commit",
-        default="False",
+        '--project_directory', dest='project_directory', help='Project directory'
     )
     parser.add_argument(
-        "--github_repository_url",
-        dest="github_repository_url",
-        help="Github repository URL",
-        default="provide later",
+        '--install_precommit',
+        dest='install_precommit',
+        help='Install pre-commit',
+        default='False',
     )
     parser.add_argument(
-        "--github_username_or_organization",
-        dest="github_username_or_organization",
-        help="Github user or organisation name",
-        default="githubuser",
+        '--github_repository_url',
+        dest='github_repository_url',
+        help='Github repository URL',
+        default='provide later',
+    )
+    parser.add_argument(
+        '--github_username_or_organization',
+        dest='github_username_or_organization',
+        help='Github user or organisation name',
+        default='githubuser',
     )
     args = parser.parse_args()
 
     # Since bool("False") returns True, we need to check the actual string value
-    if str(args.install_precommit).lower() == "true":
+    if str(args.install_precommit).lower() == 'true':
         install_precommit = True
     else:
         install_precommit = False
