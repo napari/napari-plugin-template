@@ -6,6 +6,7 @@ see: https://napari.org/stable/plugins/building_a_plugin/guides.html#writers
 
 Replace code below according to your needs.
 """
+
 from __future__ import annotations
 
 from collections.abc import Sequence

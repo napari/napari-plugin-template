@@ -1,5 +1,9 @@
 line-length = 79
 
+# Treat .py.jinja files as Python for formatting/linting, 
+# Jinja syntax inside a .py file will raise a parsing error, so these must still be manually checked. (i.e. __init__.py.jinja)
+include = ["*.py", "*.pyi", "*.py*.jinja"]
+
 [format]
 quote-style = "single"
 
