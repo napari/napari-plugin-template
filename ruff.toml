@@ -1,7 +1,7 @@
 line-length = 79
 
 
-# Treat .py.jinja files as Python for formatting/linting, 
+# Treat .py.jinja files as Python for formatting/linting,
 # Jinja syntax ({% if %}, etc.) inside a .py file will raise a parsing error, so these must still be manually checked. (i.e. __init__.py.jinja)
 include = ["*.py", "*.pyi", "*.py*.jinja"]
 exclude = [
