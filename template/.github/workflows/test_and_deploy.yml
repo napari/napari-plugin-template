@@ -24,6 +24,8 @@ jobs:
     name: ${{ matrix.platform }} py${{ matrix.python-version }}
     runs-on: ${{ matrix.platform }}
     timeout-minutes: 30
+    permissions:
+      id-token: write  # needed for codecov OIDC authentication
     strategy:
       fail-fast: false
       matrix:
@@ -57,6 +59,8 @@ jobs:
 
       - name: Coverage
         uses: codecov/codecov-action@v5
+        with:
+          use_oidc: true  # reliable tokenless codecov uploads
 
   build-and-inspect-package:
     name: Build & inspect package.
