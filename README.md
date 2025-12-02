@@ -13,7 +13,7 @@ simplify the development and distribution your plugin.
 
 > [!TIP]
 > If you are interested in creating a plugin, have any questions about the process, or simply want to show
-off your progress, we encourage you to post on the [Zulip chat](napari.zulipchat.com), where the core team
+off your progress, we encourage you to post on the [Zulip chat](https://napari.zulipchat.com), where the core team
 and the napari community are always active and happy to give you feedback!
 > You can also talk directly to some of the core team at the napari community meetings; check [here](https://napari.org/stable/community/meeting_schedule.html)
 for the schedule to see which meeting time suits you. Don't worry if your plugin is not finished yet, the earlier you join, the better! We are there to help :)
@@ -34,13 +34,13 @@ to use the latest version in the main or development branch read the
 
 Using the napari-plugin-template offers the following benefits:
 
-- 🚀Installable [PyPI] package
-- 🧪[tox] test suite, testing various python versions and platforms.
-- 🗒️`README.md` file that contains useful information about your plugin
-- ⚙️Continuous integration configuration for [github actions] that handles testing
+- 🚀 Installable [PyPI] package
+- 🧪 [tox] test suite, testing various python versions and platforms.
+- 🗒️ `README.md` file that contains useful information about your plugin
+- ⚙️ Continuous integration configuration for [github actions] that handles testing
   and deployment of tagged releases
-- 🔋git-tag-based version management with [setuptools_scm]
-- 🪪Choose from several licenses, including [BSD-3], [MIT], [MPL v2.0], [Apache
+- 🔋 git-tag-based version management with [setuptools_scm]
+- 🪪 Choose from several licenses, including [BSD-3], [MIT], [MPL v2.0], [Apache
   v2.0], [GNU GPL v3.0], or [GNU LGPL v3.0]
 
 The napari-plugin-template can be [applied to pre-existing Python projects](https://copier.readthedocs.io/en/stable/faq/#can-copier-be-applied-over-a-preexisting-project);
@@ -83,8 +83,6 @@ For example if you want to create `napari-growth-cone-finder` replace
 [uv](https://docs.astral.sh/uv/) can reduce complexity since it will
 automatically install and manage a version of Python;
 [install uv](https://docs.astral.sh/uv/getting-started/installation/) if needed.
-
-First, navigate to the source directory that you would like 
 
 The following command is then all you need to get started:
 
@@ -252,12 +250,12 @@ Your plugin template is ready!  Next steps:
 and ready for automatic deployment! :tada:
 
 
-```no-highlight
+```text
 napari-growth-cone-finder
 ├── .github
-|   ├── ISSUE TEMPLATE
-|   |   ├── bug_report.yml
-│   |   ├── documentation.md
+│   ├── ISSUE_TEMPLATE
+│   │   ├── bug_report.yml
+│   │   ├── documentation.md
 │   |   ├── feature_request.md
 │   |   └── task.md
 │   ├── workflows
@@ -455,19 +453,11 @@ along with a detailed description.
 Distributed under the terms of the [BSD-3] license, `napari-plugin-template`
 is free and open source software.
 
-[napari organization]: https://github.com/napari/
-[gitter_badge]: https://badges.gitter.im/Join%20Chat.svg
-[gitter]: https://gitter.im/napari/napari-plugin-template?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge "Join Chat on Gitter.im"
-[travis_badge]: https://travis-ci.org/napari/napari-plugin-template.svg?branch=main
-[travis]: https://travis-ci.org/napari/napari-plugin-template "See Build Status on Travis CI"
-[docs_badge]: https://readthedocs.org/projects/napari-plugin-template/badge/?version=latest
-[documentation]: https://napari-plugin-template.readthedocs.io/en/latest/ "Documentation"
 [copier]: https://github.com/copier-org/copier
 [napari]: https://github.com/napari/napari
 [npe2]: https://github.com/napari/npe2
 [pypi]: https://pypi.org/
 [tox]: https://tox.readthedocs.io/en/latest/
-[file an issue]: https://github.com/napari/napari-plugin-template/issues
 [sphinx]: https://www.sphinx-doc.org/en/master/usage/quickstart.html
 [mkdocs]: https://www.mkdocs.org/getting-started/
 [jupyterbook]: https://jupyterbook.org/en/stable/start/your-first-book.html
@@ -477,11 +467,5 @@ is free and open source software.
 [gnu gpl v3.0]: http://www.gnu.org/licenses/gpl-3.0.txt
 [gnu lgpl v3.0]: http://www.gnu.org/licenses/lgpl-3.0.txt
 [apache v2.0]: http://www.apache.org/licenses/LICENSE-2.0
-[travis ci]: https://travis-ci.com/
-[appveyor]: http://www.appveyor.com/
-[pypa code of conduct]: https://www.pypa.io/en/latest/code-of-conduct/
-[osi_certified]: https://opensource.org/trademarks/osi-certified/web/osi-certified-120x100.png
-[osi]: https://opensource.org/
 [github actions]: https://github.com/features/actions
-[new github repository]: https://help.github.com/en/github/getting-started-with-github/create-a-repo
 [setuptools_scm]: https://github.com/pypa/setuptools_scm
