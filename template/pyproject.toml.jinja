@@ -97,29 +97,9 @@ xfail_strict = true
 log_cli_level = "INFO"
 testpaths = ["tests"]
 
-[tool.black]
-line-length = 79
-target-version = ['py310', 'py311', 'py312', 'py313']
 
 [tool.ruff]
 line-length = 79
-lint.select = [
-    "E", "F", "W", #flake8
-    "UP", # pyupgrade
-    "I", # isort
-    "BLE", # flake8-blind-exception
-    "B", # flake8-bugbear
-    "A", # flake8-builtins
-    "C4", # flake8-comprehensions
-    "ISC", # flake8-implicit-str-concat
-    "G", # flake8-logging-format
-    "PIE", # flake8-pie
-    "SIM", # flake8-simplify
-]
-lint.ignore = [
-    "E501", # line too long. let black handle this
-    "UP006", "UP007", # type annotation. As using magicgui require runtime type annotation then we disable this.
-]
 
 exclude = [
     ".bzr",
@@ -143,3 +123,26 @@ exclude = [
     "*_vendor*",
 ]
 fix = true
+
+[tool.ruff.format]
+quote-style = "preserve"
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "W", #flake8
+    "UP", # pyupgrade
+    "I", # isort
+    "BLE", # flake8-blind-exception
+    "B", # flake8-bugbear
+    "A", # flake8-builtins
+    "C4", # flake8-comprehensions
+    "ISC", # flake8-implicit-str-concat
+    "G", # flake8-logging-format
+    "PIE", # flake8-pie
+    "SIM", # flake8-simplify
+]
+ignore = [
+    "E501", # line too long. let black handle this
+    "UP006", "UP007", # type annotation. As using magicgui require runtime type annotation then we disable this.
+]
+
