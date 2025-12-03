@@ -27,20 +27,20 @@ https://napari.org/stable/plugins/index.html
 
 You can install `{{plugin_name}}` via [pip]:
 
-```
+```bash
 pip install {{plugin_name}}
 ```
 
 If napari is not already installed, you can install `{{plugin_name}}` with napari and Qt via:
 
-```
+```bash
 pip install "{{plugin_name}}[all]"
 ```
 
 {% if github_repository_url != 'provide later' %}
-To install latest development version :
+To install latest development version:
 
-```
+```bash
 pip install git+https://github.com/{{github_username_or_organization}}/{{plugin_name}}.git
 ```
 
@@ -62,7 +62,6 @@ If you encounter any problems, please [file an issue] along with a detailed desc
 
 [napari]: https://github.com/napari/napari
 [copier]: https://copier.readthedocs.io/en/stable/
-[@napari]: https://github.com/napari
 [MIT]: http://opensource.org/licenses/MIT
 [BSD-3]: http://opensource.org/licenses/BSD-3-Clause
 [GNU GPL v3.0]: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -73,7 +72,6 @@ If you encounter any problems, please [file an issue] along with a detailed desc
 {% if github_repository_url != 'provide later' %}
 [file an issue]: https://github.com/{{github_username_or_organization}}/{{plugin_name}}/issues
 {% endif %}
-[napari]: https://github.com/napari/napari
 [tox]: https://tox.readthedocs.io/en/latest/
 [pip]: https://pypi.org/project/pip/
 [PyPI]: https://pypi.org/
