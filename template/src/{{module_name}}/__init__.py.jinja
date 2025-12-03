@@ -17,18 +17,33 @@ from ._widget import (
 {% endif %}{% if include_writer_plugin -%}
 from ._writer import write_multiple, write_single_image
 {% endif %}
-__all__ = (
-    {% if include_reader_plugin -%}
+
+{%- set has_plugins =
+    include_reader_plugin
+    or include_writer_plugin
+    or include_sample_data_plugin
+    or include_widget_plugin
+-%}
+
+{%- if has_plugins %}
+__all__ = [
+{%- if include_reader_plugin %}
     "napari_get_reader",
-    {% endif %}{% if include_writer_plugin -%}
+{%- endif %}
+{%- if include_writer_plugin %}
     "write_single_image",
     "write_multiple",
-    {% endif %}{% if include_sample_data_plugin -%}
+{%- endif %}
+{%- if include_sample_data_plugin %}
     "make_sample_data",
-    {% endif %}{% if include_widget_plugin -%}
+{%- endif %}
+{%- if include_widget_plugin %}
     "ExampleQWidget",
     "ImageThreshold",
     "threshold_autogenerate_widget",
     "threshold_magic_widget",
-{% endif -%}
-)
+{%- endif %}
+]
+{%- else %}
+__all__ = []
+{%- endif %}
