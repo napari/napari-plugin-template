@@ -99,8 +99,13 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 79
-format.quote-style = "single"
-lint.select = [
+fix = true
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint]
+select = [
     "E", "F", "W", #flake8
     "UP", # pyupgrade
     "I", # isort
@@ -113,8 +118,7 @@ lint.select = [
     "PIE", # flake8-pie
     "SIM", # flake8-simplify
 ]
-lint.ignore = [
+ignore = [
     "E501", # line too long. handled by formatter
     "UP006", "UP007", # type annotation. As using magicgui require runtime type annotation then we disable this.
 ]
-fix = true
