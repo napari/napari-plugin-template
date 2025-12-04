@@ -3,7 +3,14 @@ name = "{{plugin_name}}"
 dynamic = ["version"]
 description = "{{short_description}}"
 readme = "README.md"
-license = {file = "LICENSE"}
+{% if license == "MIT" -%}  license = "MIT"
+{%- elif license == "BSD-3" -%}  license = "BSD-3-Clause"
+{%- elif license == "GNU GPL v3.0" -%}  license = "GPL-3.0-or-later"
+{%- elif license == "GNU LGPL v3.0" -%}  license = "LGPL-3.0-or-later"
+{%- elif license == "Apache Software License 2.0" -%}  license = "Apache-2.0"
+{%- elif license == "Mozilla Public License 2.0" -%}  license = "MPL-2.0"
+{%- endif %}
+license-files = ["LICENSE"]
 authors = [
   {name = "{{full_name}}"},
   {email = "{{email}}"},
@@ -12,19 +19,6 @@ classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Framework :: napari",
     "Intended Audience :: Developers",
-    {% if license == "MIT" -%}
-    "License :: OSI Approved :: MIT License",
-    {%- elif license == "BSD-3" -%}
-    "License :: OSI Approved :: BSD License",
-    {%- elif license == "GNU GPL v3.0" -%}
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-    {%- elif license == "GNU LGPL v3.0" -%}
-    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
-    {%- elif license == "Apache Software License 2.0" -%}
-    "License :: OSI Approved :: Apache Software License",
-    {%- elif license == "Mozilla Public License 2.0" -%}
-    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
-    {%- endif %}
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
@@ -73,7 +67,7 @@ dev = [
 {%- endif %}
 
 [build-system]
-requires = ["setuptools>=43.0.0", "setuptools_scm"]
+requires = ["setuptools>=77.0.3", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
