@@ -1,0 +1,33 @@
+line-length = 79
+fix = true
+
+# Treat .py.jinja files as Python for formatting/linting,
+# Jinja syntax ({% if %}, etc.) inside a .py file will raise a parsing error, so these must still be manually checked. (i.e. __init__.py.jinja)
+include = ["*.py", "*.pyi", "*.py*.jinja"]
+exclude = [
+    "template/src/*//__init__.py.jinja",
+    "template/tests/*test_reader.py*.jinja",
+    "template/tests/*test_widget.py*.jinja",
+]
+
+[format]
+quote-style = "single"
+
+[lint]
+select = [
+    "E", "F", "W", #flake8
+    "UP", # pyupgrade
+    "I", # isort
+    "BLE", # flake8-blind-exception
+    "B", # flake8-bugbear
+    "A", # flake8-builtins
+    "C4", # flake8-comprehensions
+    "ISC", # flake8-implicit-str-concat
+    "G", # flake8-logging-format
+    "PIE", # flake8-pie
+    "SIM", # flake8-simplify
+]
+ignore = [
+    "E501", # line too long. handled by formatter
+    "UP006", "UP007", # type annotation. As using magicgui require runtime type annotation then we disable this.
+]

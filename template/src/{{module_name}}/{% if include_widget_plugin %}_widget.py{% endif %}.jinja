@@ -28,6 +28,7 @@ References:
 
 Replace code below according to your needs.
 """
+
 from typing import TYPE_CHECKING
 
 from magicgui import magic_factory
@@ -43,9 +44,9 @@ if TYPE_CHECKING:
 # to indicate it should be wrapped as a magicgui to autogenerate
 # a widget.
 def threshold_autogenerate_widget(
-    img: "napari.types.ImageData",
-    threshold: "float",
-) -> "napari.types.LabelsData":
+    img: 'napari.types.ImageData',
+    threshold: 'float',
+) -> 'napari.types.LabelsData':
     return img_as_float(img) > threshold
 
 
@@ -54,31 +55,31 @@ def threshold_autogenerate_widget(
 # and use auto_call=True so the function is called whenever
 # the value of a parameter changes
 @magic_factory(
-    threshold={"widget_type": "FloatSlider", "max": 1}, auto_call=True
+    threshold={'widget_type': 'FloatSlider', 'max': 1}, auto_call=True
 )
 def threshold_magic_widget(
-    img_layer: "napari.layers.Image", threshold: "float"
-) -> "napari.types.LabelsData":
+    img_layer: 'napari.layers.Image', threshold: 'float'
+) -> 'napari.types.LabelsData':
     return img_as_float(img_layer.data) > threshold
 
 
 # if we want even more control over our widget, we can use
 # magicgui `Container`
 class ImageThreshold(Container):
-    def __init__(self, viewer: "napari.viewer.Viewer"):
+    def __init__(self, viewer: 'napari.viewer.Viewer'):
         super().__init__()
         self._viewer = viewer
         # use create_widget to generate widgets from type annotations
         self._image_layer_combo = create_widget(
-            label="Image", annotation="napari.layers.Image"
+            label='Image', annotation='napari.layers.Image'
         )
         self._threshold_slider = create_widget(
-            label="Threshold", annotation=float, widget_type="FloatSlider"
+            label='Threshold', annotation=float, widget_type='FloatSlider'
         )
         self._threshold_slider.min = 0
         self._threshold_slider.max = 1
         # use magicgui widgets directly
-        self._invert_checkbox = CheckBox(text="Keep pixels below threshold")
+        self._invert_checkbox = CheckBox(text='Keep pixels below threshold')
 
         # connect your own callbacks
         self._threshold_slider.changed.connect(self._threshold_im)
@@ -99,7 +100,7 @@ class ImageThreshold(Container):
             return
 
         image = img_as_float(image_layer.data)
-        name = image_layer.name + "_thresholded"
+        name = image_layer.name + '_thresholded'
         threshold = self._threshold_slider.value
         if self._invert_checkbox.value:
             thresholded = image < threshold
@@ -114,15 +115,15 @@ class ImageThreshold(Container):
 class ExampleQWidget(QWidget):
     # your QWidget.__init__ can optionally request the napari viewer instance
     # use a type annotation of 'napari.viewer.Viewer' for any parameter
-    def __init__(self, viewer: "napari.viewer.Viewer"):
+    def __init__(self, viewer: 'napari.viewer.Viewer'):
         super().__init__()
         self.viewer = viewer
 
-        btn = QPushButton("Click me!")
+        btn = QPushButton('Click me!')
         btn.clicked.connect(self._on_click)
 
         self.setLayout(QHBoxLayout())
         self.layout().addWidget(btn)
 
     def _on_click(self):
-        print("napari has", len(self.viewer.layers), "layers")
+        print('napari has', len(self.viewer.layers), 'layers')

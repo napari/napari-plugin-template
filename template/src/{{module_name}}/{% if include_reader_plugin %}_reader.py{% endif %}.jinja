@@ -5,6 +5,7 @@ It implements the Reader specification, but your plugin may choose to
 implement multiple readers or even other plugin contributions. see:
 https://napari.org/stable/plugins/building_a_plugin/guides.html#readers
 """
+
 import numpy as np
 
 
@@ -80,5 +81,5 @@ def reader_function(path):
     # optional kwargs for the corresponding viewer.add_* method
     add_kwargs = {}
 
-    layer_type = "image"  # optional, default is "image"
+    layer_type = 'image'  # optional, default is "image"
     return [(data, add_kwargs, layer_type)]

@@ -13,7 +13,15 @@ def run_tox(plugin):
     """Run the tox suite of the newly created plugin."""
     try:
         subprocess.check_call(
-            ['tox', '-c', os.path.join(plugin, 'tox.ini'), '-e', 'py', '--', plugin]
+            [
+                'tox',
+                '-c',
+                os.path.join(plugin, 'tox.ini'),
+                '-e',
+                'py',
+                '--',
+                plugin,
+            ]
         )
     except subprocess.CalledProcessError:
         pytest.fail('Subprocess fail', pytrace=True)
@@ -54,7 +62,9 @@ def test_run_plugin_tests(
     with open(result.project_dir / 'README.md') as f:
         assert f.readline() == '# foo-bar\n'
     assert result.project_dir.joinpath('src').is_dir()
-    assert result.project_dir.joinpath('src', 'foo_bar', '__init__.py').is_file()
+    assert result.project_dir.joinpath(
+        'src', 'foo_bar', '__init__.py'
+    ).is_file()
 
     test_path = result.project_dir.joinpath('tests')
     if include_reader_plugin is True:
@@ -97,10 +107,10 @@ def test_run_plugin_tests_with_napari_prefix(copie, capsys):
     with open(result.project_dir / 'README.md') as f:
         assert f.readline() == f'# {name}\n'
     assert result.project_dir.joinpath('src').is_dir()
-    assert result.project_dir.joinpath('src', 'napari_foo', '__init__.py').is_file()
     assert result.project_dir.joinpath(
-        'tests', 'test_reader.py'
+        'src', 'napari_foo', '__init__.py'
     ).is_file()
+    assert result.project_dir.joinpath('tests', 'test_reader.py').is_file()
 
 
 def test_run_select_plugins(copie, capsys):
@@ -127,18 +137,16 @@ def test_run_select_plugins(copie, capsys):
         assert f.readline() == f'# {name}\n'
     assert result.project_dir.joinpath('src').is_dir()
     assert result.project_dir.joinpath('src', name, '__init__.py').is_file()
-    assert result.project_dir.joinpath(
-        'tests', 'test_reader.py'
-    ).is_file()
+    assert result.project_dir.joinpath('tests', 'test_reader.py').is_file()
 
-    assert not result.project_dir.joinpath('src', 'anything', '_widget.py').is_file()
     assert not result.project_dir.joinpath(
-        'tests', 'test_widget.py'
+        'src', 'anything', '_widget.py'
     ).is_file()
-    assert not result.project_dir.joinpath('src', 'anything', '_writer.py').is_file()
+    assert not result.project_dir.joinpath('tests', 'test_widget.py').is_file()
     assert not result.project_dir.joinpath(
-        'tests', 'test_writer.py'
+        'src', 'anything', '_writer.py'
     ).is_file()
+    assert not result.project_dir.joinpath('tests', 'test_writer.py').is_file()
 
 
 @pytest.mark.parametrize('include_reader_plugin', [True, False])

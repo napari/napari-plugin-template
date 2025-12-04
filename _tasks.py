@@ -1,10 +1,10 @@
-from argparse import ArgumentParser
 import logging
 import os
-from pathlib import Path
 import re
 import subprocess
 import sys
+from argparse import ArgumentParser
+from pathlib import Path
 
 
 def module_name_pep8_compliance(module_name):
@@ -12,14 +12,16 @@ def module_name_pep8_compliance(module_name):
     if not re.match(r'^[a-z][_a-z0-9]+$', module_name):
         link = 'https://www.python.org/dev/peps/pep-0008/#package-and-module-names'
         logger.error('Module name should be pep-8 compliant.')
-        logger.error(f'  More info: {link}')
+        logger.error('  More info: %s', link)
         sys.exit(1)
 
 
 def pypi_package_name_compliance(plugin_name):
     """Check there are no underscores in the plugin name"""
     if re.search(r'_', plugin_name):
-        logger.error('PyPI.org and pip discourage package names with underscores.')
+        logger.error(
+            'PyPI.org and pip discourage package names with underscores.'
+        )
         sys.exit(1)
 
 
@@ -49,7 +51,7 @@ def validate_manifest(module_name, project_directory):
         msg = f'🅇 Invalid! {err}'
         logger.error(msg.encode('utf-8'))
         sys.exit(1)
-    except Exception as err:
+    except (FileNotFoundError, PermissionError, OSError) as err:
         msg = f'🅇 Failed to read {path!r}. {type(err).__name__}: {err}'
         logger.error(msg.encode('utf-8'))
         sys.exit(1)
@@ -78,9 +80,9 @@ def initialize_new_repository(
 
     # try to run git init
     try:
-        subprocess.run(['git', 'init', '-q'])
-        subprocess.run(['git', 'checkout', '-b', 'main'])
-    except Exception:
+        subprocess.run(['git', 'init', '-q'], check=True)
+        subprocess.run(['git', 'checkout', '-b', 'main'], check=True)
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
         logger.error('Error in git initialization.')
 
     if install_precommit is True:
@@ -92,16 +94,30 @@ def initialize_new_repository(
                 stdout=subprocess.DEVNULL,
             )
             print('updating pre-commit...')
-            subprocess.run(['pre-commit', 'autoupdate'], stdout=subprocess.DEVNULL)
+            subprocess.run(
+                ['pre-commit', 'autoupdate'], stdout=subprocess.DEVNULL
+            )
             subprocess.run(['git', 'add', '.'])
-            subprocess.run(['pre-commit', 'run', 'black', '-a'], capture_output=True)
-        except Exception:
+            # Run both ruff hooks to match template pre-commit config
+            subprocess.run(
+                ['pre-commit', 'run', 'ruff-check', '-a'],
+                capture_output=True,
+                check=False,
+            )
+            subprocess.run(
+                ['pre-commit', 'run', 'ruff-format', '-a'],
+                capture_output=True,
+                check=False,
+            )
+        except (subprocess.CalledProcessError, FileNotFoundError, OSError):
             logger.error('Error pip installing then running pre-commit.')
 
     try:
-        subprocess.run(['git', 'add', '.'])
-        subprocess.run(['git', 'commit', '-q', '-m', 'initial commit'])
-    except Exception:
+        subprocess.run(['git', 'add', '.'], check=True)
+        subprocess.run(
+            ['git', 'commit', '-q', '-m', 'initial commit'], check=True
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
         logger.error('Error creating initial git commit.')
         msg += f"""
 Your plugin template is ready!  Next steps:
@@ -135,8 +151,8 @@ Your plugin template is ready!  Next steps:
         # installing after commit to avoid problem with comments in pyproject.toml.
         try:
             print('install pre-commit hook...')
-            subprocess.run(['pre-commit', 'install'])
-        except Exception:
+            subprocess.run(['pre-commit', 'install'], check=True)
+        except (subprocess.CalledProcessError, FileNotFoundError, OSError):
             logger.error('Error at pre-commit install, skipping pre-commit')
 
     if github_repository_url != 'provide later':
@@ -185,9 +201,13 @@ if __name__ == '__main__':
     parser.add_argument(
         '--plugin_name', dest='plugin_name', help='The name of your plugin'
     )
-    parser.add_argument('--module_name', dest='module_name', help='Plugin module name')
     parser.add_argument(
-        '--project_directory', dest='project_directory', help='Project directory'
+        '--module_name', dest='module_name', help='Plugin module name'
+    )
+    parser.add_argument(
+        '--project_directory',
+        dest='project_directory',
+        help='Project directory',
     )
     parser.add_argument(
         '--install_precommit',

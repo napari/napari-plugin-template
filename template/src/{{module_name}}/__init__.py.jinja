@@ -1,29 +1,34 @@
 try:
     from ._version import version as __version__
 except ImportError:
-    __version__ = "unknown"
+    __version__ = 'unknown'
 
 {% if include_reader_plugin %}
 from ._reader import napari_get_reader
 {% endif %}{% if include_sample_data_plugin -%}
 from ._sample_data import make_sample_data
 {% endif %}{% if include_widget_plugin -%}
-from ._widget import ExampleQWidget, ImageThreshold, threshold_autogenerate_widget, threshold_magic_widget
+from ._widget import (
+    ExampleQWidget,
+    ImageThreshold,
+    threshold_autogenerate_widget,
+    threshold_magic_widget,
+)
 {% endif %}{% if include_writer_plugin -%}
 from ._writer import write_multiple, write_single_image
 {% endif %}
 __all__ = (
     {% if include_reader_plugin -%}
-    "napari_get_reader",
+    'napari_get_reader',
     {% endif %}{% if include_writer_plugin -%}
-    "write_single_image",
-    "write_multiple",
+    'write_single_image',
+    'write_multiple',
     {% endif %}{% if include_sample_data_plugin -%}
-    "make_sample_data",
+    'make_sample_data',
     {% endif %}{% if include_widget_plugin -%}
-    "ExampleQWidget",
-    "ImageThreshold",
-    "threshold_autogenerate_widget",
-    "threshold_magic_widget",
+    'ExampleQWidget',
+    'ImageThreshold',
+    'threshold_autogenerate_widget',
+    'threshold_magic_widget',
 {% endif -%}
 )
