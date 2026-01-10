@@ -87,7 +87,7 @@ automatically install and manage a version of Python;
 The following command is then all you need to get started:
 
 ```bash
-uv tool run --with jinja2-time --with npe2 copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
+uv tool run --with jinja2-time --with npe2 --python=3.13 copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
 ```
 
 #### [Option 2B]: Use a conda or virtual environment to run the plugin template
