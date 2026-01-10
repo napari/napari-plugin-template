@@ -95,7 +95,7 @@ uv tool run --with jinja2-time --with npe2 --python=3.13 copier copy --trust htt
 Using `conda`:
 
 ```bash
-conda create -y --name copier-env python=3.12 copier jinja2-time npe2
+conda create -y --name copier-env python=3.13 copier jinja2-time npe2
 conda activate copier-env
 ```
 
