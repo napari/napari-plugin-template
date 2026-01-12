@@ -14,6 +14,7 @@ class Colors:
     GREEN = '\033[92m'
     YELLOW = '\033[93m'
     RED = '\033[91m'
+    CYAN = '\033[96m'
     BOLD = '\033[1m'
     END = '\033[0m'
 
@@ -35,7 +36,7 @@ class Colors:
 
     @staticmethod
     def step(num, total, msg):
-        return f"{Colors.BOLD}[{num}/{total}]{Colors.END} {msg}"
+        return f"{Colors.BOLD}{Colors.CYAN}[{num}/{total}]{Colors.END} {msg}"
 
 
 def module_name_pep8_compliance(module_name):
@@ -322,7 +323,7 @@ def _generate_next_steps_message(plugin_name, plugin_directory, github_repositor
     • Read the the plugin guide: https://napari.org/stable/plugins/building_a_plugin/index.html
 
 {"="*50}
-{Colors.success('Happy plugin development! 🚀')}
+{Colors.BOLD}{Colors.GREEN}Happy plugin development! 🚀{Colors.END}
 {"="*50}
 """
     return msg
