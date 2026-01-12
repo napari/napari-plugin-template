@@ -175,7 +175,11 @@ def initialize_new_repository(
             )
 
             # Stage files and run pre-commit formatting
-            subprocess.run(['git', 'add', '.'])
+            subprocess.run(
+                ['git', 'add', '.'],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
             subprocess.run(
                 ['pre-commit', 'run', 'ruff-check', '-a'],
                 capture_output=True,
