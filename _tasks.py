@@ -1,3 +1,4 @@
+import contextlib
 import os
 import re
 import subprocess
@@ -15,23 +16,23 @@ class Colors:
     RED = '\033[91m'
     BOLD = '\033[1m'
     END = '\033[0m'
-    
+
     @staticmethod
     def success(msg):
-        return f"{Colors.GREEN}✔{Colors.END} {msg}"
-    
+        return f"{Colors.GREEN}✔ {msg}{Colors.END}"
+
     @staticmethod
     def info(msg):
-        return f"{Colors.BLUE}ℹ{Colors.END} {msg}"
-    
+        return f"{Colors.BLUE}ℹ {msg}{Colors.END}"
+
     @staticmethod
     def warning(msg):
-        return f"{Colors.YELLOW}⚠{Colors.END} {msg}"
-    
+        return f"{Colors.YELLOW}⚠ {msg}{Colors.END}"
+
     @staticmethod
     def error(msg):
-        return f"{Colors.RED}✗{Colors.END} {msg}"
-    
+        return f"{Colors.RED}✗ {msg}{Colors.END}"
+
     @staticmethod
     def step(num, total, msg):
         return f"{Colors.BOLD}[{num}/{total}]{Colors.END} {msg}"
@@ -95,24 +96,25 @@ def initialize_new_repository(
 ):
     """Initialize new plugin repository with git, and optionally pre-commit."""
 
-    print("\n" + "="*70)
-    print(Colors.step(1, 3, "Setting up your plugin repository..."))
-    print("="*70 + "\n")
+    print("\n" + "="*50)
+    print(Colors.info("Setting up your plugin repository..."))
+    print("="*50 + "\n")
 
     # Configure git to suppress line ending warnings
     git_env = os.environ.copy()
     git_env['GIT_CONFIG_GLOBAL'] = os.devnull  # Prevent reading global config
-    
+
     # Configure git line ending settings quietly
+    # devnull to suppress output
     if os.name == 'nt':  # if on Windows, configure git line ending characters
         subprocess.run(
-            ['git', 'config', 'core.autocrlf', 'true'],
+            ['git', 'config', '--global', 'core.autocrlf', 'true'],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
     else:  # for Linux and Mac
         subprocess.run(
-            ['git', 'config', 'core.autocrlf', 'input'],
+            ['git', 'config', '--global', 'core.autocrlf', 'input'],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
@@ -141,13 +143,13 @@ def initialize_new_repository(
         print(Colors.info("Setting up pre-commit hooks..."))
         # Try to install and update pre-commit
         try:
-            # Check if we're in a uv-managed environment
+            # Check if we're in a uv environment to use uv's pip if available
             in_uv_env = 'UV_PROJECT_ENVIRONMENT' in os.environ or subprocess.run(
                 ['uv', '--version'],
                 capture_output=True,
                 text=True
             ).returncode == 0
-            
+
             if in_uv_env:
                 # Use uv to install pre-commit
                 subprocess.run(
@@ -164,16 +166,16 @@ def initialize_new_repository(
                     stderr=subprocess.DEVNULL,
                     check=True,
                 )
-            
+
             # Update pre-commit hooks
             subprocess.run(
                 ['pre-commit', 'autoupdate'],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
-            
+
             # Stage files and run pre-commit formatting
-            subprocess.run(['git', 'add', '.'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(['git', 'add', '.'])
             subprocess.run(
                 ['pre-commit', 'run', 'ruff-check', '-a'],
                 capture_output=True,
@@ -205,14 +207,12 @@ def initialize_new_repository(
 
     # Ensure full read/write/execute permissions for .git files on Windows
     if os.name == 'nt':
-        try:
+        with contextlib.suppress(Exception):
             subprocess.run(
                 ['attrib', '-h', '-r', '.git', '/s', '/d'],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
-        except:
-            pass  # Non-critical, ignore errors
 
     # Install pre-commit hooks after initial commit
     if install_precommit is True:
@@ -245,9 +245,10 @@ def _generate_manual_setup_message(plugin_name, plugin_directory, github_reposit
 
 {Colors.step(3, 4, 'Install your plugin in development mode:')}
     pip install -e .[all]
+{Colors.info('This installs your plugin with napari and default Qt bindings in editable mode.')}
 
 {Colors.step(4, 4, 'Create and link GitHub repository:')}"""
-    
+
     if github_repository_url != 'provide later':
         msg += f"""
     Create at: https://github.com/{github_username_or_organization}/{plugin_name}
@@ -258,23 +259,22 @@ def _generate_manual_setup_message(plugin_name, plugin_directory, github_reposit
         msg += """
     Create at: https://github.com/new
     Then link it to your local repository."""
-    
+
     return msg
 
 
 def _generate_next_steps_message(plugin_name, plugin_directory, github_repository_url, github_username_or_organization):
     """Generate the next steps message after successful initialization."""
-    
-    msg = f"""
-{"="*70}
-{Colors.BOLD}{Colors.GREEN}✔ Your plugin template is ready!{Colors.END}
-{"="*70}
 
+    msg = f"""
+{"="*50}
+{Colors.BOLD}{Colors.GREEN}✔ Your plugin template is ready!{Colors.END}
+{"="*50}
 {Colors.step(1, 5, 'Install your plugin in development mode:')}
     cd {plugin_directory}
     pip install -e .[all]
 
-{Colors.info('This installs your plugin with napari and Qt bindings in editable mode.')}
+{Colors.info('This installs your plugin with napari and default Qt bindings in editable mode.')}
 """
 
     if github_repository_url != 'provide later':
@@ -303,22 +303,23 @@ def _generate_next_steps_message(plugin_name, plugin_directory, github_repositor
     git push -u origin main
 
 {Colors.step(4, 5, 'Add project URLs to pyproject.toml:')}
-    Consider adding these URLs under [project.urls]:
-    • Bug Tracker
-    • Documentation
-    • Source Code
-    • User Support
+    Consider adding these URLs under the project_urls key:
+        [project.urls]
+        Bug Tracker = https://github.com/your-repo-username/your-repo-name/issues
+        Documentation = https://github.com/your-repo-username/your-repo-name#README.md
+        Source Code = https://github.com/your-repo-username/your-repo-name
+        User Support = https://github.com/your-repo-username/your-repo-name/issues
 """
 
     msg += f"""
 {Colors.step(5, 5, 'Customize your plugin:')}
-    • Edit .napari-hub/DESCRIPTION.md for your napari hub listing
+    • Optionally edit .napari-hub/DESCRIPTION.md for your napari hub listing
     • Customize metadata: https://github.com/chanzuckerberg/napari-hub/blob/main/docs/customizing-plugin-listing.md
-    • Read the full guide: https://github.com/napari/napari-plugin-template
+    • Read the the plugin guide: https://napari.org/stable/plugins/building_a_plugin/index.html
 
-{"="*70}
-{Colors.info('Happy plugin development! 🚀')}
-{"="*70}
+{"="*50}
+{Colors.success('Happy plugin development! 🚀')}
+{"="*50}
 """
     return msg
 
@@ -361,13 +362,9 @@ if __name__ == '__main__':
         install_precommit = True
     else:
         install_precommit = False
-    
-    # Validation steps
     module_name_pep8_compliance(args.module_name)
     pypi_package_name_compliance(args.plugin_name)
     validate_manifest(args.module_name, args.project_directory)
-    
-    # Initialize repository and display next steps
     msg = initialize_new_repository(
         install_precommit=install_precommit,
         plugin_name=args.plugin_name,
