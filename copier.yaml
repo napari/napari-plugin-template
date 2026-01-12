@@ -1,8 +1,8 @@
 _message_before_copy: |
     
-    ╔═══════════════════════════════════════════════════════════════╗
-    ║         🎉 Welcome to the napari plugin template! 🎉         ║
-    ╚═══════════════════════════════════════════════════════════════╝
+    ═══════════════════════════════════════════════════════════════
+             🎉 Welcome to the napari plugin template! 🎉
+    ═══════════════════════════════════════════════════════════════
     
     This template will help you create a new napari plugin with all
     the necessary structure of a Python package.
@@ -11,7 +11,7 @@ _message_before_copy: |
        https://github.com/napari/napari-plugin-template/blob/main/PROMPTS.md
 plugin_name:
     default: "{{ _copier_conf.dst_path | basename if _copier_conf is defined else 'my-napari-plugin' }}"
-    help: "📦 Package name (lowercase, hyphens allowed, e.g., 'my-cool-plugin')"
+    help: The name of your plugin, used to name the package and repository
     type: str
     validator: >-
         {% if not (plugin_name | regex_search('^[a-z][a-z0-9\-]+$')) %}
@@ -19,7 +19,7 @@ plugin_name:
         {% endif %}
 display_name:
     default: "{{ plugin_name|lower|replace('napari-', '')|title|replace('-', ' ') }}"
-    help: "🏷️  Display name shown in napari GUI (Title Case, e.g., 'My Cool Plugin')"
+    help: Display name for your plugin in the napari GUI
     type: str
     validator: >-
         {% if not (display_name | regex_search('(.|\s)*\S(.|\s)*')) %}
@@ -27,7 +27,7 @@ display_name:
         {% endif %}
 module_name:
     default: "{{ plugin_name|lower|replace('-', '_') }}"
-    help: "🐍 Python module name (lowercase, underscores only, e.g., 'my_cool_plugin')"
+    help: Plugin module name, usually the same as the name of the plugin package, but lowercase and with underscores
     type: str
     validator: >-
         {% if not (module_name | regex_search("^[a-z][_a-z0-9]+$")) %}
@@ -55,7 +55,7 @@ github_username_or_organization:
     type: str
 github_repository_url:
     default: provide later
-    help: "🔗 GitHub repository URL (you can set this up later if unsure)"
+    help: Github repository URL
     type: str
     choices:
         - provide later
@@ -110,11 +110,6 @@ _exclude:
     - ".svn"
     - "*licenses*"
     - "_tasks.py"
-_message_after_copy: |
-    
-    ✨ Template files created successfully!
-    
-    Now setting up git repository and development tools...
 _tasks:
     - [
     "{{ _copier_python }}", # which python
