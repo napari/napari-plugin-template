@@ -1,6 +1,8 @@
 name: Test plugin template
 
 on:
+  schedule:
+  - cron: "0 0 * * TUE" # every week on Tuesday at midnight
   pull_request:
     branches:
       - main
