@@ -354,6 +354,10 @@ You will need to enable the [codecov](https://github.com/apps/codecov) github ap
 for this to work. See [codecov installation docs](https://github.com/apps/codecov/installations/new)
 to install the codecov github app and give it access to your napari plugin repository.
 
+Codecov uploads can use [tokenless OIDC authentication](https://docs.codecov.com/docs/codecov-tokens#uploading-without-a-token)
+for public repositories, so no `CODECOV_TOKEN` secret is required.
+The OIDC authentication is automatically handled by GitHub actions, and is required when the coverage branch has been protected via GitHub branch protection rules.
+
 ### Set up automatic deployments
 
 Your new package is also nearly ready to automatically deploy to [PyPI]
