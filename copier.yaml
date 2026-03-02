@@ -1,11 +1,14 @@
 _message_before_copy: |
-
-    Welcome to the napari plugin template!
-    This template will help you create a new napari plugin with all the necessary structure of a Python package.
-
-    For more detailed information about each prompt, see:
-    https://github.com/napari/napari-plugin-template/blob/main/PROMPTS.md
-
+    
+    ═══════════════════════════════════════════════════════════════
+             🎉 Welcome to the napari plugin template! 🎉
+    ═══════════════════════════════════════════════════════════════
+    
+    This template will help you create a new napari plugin with all
+    the necessary structure of a Python package.
+    
+    For detailed information about each prompt:
+       https://github.com/napari/napari-plugin-template/blob/main/PROMPTS.md
 plugin_name:
     default: "{{ _copier_conf.dst_path | basename if _copier_conf is defined else 'my-napari-plugin' }}"
     help: The name of your plugin, used to name the package and repository
