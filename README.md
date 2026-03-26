@@ -35,7 +35,7 @@ to use the latest version in the main or development branch read the
 Using the napari-plugin-template offers the following benefits:
 
 - 🚀 Installable [PyPI] package
-- 🧪 [tox] test suite, testing various python versions and platforms.
+- 🧪 [pixi] tasks for local testing, plus multi-version CI coverage.
 - 🗒️ `README.md` file that contains useful information about your plugin
 - ⚙️ Continuous integration configuration for [github actions] that handles testing
   and deployment of tagged releases
@@ -78,7 +78,7 @@ copier will create (or re-use) the folder in the parent directory with this `<ne
 For example if you want to create `napari-growth-cone-finder` replace
 `<new-plugin-name>` with `napari-growth-cone-finder`.
 
-#### [Option 2A]: Use uv for an up-to-date, no environment utilization of copier
+#### [Option 2A]: Use uv for an up-to-date, no-environment copier run
 
 [uv](https://docs.astral.sh/uv/) can reduce complexity since it will
 automatically install and manage a version of Python;
@@ -95,7 +95,7 @@ uv tool run --with jinja2-time --with npe2 --python=3.13 copier copy --trust htt
 Using `conda`:
 
 ```bash
-conda create -y --name copier-env python=3.13 copier jinja2-time npe2
+conda create -y --name copier-env python=3.14 copier jinja2-time npe2
 conda activate copier-env
 ```
 
@@ -192,7 +192,6 @@ Copying from template version 0.0.0.post126.dev0+95d5ece
     create  .github/workflows
     create  .github/workflows/test_and_deploy
     create  .github/dependabot.yml
-    create  tox.ini
     create  pyproject.toml
     create  src
     create  src/napari_growth_cone_finder
@@ -278,8 +277,7 @@ napari-growth-cone-finder
 ├── LICENSE
 ├── MANIFEST.in
 ├── pyproject.toml
-├── README.md
-└── tox.ini
+└── README.md
 ```
 
 
@@ -327,12 +325,17 @@ git commit -m 'initial commit'
 Tests are automatically setup to run on GitHub when you push changes to your repository.
 
 You may also run your tests locally with [pytest](https://docs.pytest.org/en/7.1.x/).
-You'll need to make sure that your package is installed in your environment,
-along with testing requirements (specified in the pyproject.toml `[dependency-groups]` section):
+The generated project already declares its test dependencies in the
+pyproject.toml `[dependency-groups]` section:
 
 ```bash
-pip install -e . --group dev
-pytest
+pixi run test
+```
+
+To exercise the pinned Python matrix locally:
+
+```bash
+pixi run -e py314 test
 ```
 
 ### Automated testing and coverage
@@ -461,7 +464,7 @@ is free and open source software.
 [napari]: https://github.com/napari/napari
 [npe2]: https://github.com/napari/npe2
 [pypi]: https://pypi.org/
-[tox]: https://tox.readthedocs.io/en/latest/
+[pixi]: https://pixi.sh/latest/
 [sphinx]: https://www.sphinx-doc.org/en/master/usage/quickstart.html
 [mkdocs]: https://www.mkdocs.org/getting-started/
 [jupyterbook]: https://jupyterbook.org/en/stable/start/your-first-book.html
