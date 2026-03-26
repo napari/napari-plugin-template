@@ -87,7 +87,7 @@ automatically install and manage a version of Python;
 The following command is then all you need to get started:
 
 ```bash
-uv tool run --with jinja2-time --with npe2 copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
+uv tool run --with jinja2-time --with npe2 --python=3.13 copier copy --trust https://github.com/napari/napari-plugin-template <new-plugin-name>
 ```
 
 #### [Option 2B]: Use a conda or virtual environment to run the plugin template
@@ -95,7 +95,7 @@ uv tool run --with jinja2-time --with npe2 copier copy --trust https://github.co
 Using `conda`:
 
 ```bash
-conda create -y --name copier-env python=3.12 copier jinja2-time npe2
+conda create -y --name copier-env python=3.13 copier jinja2-time npe2
 conda activate copier-env
 ```
 
@@ -353,6 +353,10 @@ When the tests are done, test coverage will be viewable at
 You will need to enable the [codecov](https://github.com/apps/codecov) github app
 for this to work. See [codecov installation docs](https://github.com/apps/codecov/installations/new)
 to install the codecov github app and give it access to your napari plugin repository.
+
+Codecov uploads can use [tokenless OIDC authentication](https://docs.codecov.com/docs/codecov-tokens#uploading-without-a-token)
+for public repositories, so no `CODECOV_TOKEN` secret is required.
+The OIDC authentication is automatically handled by GitHub actions, and is required when the coverage branch has been protected via GitHub branch protection rules.
 
 ### Set up automatic deployments
 
