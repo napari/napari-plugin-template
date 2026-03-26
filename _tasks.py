@@ -1,20 +1,23 @@
 import contextlib
 import os
 import re
+import shutil
 import subprocess
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
 
-# Ensure UTF-8 output on Windows where the default encoding (cp1252) cannot
-# encode the Unicode symbols (✔ ℹ ⚠ ✗ 🚀) used in the output below.
+from pydantic import ValidationError
+
+# Ensure UTF-8 output on Windows where the default encoding cannot encode the
+# Unicode symbols used in the terminal output below.
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 
-# ANSI color codes for better visual output
 class Colors:
     """ANSI color codes for terminal output."""
+
     BLUE = '\033[94m'
     GREEN = '\033[92m'
     YELLOW = '\033[93m'
@@ -82,7 +85,7 @@ def validate_manifest(module_name, project_directory):
         pm = PluginManifest.from_file(path)
         msg = f"Manifest for '{pm.display_name or pm.name}' is valid!"
         valid = True
-    except PluginManifest.ValidationError as err:
+    except ValidationError as err:
         print(Colors.error(f'Invalid manifest: {err}'))
         sys.exit(1)
     except (FileNotFoundError, PermissionError, OSError) as err:
@@ -102,32 +105,14 @@ def initialize_new_repository(
 ):
     """Initialize new plugin repository with git, and optionally pre-commit."""
 
-    print("\n" + "="*50)
-    print(Colors.info("Setting up your plugin repository..."))
-    print("="*50 + "\n")
+    print("\n" + "=" * 50)
+    print(Colors.info('Setting up your plugin repository...'))
+    print("=" * 50 + "\n")
 
-    # Configure git to suppress line ending warnings
-    git_env = os.environ.copy()
-    git_env['GIT_CONFIG_GLOBAL'] = os.devnull  # Prevent reading global config
+    pre_commit_command = shutil.which('pre-commit')
 
-    # Configure git line ending settings quietly
-    # devnull to suppress output
-    if os.name == 'nt':  # if on Windows, configure git line ending characters
-        subprocess.run(
-            ['git', 'config', '--global', 'core.autocrlf', 'true'],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-    else:  # for Linux and Mac
-        subprocess.run(
-            ['git', 'config', '--global', 'core.autocrlf', 'input'],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-
-    # Initialize git repository
     try:
-        print(Colors.info("Initializing git repository..."))
+        print(Colors.info('Initializing git repository...'))
         subprocess.run(
             ['git', 'init', '-q'],
             check=True,
@@ -140,87 +125,78 @@ def initialize_new_repository(
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        print(Colors.success("Git repository initialized"))
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
-        print(Colors.error(f'Error in git initialization: {e}'))
-        return _generate_manual_setup_message(plugin_name, plugin_directory, github_repository_url, github_username_or_organization)
+        subprocess.run(
+            ['git', 'config', 'core.autocrlf', 'true' if os.name == 'nt' else 'input'],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        subprocess.run(
+            ['git', 'config', 'core.safecrlf', 'false'],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        print(Colors.success('Git repository initialized'))
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError) as err:
+        print(Colors.error(f'Error in git initialization: {err}'))
+        return _generate_manual_setup_message(
+            plugin_name,
+            plugin_directory,
+            github_repository_url,
+            github_username_or_organization,
+        )
 
     if install_precommit is True:
-        print(Colors.info("Setting up pre-commit hooks..."))
-        # Try to install and update pre-commit
+        print(Colors.info('Setting up pre-commit hooks...'))
         try:
-            # Check if we're in a uv environment to use uv's pip if available
-            in_uv_env = 'UV_PROJECT_ENVIRONMENT' in os.environ or subprocess.run(
-                ['uv', '--version'],
-                capture_output=True,
-                text=True
-            ).returncode == 0
-
-            if in_uv_env:
-                # Use uv to install pre-commit
+            if pre_commit_command is None:
                 subprocess.run(
-                    ['uv', 'pip', 'install', 'pre-commit'],
+                    [sys.executable, '-m', 'pip', 'install', 'pre-commit'],
+                    check=True,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
-                    check=True,
                 )
-            else:
-                # Use regular pip
-                subprocess.run(
-                    ['python', '-m', 'pip', 'install', 'pre-commit'],
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                    check=True,
-                )
+                pre_commit_command = shutil.which('pre-commit')
+            if pre_commit_command is None:
+                raise FileNotFoundError('pre-commit executable was not found after installation')
+            print(Colors.success('Pre-commit is available'))
+        except (subprocess.CalledProcessError, FileNotFoundError, OSError) as err:
+            print(Colors.warning(f'Could not install pre-commit (this is optional): {err}'))
+            pre_commit_command = None
 
-            # Update pre-commit hooks
-            subprocess.run(
-                ['pre-commit', 'autoupdate'],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-
-            # Stage files and run pre-commit formatting
-            subprocess.run(
-                ['git', 'add', '.'],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-            subprocess.run(
-                ['pre-commit', 'run', 'ruff-check', '-a'],
-                capture_output=True,
-                check=False,
-            )
-            subprocess.run(
-                ['pre-commit', 'run', 'ruff-format', '-a'],
-                capture_output=True,
-                check=False,
-            )
-            print(Colors.success("Pre-commit hooks configured"))
-        except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
-            print(Colors.warning(f'Could not install pre-commit (this is optional): {e}'))
-
-    # Create initial commit
     try:
-        print(Colors.info("Creating initial commit..."))
-        subprocess.run(['git', 'add', '.'], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(Colors.info('Creating initial commit...'))
+        subprocess.run(
+            ['git', 'add', '.'],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
         subprocess.run(
             [
                 'git',
                 '-c', 'user.email=template@napari.org',
                 '-c', 'user.name=napari template',
-                'commit', '-q', '-m', 'initial commit',
+                'commit',
+                '-q',
+                '-m',
+                'initial commit',
             ],
             check=True,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        print(Colors.success("Initial commit created"))
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
-        print(Colors.error(f'Error creating initial git commit: {e}'))
-        return _generate_manual_setup_message(plugin_name, plugin_directory, github_repository_url, github_username_or_organization)
+        print(Colors.success('Initial commit created'))
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError) as err:
+        print(Colors.error(f'Error creating initial git commit: {err}'))
+        return _generate_manual_setup_message(
+            plugin_name,
+            plugin_directory,
+            github_repository_url,
+            github_username_or_organization,
+        )
 
-    # Ensure full read/write/execute permissions for .git files on Windows
     if os.name == 'nt':
         with contextlib.suppress(Exception):
             subprocess.run(
@@ -229,23 +205,32 @@ def initialize_new_repository(
                 stderr=subprocess.DEVNULL,
             )
 
-    # Install pre-commit hooks after initial commit
-    if install_precommit is True:
+    if install_precommit is True and pre_commit_command is not None:
         try:
             subprocess.run(
-                ['pre-commit', 'install'],
+                [pre_commit_command, 'install'],
                 check=True,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
-            print(Colors.success("Pre-commit hooks installed"))
+            print(Colors.success('Pre-commit hooks installed'))
         except (subprocess.CalledProcessError, FileNotFoundError, OSError):
             print(Colors.warning('Could not install pre-commit hooks (this is optional)'))
 
-    return _generate_next_steps_message(plugin_name, plugin_directory, github_repository_url, github_username_or_organization)
+    return _generate_next_steps_message(
+        plugin_name,
+        plugin_directory,
+        github_repository_url,
+        github_username_or_organization,
+    )
 
 
-def _generate_manual_setup_message(plugin_name, plugin_directory, github_repository_url, github_username_or_organization):
+def _generate_manual_setup_message(
+    plugin_name,
+    plugin_directory,
+    github_repository_url,
+    github_username_or_organization,
+):
     """Generate message for manual setup when git initialization fails."""
     msg = f"""
 {Colors.warning('Git initialization had issues. Please set up manually:')}
@@ -261,6 +246,7 @@ def _generate_manual_setup_message(plugin_name, plugin_directory, github_reposit
 {Colors.step(3, 4, 'Install your plugin in development mode:')}
     pip install -e .[all]
 {Colors.info('This installs your plugin with napari and default Qt bindings in editable mode.')}
+{Colors.info('You can also run project commands with pixi, for example: pixi run test. CI uses pixi as well.')}
 
 {Colors.step(4, 4, 'Create and link GitHub repository:')}"""
 
@@ -278,18 +264,24 @@ def _generate_manual_setup_message(plugin_name, plugin_directory, github_reposit
     return msg
 
 
-def _generate_next_steps_message(plugin_name, plugin_directory, github_repository_url, github_username_or_organization):
+def _generate_next_steps_message(
+    plugin_name,
+    plugin_directory,
+    github_repository_url,
+    github_username_or_organization,
+):
     """Generate the next steps message after successful initialization."""
 
     msg = f"""
-{"="*50}
+{"=" * 50}
 {Colors.BOLD}{Colors.GREEN}✔ Your plugin template is ready!{Colors.END}
-{"="*50}
+{"=" * 50}
 {Colors.step(1, 5, 'Install your plugin in development mode:')}
     cd {plugin_directory}
     pip install -e .[all]
 
 {Colors.info('This installs your plugin with napari and default Qt bindings in editable mode.')}
+{Colors.info('You can also run project commands with pixi, for example: pixi run test. CI uses pixi as well.')}
 """
 
     if github_repository_url != 'provide later':
@@ -332,9 +324,9 @@ def _generate_next_steps_message(plugin_name, plugin_directory, github_repositor
     • Customize your hub listing: https://napari.org/stable/plugins/testing_and_publishing/hub_customization.html
 
 
-{"="*50}
+{"=" * 50}
 {Colors.BOLD}{Colors.GREEN}Happy plugin development! 🚀{Colors.END}
-{"="*50}
+{"=" * 50}
 """
     return msg
 
@@ -372,7 +364,6 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
 
-    # Since bool("False") returns True, we need to check the actual string value
     if str(args.install_precommit).lower() == 'true':
         install_precommit = True
     else:
