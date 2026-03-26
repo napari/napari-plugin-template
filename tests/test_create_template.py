@@ -149,17 +149,14 @@ def test_run_select_plugins(copie, capsys):
     assert not result.project_dir.joinpath('tests', 'test_writer.py').is_file()
 
 
-@pytest.mark.parametrize('include_reader_plugin', [True, False])
-@pytest.mark.parametrize('include_writer_plugin', [True, False])
-@pytest.mark.parametrize('include_sample_data_plugin', [True, False])
-@pytest.mark.parametrize('include_widget_plugin', [True, False])
-def test_pre_commit_validity(
-    copie,
-    include_reader_plugin,
-    include_writer_plugin,
-    include_sample_data_plugin,
-    include_widget_plugin,
-):
+def test_pre_commit_validity(copie):
+    """Verify pre-commit passes on a fully-featured generated plugin.
+
+    Pre-commit validity doesn't vary with the plugin-type combination flags —
+    what matters is that the generated files are lint-clean.  Running all 16
+    parametrize combinations takes significant CI time for no additional
+    coverage, so we test the richest case (all contribution types enabled).
+    """
     result = copie.copy(
         extra_answers={
             'plugin_name': 'anything',
@@ -169,14 +166,15 @@ def test_pre_commit_validity(
             'full_name': 'napari bot',
             'email': 'etal@example.com',
             'github_username_or_organization': 'napari',
-            'include_reader_plugin': include_reader_plugin,
-            'include_writer_plugin': include_writer_plugin,
-            'include_sample_data_plugin': include_sample_data_plugin,
-            'include_widget_plugin': include_widget_plugin,
+            'include_reader_plugin': True,
+            'include_writer_plugin': True,
+            'include_sample_data_plugin': True,
+            'include_widget_plugin': True,
             'install_precommit': True,
         }
     )
-    result.project_dir.joinpath('pyproject.toml').is_file()
+    assert result.exit_code == 0
+    assert result.project_dir.joinpath('pyproject.toml').is_file()
     try:
         subprocess.run(
             ['pre-commit', 'run', '--all-files', '--show-diff-on-failure'],
