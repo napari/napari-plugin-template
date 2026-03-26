@@ -6,6 +6,11 @@ import sys
 from argparse import ArgumentParser
 from pathlib import Path
 
+# Ensure UTF-8 output on Windows where the default encoding (cp1252) cannot
+# encode the Unicode symbols (✔ ℹ ⚠ ✗ 🚀) used in the output below.
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 
 # ANSI color codes for better visual output
 class Colors:
