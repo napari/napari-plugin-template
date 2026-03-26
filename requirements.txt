@@ -1,7 +1,0 @@
-copier
-jinja2-time
-npe2
-pre-commit
-pytest
-pytest-copie
-tox
