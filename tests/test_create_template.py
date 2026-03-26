@@ -5,147 +5,161 @@ test_create_template
 
 import os
 import subprocess
+from pathlib import Path
+from shutil import which
 
 import pytest
 
+DEFAULT_ANSWERS = {
+    'plugin_name': 'foo-bar',
+    'display_name': 'Foo Bar',
+    'module_name': 'foo_bar',
+    'short_description': 'Super fast foo for all the bars',
+    'full_name': 'napari bot',
+    'email': 'etal@example.com',
+    'github_username_or_organization': 'napari',
+    'install_precommit': False,
+}
 
-def run_tox(plugin):
-    """Run the tox suite of the newly created plugin."""
-    try:
-        subprocess.check_call(
-            [
-                'tox',
-                '-c',
-                os.path.join(plugin, 'tox.ini'),
-                '-e',
-                'py',
-                '--',
-                plugin,
-            ]
-        )
-    except subprocess.CalledProcessError:
-        pytest.fail('Subprocess fail', pytrace=True)
+FEATURE_CASES = [
+    {},
+    {'include_reader_plugin': False},
+    {'include_writer_plugin': False},
+    {'include_sample_data_plugin': False},
+    {'include_widget_plugin': False},
+    {
+        'include_reader_plugin': False,
+        'include_writer_plugin': False,
+        'include_sample_data_plugin': False,
+        'include_widget_plugin': False,
+    },
+]
+
+SMOKE_CASES = [{}]
 
 
-@pytest.mark.parametrize('include_reader_plugin', [True, False])
-@pytest.mark.parametrize('include_writer_plugin', [True, False])
-@pytest.mark.parametrize('include_sample_data_plugin', [True, False])
-@pytest.mark.parametrize('include_widget_plugin', [True, False])
-def test_run_plugin_tests(
-    copie,
-    capsys,
-    include_reader_plugin,
-    include_writer_plugin,
-    include_sample_data_plugin,
-    include_widget_plugin,
-):
-    """Create a new plugin with the napari plugin template and run its tests."""
-    result = copie.copy(
-        extra_answers={
-            'plugin_name': 'foo-bar',
-            'display_name': 'Foo Bar',
-            'module_name': 'foo_bar',
-            'short_description': 'Super fast foo for all the bars',
-            'full_name': 'napari bot',
-            'email': 'etal@example.com',
-            'github_username_or_organization': 'napari',
-            'include_reader_plugin': include_reader_plugin,
-            'include_writer_plugin': include_writer_plugin,
-            'include_sample_data_plugin': include_sample_data_plugin,
-            'include_widget_plugin': include_widget_plugin,
-        }
-    )
+def build_answers(**overrides):
+    answers = DEFAULT_ANSWERS.copy()
+    answers.update(overrides)
+    return answers
 
+
+def assert_generated_layout(result, plugin_name, module_name):
     assert result.exit_code == 0
     assert result.exception is None
     assert result.project_dir.is_dir()
-    with open(result.project_dir / 'README.md') as f:
-        assert f.readline() == '# foo-bar\n'
     assert result.project_dir.joinpath('src').is_dir()
     assert result.project_dir.joinpath(
-        'src', 'foo_bar', '__init__.py'
+        'src', module_name, '__init__.py'
     ).is_file()
+    with open(result.project_dir / 'README.md', encoding='utf-8') as handle:
+        assert handle.readline() == f'# {plugin_name}\n'
 
+    pyproject_text = result.project_dir.joinpath('pyproject.toml').read_text(
+        encoding='utf-8'
+    )
+    assert 'Programming Language :: Python :: 3.14' in pyproject_text
+    assert '[tool.pixi.workspace]' in pyproject_text
+
+
+def assert_feature_files(result, answers):
     test_path = result.project_dir.joinpath('tests')
-    if include_reader_plugin is True:
-        assert (test_path / 'test_reader.py').is_file()
-    if include_writer_plugin is True:
-        assert (test_path / 'test_writer.py').is_file()
-    if include_sample_data_plugin is True:
-        assert (test_path / 'test_sample_data.py').is_file()
-    if include_widget_plugin is True:
-        assert (test_path / 'test_widget.py').is_file()
+    expected = {
+        'test_reader.py': answers.get('include_reader_plugin', True),
+        'test_writer.py': answers.get('include_writer_plugin', True),
+        'test_sample_data.py': answers.get('include_sample_data_plugin', True),
+        'test_widget.py': answers.get('include_widget_plugin', True),
+    }
 
-    # if all are False there are no modules or tests
-    if True in {
-        include_reader_plugin,
-        include_writer_plugin,
-        include_sample_data_plugin,
-        include_widget_plugin,
-    }:
-        run_tox(str(result.project_dir))
+    for file_name, is_expected in expected.items():
+        assert test_path.joinpath(file_name).is_file() is is_expected
 
 
-def test_run_plugin_tests_with_napari_prefix(copie, capsys):
-    """make sure it's also ok to use napari prefix."""
+def run_generated_tests(plugin_directory):
+    """Run the generated project's test suite via pixi."""
+    if which('pixi') is None:
+        pytest.fail(
+            'pixi must be available in PATH to run generated smoke tests'
+        )
+
+    project_dir = Path(plugin_directory)
+    env = os.environ.copy()
+    env.pop('PIXI_PROJECT_MANIFEST', None)
+    env.pop('PIXI_IN_SHELL', None)
+    try:
+        subprocess.run(
+            ['pixi', 'run', 'test'],
+            cwd=project_dir,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=env,
+        )
+    except subprocess.CalledProcessError as error:
+        pytest.fail(
+            'Generated project smoke test failed:\n'
+            f'stdout:\n{error.stdout}\n'
+            f'stderr:\n{error.stderr}'
+        )
+
+
+@pytest.mark.parametrize('overrides', FEATURE_CASES)
+def test_rendered_feature_matrix(copie, overrides):
+    """Render representative feature combinations quickly."""
+    answers = build_answers(**overrides)
+    result = copie.copy(extra_answers=answers)
+
+    assert_generated_layout(
+        result, answers['plugin_name'], answers['module_name']
+    )
+    assert_feature_files(result, answers)
+
+
+@pytest.mark.parametrize('overrides', SMOKE_CASES)
+def test_generated_project_smoke_tests(copie, overrides):
+    """Run a couple of generated projects end to end via pixi."""
+    answers = build_answers(**overrides)
+    result = copie.copy(extra_answers=answers)
+
+    assert_generated_layout(
+        result, answers['plugin_name'], answers['module_name']
+    )
+    assert_feature_files(result, answers)
+    run_generated_tests(result.project_dir)
+
+
+def test_run_plugin_tests_with_napari_prefix(copie):
+    """Make sure it is also ok to use the napari prefix."""
     name = 'napari-foo'
     result = copie.copy(
-        extra_answers={
-            'plugin_name': name,
-            'display_name': 'napari Foo',
-            'module_name': 'napari_foo',
-            'short_description': 'Super fast foo for all the bars',
-            'full_name': 'napari bot',
-            'email': 'etal@example.com',
-            'github_username_or_organization': 'napari',
-        }
+        extra_answers=build_answers(
+            plugin_name=name,
+            display_name='napari Foo',
+            module_name='napari_foo',
+        )
     )
 
-    assert result.exit_code == 0
-    assert result.exception is None
-    assert result.project_dir.is_dir()
-    with open(result.project_dir / 'README.md') as f:
-        assert f.readline() == f'# {name}\n'
-    assert result.project_dir.joinpath('src').is_dir()
-    assert result.project_dir.joinpath(
-        'src', 'napari_foo', '__init__.py'
-    ).is_file()
+    assert_generated_layout(result, name, 'napari_foo')
     assert result.project_dir.joinpath('tests', 'test_reader.py').is_file()
 
 
-def test_run_select_plugins(copie, capsys):
-    """make sure it's also ok to use napari prefix."""
+def test_run_select_plugins(copie):
+    """Make sure boolean prompts behave with copier's short answers."""
     name = 'anything'
     result = copie.copy(
-        extra_answers={
-            'plugin_name': name,
-            'display_name': 'Foo Bar',
-            'module_name': 'anything',
-            'short_description': 'Super fast foo for all the bars',
-            'full_name': 'napari bot',
-            'email': 'etal@example.com',
-            'github_username_or_organization': 'napari',
-            'include_widget_plugin': 'n',
-            'include_writer_plugin': 'n',
-        }
+        extra_answers=build_answers(
+            plugin_name=name,
+            module_name=name,
+            include_widget_plugin='n',
+            include_writer_plugin='n',
+        )
     )
 
-    assert result.exit_code == 0
-    assert result.exception is None
-    assert result.project_dir.is_dir()
-    with open(result.project_dir / 'README.md') as f:
-        assert f.readline() == f'# {name}\n'
-    assert result.project_dir.joinpath('src').is_dir()
-    assert result.project_dir.joinpath('src', name, '__init__.py').is_file()
+    assert_generated_layout(result, name, name)
     assert result.project_dir.joinpath('tests', 'test_reader.py').is_file()
-
-    assert not result.project_dir.joinpath(
-        'src', 'anything', '_widget.py'
-    ).is_file()
+    assert not result.project_dir.joinpath('src', name, '_widget.py').is_file()
     assert not result.project_dir.joinpath('tests', 'test_widget.py').is_file()
-    assert not result.project_dir.joinpath(
-        'src', 'anything', '_writer.py'
-    ).is_file()
+    assert not result.project_dir.joinpath('src', name, '_writer.py').is_file()
     assert not result.project_dir.joinpath('tests', 'test_writer.py').is_file()
 
 
@@ -158,20 +172,16 @@ def test_pre_commit_validity(copie):
     coverage, so we test the richest case (all contribution types enabled).
     """
     result = copie.copy(
-        extra_answers={
-            'plugin_name': 'anything',
-            'display_name': 'Foo Bar',
-            'module_name': 'anything',
-            'short_description': 'Super fast foo for all the bars',
-            'full_name': 'napari bot',
-            'email': 'etal@example.com',
-            'github_username_or_organization': 'napari',
-            'include_reader_plugin': True,
-            'include_writer_plugin': True,
-            'include_sample_data_plugin': True,
-            'include_widget_plugin': True,
-            'install_precommit': True,
-        }
+        extra_answers=build_answers(
+            plugin_name='anything',
+            display_name='Foo Bar',
+            module_name='anything',
+            include_reader_plugin=True,
+            include_writer_plugin=True,
+            include_sample_data_plugin=True,
+            include_widget_plugin=True,
+            install_precommit=True,
+        )
     )
     assert result.exit_code == 0
     assert result.project_dir.joinpath('pyproject.toml').is_file()
@@ -182,7 +192,8 @@ def test_pre_commit_validity(copie):
             check=True,
             capture_output=True,
         )
-    except subprocess.CalledProcessError as e:
+    except subprocess.CalledProcessError as error:
         pytest.fail(
-            f'pre-commit failed with output:\n{e.stdout.decode()}\nerror:\n{e.stderr.decode()}'
+            f'pre-commit failed with output:\n{error.stdout.decode()}\n'
+            f'error:\n{error.stderr.decode()}'
         )
