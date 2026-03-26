@@ -205,7 +205,12 @@ def initialize_new_repository(
         print(Colors.info("Creating initial commit..."))
         subprocess.run(['git', 'add', '.'], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.run(
-            ['git', 'commit', '-q', '-m', 'initial commit'],
+            [
+                'git',
+                '-c', 'user.email=template@napari.org',
+                '-c', 'user.name=napari template',
+                'commit', '-q', '-m', 'initial commit',
+            ],
             check=True,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
