@@ -38,7 +38,6 @@ pip-wheel-metadata/
 
 # Unit test / coverage reports
 htmlcov/
-.tox/
 .coverage
 .coverage.*
 .cache
@@ -87,6 +86,9 @@ celerybeat-schedule
 # Environments
 .env
 .venv
+.pixi/
+pixi.lock
+uv.lock
 env/
 venv/
 ENV/
