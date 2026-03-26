@@ -15,21 +15,34 @@ concurrency:
 
 jobs:
   test:
-    name: ${{ matrix.platform }} py${{ matrix.python-version }}
-    runs-on: ${{ matrix.platform }}
+    name: ${{ matrix.os }} ${{ matrix.environment }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        include:
+          - os: ubuntu-latest
+            environment: py310
+          - os: ubuntu-latest
+            environment: py311
+          - os: ubuntu-latest
+            environment: py312
+          - os: ubuntu-latest
+            environment: py313
+          - os: ubuntu-latest
+            environment: py314
+          - os: windows-latest
+            environment: py312
+          - os: macos-latest
+            environment: py312
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@a0af7a228712d6121d37aba47adf55c1332c9c2e  # v0.9.4
         with:
-          python-version: ${{ matrix.python-version }}
+          environments: ${{ matrix.environment }}
 
       - name: Setup headless screenL
         uses: pyvista/setup-headless-display-action@7d84ae825e6d9297a8e99bdbbae20d1b919a0b19 # v4.2
@@ -37,10 +50,5 @@ jobs:
           qt: true
           wm: herbstluftwm
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
-
       - name: Test
-        run: python -m pytest -s -v --color=yes
+        run: pixi run -e ${{ matrix.environment }} test
