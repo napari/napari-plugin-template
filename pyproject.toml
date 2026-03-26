@@ -1,0 +1,47 @@
+[project]
+name = "napari-plugin-template"
+version = "0.0.0"
+description = "Development metadata for testing the napari plugin copier template"
+requires-python = ">=3.10,<3.15"
+dependencies = [
+    "copier",
+    "jinja2-time",
+    "npe2",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit",
+    "pytest>=8",
+    "pytest-copie",
+]
+
+[tool.pytest.ini_options]
+addopts = ["-ra", "--strict-config", "--strict-markers"]
+norecursedirs = ["{{plugin_name}}", ".git", ".pixi", ".venv"]
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+[tool.pixi.feature.py310.dependencies]
+python = "3.10.*"
+[tool.pixi.feature.py311.dependencies]
+python = "3.11.*"
+[tool.pixi.feature.py312.dependencies]
+python = "3.12.*"
+[tool.pixi.feature.py313.dependencies]
+python = "3.13.*"
+[tool.pixi.feature.py314.dependencies]
+python = "3.14.*"
+
+[tool.pixi.environments]
+default = ["dev"]
+py310 = ["dev", "py310"]
+py311 = ["dev", "py311"]
+py312 = ["dev", "py312"]
+py313 = ["dev", "py313"]
+py314 = ["dev", "py314"]
+
+[tool.pixi.tasks]
+test = "pytest -q --color=yes"
