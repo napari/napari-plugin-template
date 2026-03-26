@@ -48,8 +48,15 @@ pip install git+https://github.com/{{github_username_or_organization}}/{{plugin_
 
 ## Contributing
 
-Contributions are very welcome. Tests can be run with [tox], please ensure
-the coverage at least stays the same before you submit a pull request.
+Contributions are very welcome. You can set up a development environment with
+your usual Python tooling, and pixi is also available for running project
+commands locally; CI uses pixi as well. For example, to run the test suite:
+
+```bash
+pixi run test
+```
+
+Please ensure the coverage at least stays the same before you submit a pull request.
 
 ## License
 
@@ -72,6 +79,5 @@ If you encounter any problems, please [file an issue] along with a detailed desc
 {% if github_repository_url != 'provide later' %}
 [file an issue]: https://github.com/{{github_username_or_organization}}/{{plugin_name}}/issues
 {% endif %}
-[tox]: https://tox.readthedocs.io/en/latest/
 [pip]: https://pypi.org/project/pip/
 [PyPI]: https://pypi.org/

@@ -27,6 +27,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering :: Image Processing",
 ]
 requires-python = ">=3.10"
@@ -48,12 +49,40 @@ all = ["napari[all]"]
 
 [dependency-groups]
 dev = [
-    "tox-uv",
     "pytest",  # https://docs.pytest.org/en/latest/contents.html
     "pytest-cov",  # https://pytest-cov.readthedocs.io/en/latest/
 {% if include_widget_plugin %}    "pytest-qt",  # https://pytest-qt.readthedocs.io/en/latest/
     "napari[qt]",  # test with napari's default Qt bindings
 {% endif %}]
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+[tool.pixi.pypi-dependencies]
+{{plugin_name}} = { path = ".", editable = true }
+
+[tool.pixi.tasks]
+test = "pytest -v --color=yes --cov={{module_name}} --cov-report=xml"
+
+[tool.pixi.feature.py310.dependencies]
+python = "3.10.*"
+[tool.pixi.feature.py311.dependencies]
+python = "3.11.*"
+[tool.pixi.feature.py312.dependencies]
+python = "3.12.*"
+[tool.pixi.feature.py313.dependencies]
+python = "3.13.*"
+[tool.pixi.feature.py314.dependencies]
+python = "3.14.*"
+
+[tool.pixi.environments]
+default = ["dev"]
+py310 = ["dev", "py310"]
+py311 = ["dev", "py311"]
+py312 = ["dev", "py312"]
+py313 = ["dev", "py313"]
+py314 = ["dev", "py314"]
 
 [project.entry-points."napari.manifest"]
 {{plugin_name}} = "{{module_name}}:napari.yaml"
