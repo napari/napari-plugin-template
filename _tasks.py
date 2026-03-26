@@ -318,9 +318,9 @@ def _generate_next_steps_message(plugin_name, plugin_directory, github_repositor
 
     msg += f"""
 {Colors.step(5, 5, 'Customize your plugin:')}
-    • Optionally edit .napari-hub/DESCRIPTION.md for your napari hub listing
-    • Customize metadata: https://github.com/chanzuckerberg/napari-hub/blob/main/docs/customizing-plugin-listing.md
-    • Read the the plugin guide: https://napari.org/stable/plugins/building_a_plugin/index.html
+    • Read the plugin guide: https://napari.org/stable/plugins/building_a_plugin/index.html
+    • Customize your hub listing: https://napari.org/stable/plugins/testing_and_publishing/hub_customization.html
+
 
 {"="*50}
 {Colors.BOLD}{Colors.GREEN}Happy plugin development! 🚀{Colors.END}
