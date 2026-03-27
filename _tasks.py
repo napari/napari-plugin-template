@@ -7,8 +7,6 @@ import sys
 from argparse import ArgumentParser
 from pathlib import Path
 
-from pydantic import ValidationError
-
 # Ensure UTF-8 output on Windows where the default encoding cannot encode the
 # Unicode symbols used in the terminal output below.
 if hasattr(sys.stdout, 'reconfigure'):
@@ -67,6 +65,7 @@ def validate_manifest(module_name, project_directory):
     """Validate the new plugin repository against napari requirements."""
     try:
         from npe2 import PluginManifest
+        from pydantic import ValidationError
     except ImportError:
         print(Colors.warning('npe2 is not installed. Skipping manifest validation.'))
         return True
@@ -80,11 +79,9 @@ def validate_manifest(module_name, project_directory):
 
     path = Path(project_directory) / 'src' / Path(module_name) / 'napari.yaml'
 
-    valid = False
     try:
         pm = PluginManifest.from_file(path)
         msg = f"Manifest for '{pm.display_name or pm.name}' is valid!"
-        valid = True
     except ValidationError as err:
         print(Colors.error(f'Invalid manifest: {err}'))
         sys.exit(1)
@@ -93,7 +90,7 @@ def validate_manifest(module_name, project_directory):
         sys.exit(1)
     else:
         print(Colors.success(msg))
-        return valid
+        return True
 
 
 def initialize_new_repository(
