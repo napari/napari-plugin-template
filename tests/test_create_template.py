@@ -5,10 +5,13 @@ test_create_template
 
 import os
 import subprocess
+import sys
 from pathlib import Path
 from shutil import which
 
 import pytest
+
+LATEST_SUPPORTED_PYTHON = '3.14'
 
 DEFAULT_ANSWERS = {
     'plugin_name': 'foo-bar',
@@ -35,8 +38,6 @@ FEATURE_CASES = [
     },
 ]
 
-SMOKE_CASES = [{}]
-
 
 def build_answers(**overrides):
     answers = DEFAULT_ANSWERS.copy()
@@ -58,12 +59,17 @@ def assert_generated_layout(result, plugin_name, module_name):
     pyproject_text = result.project_dir.joinpath('pyproject.toml').read_text(
         encoding='utf-8'
     )
-    assert 'Programming Language :: Python :: 3.14' in pyproject_text
+    assert f'Programming Language :: Python :: {LATEST_SUPPORTED_PYTHON}' in pyproject_text
     assert '[tool.pixi.workspace]' in pyproject_text
+    assert '[tool.pixi.tasks]' in pyproject_text
+    assert not result.project_dir.joinpath('tox.ini').exists()
 
 
 def assert_feature_files(result, answers):
     test_path = result.project_dir.joinpath('tests')
+    pyproject_text = result.project_dir.joinpath('pyproject.toml').read_text(
+        encoding='utf-8'
+    )
     expected = {
         'test_reader.py': answers.get('include_reader_plugin', True),
         'test_writer.py': answers.get('include_writer_plugin', True),
@@ -73,6 +79,15 @@ def assert_feature_files(result, answers):
 
     for file_name, is_expected in expected.items():
         assert test_path.joinpath(file_name).is_file() is is_expected
+
+    if answers.get('include_widget_plugin', True):
+        assert '    "magicgui",' in pyproject_text
+        assert '    "pytest-qt",' in pyproject_text
+        assert '    "napari[qt]",' in pyproject_text
+    else:
+        assert '    "magicgui",' not in pyproject_text
+        assert '    "pytest-qt",' not in pyproject_text
+        assert '    "napari[qt]",' not in pyproject_text
 
 
 def run_generated_tests(plugin_directory):
@@ -94,6 +109,7 @@ def run_generated_tests(plugin_directory):
             capture_output=True,
             text=True,
             env=env,
+            timeout=600,
         )
     except subprocess.CalledProcessError as error:
         pytest.fail(
@@ -115,10 +131,9 @@ def test_rendered_feature_matrix(copie, overrides):
     assert_feature_files(result, answers)
 
 
-@pytest.mark.parametrize('overrides', SMOKE_CASES)
-def test_generated_project_smoke_tests(copie, overrides):
+def test_generated_project_smoke_tests(copie):
     """Run a couple of generated projects end to end via pixi."""
-    answers = build_answers(**overrides)
+    answers = build_answers()
     result = copie.copy(extra_answers=answers)
 
     assert_generated_layout(
@@ -187,7 +202,7 @@ def test_pre_commit_validity(copie):
     assert result.project_dir.joinpath('pyproject.toml').is_file()
     try:
         subprocess.run(
-            ['pre-commit', 'run', '--all-files', '--show-diff-on-failure'],
+            [sys.executable, '-m', 'pre_commit', 'run', '--all-files', '--show-diff-on-failure'],
             cwd=str(result.project_dir),
             check=True,
             capture_output=True,
