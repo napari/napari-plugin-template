@@ -267,16 +267,16 @@ napari-growth-cone-finder
 │   └── dependabot.yml
 ├── src
 │   └── napari_growth_cone_finder
-│       ├── _tests
-│       │   ├── __init__.py
-│       │   └── test_widget.py
 │       ├── __init__.py
 │       ├── napari.yaml
 │       └── _widget.py
+├── tests
+│   ├── __init__.py
+│   └── test_widget.py
+├── .copier-answers.yml
 ├── .gitignore
 ├── .pre-commit-config.yaml
 ├── LICENSE
-├── MANIFEST.in
 ├── pyproject.toml
 └── README.md
 ```
