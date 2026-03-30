@@ -180,9 +180,6 @@ After entering the configuration information, the following output will be displ
 
 ```sh
 Copying from template version 0.0.0.post126.dev0+95d5ece
-    create  .napari-hub
-    create  .napari-hub/DESCRIPTION.md
-    create  .napari-hub/config-yml
     create  .pre-commit-config.yaml
     create  README.md
     create  MANIFEST.in
@@ -237,8 +234,6 @@ Your plugin template is ready!  Next steps:
         These URLs will be displayed on your plugin's napari hub page.
         You may wish to change these before publishing your plugin!
     5. Read the README for more info: https://github.com/napari/napari-plugin-template
-    6. We've provided a template description for your plugin page on the napari hub at `.napari-hub/DESCRIPTION.md`.
-    You'll likely want to edit this before you publish your plugin.
     7. Consider customizing the rest of your plugin metadata for display on the napari hub:
     https://github.com/chanzuckerberg/napari-hub/blob/main/docs/customizing-plugin-listing.md
 ```
@@ -261,9 +256,6 @@ napari-growth-cone-finder
 │   |   └── test_and_deploy.yml
 |   ├── PULL_REQUEST_TEMPLATE.md
 │   └── dependabot.yml
-├── .napari-hub
-│   ├── DESCRIPTION.md
-|   └── config.yml
 ├── src
 │   └── napari_growth_cone_finder
 │       ├── _tests

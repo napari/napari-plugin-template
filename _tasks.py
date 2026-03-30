@@ -162,6 +162,7 @@ def initialize_new_repository(
             print(Colors.warning(f'Could not install pre-commit (this is optional): {err}'))
             pre_commit_command = None
 
+    # Create initial commit
     try:
         print(Colors.info('Creating initial commit...'))
         subprocess.run(
