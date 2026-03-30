@@ -242,7 +242,7 @@ def _generate_manual_setup_message(
     git commit -m 'initial commit'
 
 {Colors.step(3, 4, 'Install your plugin in development mode:')}
-    pip install -e .[all]
+    pip install -e .[all] --group dev
 {Colors.info('This installs your plugin with napari and default Qt bindings in editable mode.')}
 {Colors.info('You can also run project commands with pixi, for example: pixi run test. CI uses pixi as well.')}
 
@@ -276,7 +276,7 @@ def _generate_next_steps_message(
 {"=" * 50}
 {Colors.step(1, 5, 'Install your plugin in development mode:')}
     cd {plugin_directory}
-    pip install -e .[all]
+    pip install -e .[all] --group dev
 
 {Colors.info('This installs your plugin with napari and default Qt bindings in editable mode.')}
 {Colors.info('You can also run project commands with pixi, for example: pixi run test. CI uses pixi as well.')}

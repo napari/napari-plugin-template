@@ -122,19 +122,24 @@ the [prompts reference](./PROMPTS.md).
 <summary>Configuration prompts</summary>
 
 ```sh
-copier copy --trust https://github.com/napari/napari-plugin-template napari-growth-cone-finder
+uv tool run --with jinja2-time --with npe2 --python=3.13 copier copy --trust https://github.com/napari/napari-plugin-template napari-growth-cone-finder
+Installed 40 packages in 1.60s
 
-Welcome to the napari plugin template!
-This template will help you create a new napari plugin with all the necessary structure of a Python package. 
+===============================================================
+           Welcome to the napari plugin template!
+===============================================================
 
-For more detailed information about each prompt, see:
-https://github.com/napari/napari-plugin-template/blob/main/PROMPTS.md
+This template will help you create a new napari plugin with all
+the necessary structure of a Python package.
+
+For detailed information about each prompt:
+   https://github.com/napari/napari-plugin-template/blob/main/PROMPTS.md
 
 🎤 The name of your plugin, used to name the package and repository
    napari-growth-cone-finder
 🎤 Display name for your plugin in the napari GUI
    Growth Cone Finder
-🎤 Plugin module name, usually the same as the name of the package, but lowercase and with underscores
+🎤 Plugin module name, usually the same as the name of the plugin package, but lowercase 
    napari_growth_cone_finder
 🎤 Short description of what your plugin does
    A simple plugin for napari
@@ -161,81 +166,85 @@ https://github.com/napari/napari-plugin-template/blob/main/PROMPTS.md
 🎤 Which licence do you want your plugin code to have?
    BSD-3
 
-Select license:
-1 - BSD-3
-2 - MIT
-3 - Mozilla Public License 2.0
-4 - Apache Software License 2.0
-5 - GNU LGPL v3.0
-6 - GNU GPL v3.0
-Choose from 1, 2, 3, 4, 5, 6 (1, 2, 3, 4, 5, 6) [1]: 1
-```
-
-</details>
-
-After entering the configuration information, the following output will be displayed:
-
-<details open>
-<summary>Output</summary>
-
-```sh
-Copying from template version 0.0.0.post126.dev0+95d5ece
-    create  .pre-commit-config.yaml
-    create  README.md
-    create  MANIFEST.in
-    create  LICENSE
-    create  .gitignore
+Copying from template version 2.1.0.post30.dev0+c82ffcd
     create  .github
-    create  .github/workflows
-    create  .github/workflows/test_and_deploy
-    create  .github/dependabot.yml
+    create  .github\ISSUE_TEMPLATE
+    create  .github\ISSUE_TEMPLATE\bug_report.yml
+    create  .github\ISSUE_TEMPLATE\documentation.md
+    create  .github\ISSUE_TEMPLATE\feature_request.md
+    create  .github\ISSUE_TEMPLATE\task.md
+    create  .github\PULL_REQUEST_TEMPLATE.md
+    create  .github\workflows
+    create  .github\workflows\test_and_deploy.yml
+    create  .github\dependabot.yml
+    create  .gitignore
+    create  LICENSE
     create  pyproject.toml
+    create  README.md
     create  src
-    create  src/napari_growth_cone_finder
-    create  src/napari_growth_cone_finder/_writer.py
-    create  src/napari_growth_cone_finder/_tests
-    create  src/napari_growth_cone_finder/_tests/test_sample_data.py
-    create  src/napari_growth_cone_finder/_tests/test_writer.py
-    create  src/napari_growth_cone_finder/_tests/__init__.py
-    create  src/napari_growth_cone_finder/_tests/test_widget.py
-    create  src/napari_growth_cone_finder/_tests/test_reader.py
-    create  src/napari_growth_cone_finder/_sample_data.py
-    create  src/napari_growth_cone_finder/napari.yaml
-    create  src/napari_growth_cone_finder/__init__.py
-    create  src/napari_growth_cone_finder/_reader.py
-    create  src/napari_growth_cone_finder/_widget.py
+    create  src\napari_growth_cone_finder
+    create  src\napari_growth_cone_finder\napari.yaml
+    create  src\napari_growth_cone_finder\__init__.py
+    create  src\napari_growth_cone_finder\_reader.py
+    create  src\napari_growth_cone_finder\_sample_data.py
+    create  src\napari_growth_cone_finder\_widget.py
+    create  src\napari_growth_cone_finder\_writer.py
+    create  tests
+    create  tests\__init__.py
+    create  tests\test_reader.py
+    create  tests\test_sample_data.py
+    create  tests\test_widget.py
+    create  tests\test_writer.py
+    create  .pre-commit-config.yaml
+    create  .copier-answers.yml
 
- > Running task 1 of 1: ['/Users/creator/Code/repos-napari/.venv/bin/python3', '/private/var/folders/hg/l3v3xynd45sbvd141f3rqh600000gn/T/copier.vcs.clone.i5ou6e_q/_tasks.py', '--plugin_name=napari-growth-cone-finder', '--module_name=napari_growth_cone_finder', '--project_directory=napari-growth-cone-finder', '--install_precommit=True', '--github_repository_url=https://github.com/creator/napari-growth-cone-finder', '--github_username_or_organization=creator']
-INFO:pre_gen_project:b"\xe2\x9c\x94 Manifest for 'Growth Cone Finder' valid!"
-Switched to a new branch 'main'
-install pre-commit ...
-/Users/creator/Code/repos-napari/.venv/bin/python: No module named pip
-updating pre-commit...
-install pre-commit hook...
-pre-commit installed at .git/hooks/pre-commit
+ > Running task 1 of 1: ['C:\\Users\\timmo\\AppData\\Local\\uv\\cache\\archive-v0\\0vlfbRMRjFCmASY5RvFd_\\Scripts\\python.exe', 'C:\\Users\\timmo\\AppData\\Local\\Temp\\copier._vcs.clone.g5hr4v8p\\_tasks.py', '--plugin_name=napari-growth-cone-finder', '--module_name=napari_growth_cone_finder', '--project_directory=napari-growth-cone-finder', '--install_precommit=True', '--github_repository_url=https://github.com/creator/napari-growth-cone-finder', '--github_username_or_organization=creator']
+✔ Manifest for 'Growth Cone Finder' is valid!
 
-Your plugin template is ready!  Next steps:
-1. `cd` into your new directory
+==================================================
+ℹ Setting up your plugin repository...
+==================================================
+
+ℹ Initializing git repository...
+✔ Git repository initialized
+ℹ Setting up pre-commit hooks...
+✔ Pre-commit is available
+ℹ Creating initial commit...
+✔ Initial commit created
+✔ Pre-commit hooks installed
+
+==================================================
+✔ Your plugin template is ready!
+==================================================
+[1/5] Install your plugin in development mode:
     cd napari-growth-cone-finder
-    # Use the following command to install your package in editable mode,
-    # as well as napari and Qt bindings into your existing environment.
-    pip install -e .[all]
+    pip install -e .[all] --group dev
 
-    2. Create a github repository with the name 'napari-growth-cone-finder':
-    https://github.com/creator/napari-growth-cone-finder.git
-    3. Add your newly created github repo as a remote and push:
-        git remote add origin https://github.com/creator/napari-growth-cone-finder.git
-        git push -u origin main
-    4. The following default URLs have been added to `pyproject.toml`:
-        Bug Tracker = https://github.com/creator/napari-growth-cone-finder/issues
-        Documentation = https://github.com/creator/napari-growth-cone-finder#README.md
-        Source Code = https://github.com/creator/napari-growth-cone-finder
-        User Support = https://github.com/creator/napari-growth-cone-finder/issues
-        These URLs will be displayed on your plugin's napari hub page.
-        You may wish to change these before publishing your plugin!
-    5. Read the README for more info: https://github.com/napari/napari-plugin-template
-    7. Consider customizing the rest of your plugin metadata for display on the napari hub:
-    https://github.com/chanzuckerberg/napari-hub/blob/main/docs/customizing-plugin-listing.md
+ℹ This installs your plugin with napari and default Qt bindings in editable mode.        
+ℹ You can also run project commands with pixi, for example: pixi run test. CI uses pixi as well.
+
+[2/5] Create a GitHub repository named 'napari-growth-cone-finder':
+    https://github.com/creator/napari-growth-cone-finder
+
+[3/5] Link and push to GitHub:
+    git remote add origin https://github.com/creator/napari-growth-cone-finder.git       
+    git push -u origin main
+
+[4/5] Review your project URLs in pyproject.toml:
+    The following URLs will appear on the napari hub:
+    • Bug Tracker: https://github.com/creator/napari-growth-cone-finder/issues
+    • Documentation: https://github.com/creator/napari-growth-cone-finder#README.md      
+    • Source Code: https://github.com/creator/napari-growth-cone-finder
+    • User Support: https://github.com/creator/napari-growth-cone-finder/issues
+
+[5/5] Customize your plugin:
+    • Read the plugin guide: https://napari.org/stable/plugins/building_a_plugin/index.html
+    • Customize your hub listing: https://napari.org/stable/plugins/testing_and_publishing/hub_customization.html
+
+
+==================================================
+Happy plugin development! 🚀
+==================================================
 ```
 
 </details>
