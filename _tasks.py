@@ -1,6 +1,5 @@
 import contextlib
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -9,8 +8,9 @@ from pathlib import Path
 
 # Ensure UTF-8 output on Windows where the default encoding cannot encode the
 # Unicode symbols used in the terminal output below.
-if hasattr(sys.stdout, 'reconfigure'):
-    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+stdout_reconfigure = getattr(sys.stdout, 'reconfigure', None)
+if callable(stdout_reconfigure):
+    stdout_reconfigure(encoding='utf-8', errors='replace')
 
 
 class Colors:
@@ -43,22 +43,6 @@ class Colors:
     @staticmethod
     def step(num, total, msg):
         return f"{Colors.BOLD}{Colors.CYAN}[{num}/{total}]{Colors.END} {msg}"
-
-
-def module_name_pep8_compliance(module_name):
-    """Validate that the plugin module name is PEP8 compliant."""
-    if not re.match(r'^[a-z][_a-z0-9]+$', module_name):
-        link = 'https://www.python.org/dev/peps/pep-0008/#package-and-module-names'
-        print(Colors.error('Module name should be PEP-8 compliant.'))
-        print(f'  More info: {link}')
-        sys.exit(1)
-
-
-def pypi_package_name_compliance(plugin_name):
-    """Check there are no underscores in the plugin name"""
-    if re.search(r'_', plugin_name):
-        print(Colors.error('PyPI.org and pip discourage package names with underscores.'))
-        sys.exit(1)
 
 
 def validate_manifest(module_name, project_directory):
@@ -366,8 +350,6 @@ if __name__ == '__main__':
         install_precommit = True
     else:
         install_precommit = False
-    module_name_pep8_compliance(args.module_name)
-    pypi_package_name_compliance(args.plugin_name)
     validate_manifest(args.module_name, args.project_directory)
     msg = initialize_new_repository(
         install_precommit=install_precommit,
