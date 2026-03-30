@@ -10,10 +10,11 @@ This document details what each of the prompts is asking, what the effect
 of your choice will be on your package directory/plugin, and any potential
 pitfalls of selecting one option over another.
 
-**Note: ** Many of these configuration options will also affect how your plugin
+**Note:** Many of these configuration options will also affect how your plugin
 appears on the [napari hub](https://www.napari-hub.org/). If you're planning
 on publishing your plugin to PyPI (and by extension, the hub), you can refer
-to [this document](https://github.com/chanzuckerberg/napari-hub/blob/main/docs/customizing-plugin-listing.md) for detailed documentation on customizing your listing.
+to [the napari hub customization guide](https://napari.org/stable/plugins/testing_and_publishing/hub_customization.html)
+for detailed documentation on customizing your listing.
 
 ## full_name
 
