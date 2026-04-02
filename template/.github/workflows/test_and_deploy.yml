@@ -41,7 +41,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           activate-environment: "true"
       - name: Install Windows OpenGL
-        uses: pyvista/setup-headless-display-action@v4.2
+        uses: pyvista/setup-headless-display-action@v4.3
         with:
           qt: true
           wm: herbstluftwm
@@ -58,7 +58,7 @@ jobs:
           PLATFORM: ${{ matrix.platform }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           use_oidc: true  # reliable tokenless codecov uploads
 
