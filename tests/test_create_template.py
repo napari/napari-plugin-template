@@ -60,9 +60,15 @@ def assert_generated_layout(result, plugin_name, module_name):
         encoding='utf-8'
     )
     assert f'Programming Language :: Python :: {LATEST_SUPPORTED_PYTHON}' in pyproject_text
-    assert '[tool.pixi.workspace]' in pyproject_text
-    assert '[tool.pixi.tasks]' in pyproject_text
-    assert not result.project_dir.joinpath('tox.ini').exists()
+    assert '[tool.tox]' in pyproject_text
+
+
+def assert_generated_ci_workflow(result):
+    workflow_text = result.project_dir.joinpath(
+        '.github', 'workflows', 'test_and_deploy.yml'
+    ).read_text(encoding='utf-8')
+
+    assert 'uses: astral-sh/setup-uv@' in workflow_text
 
 
 def assert_feature_files(result, answers):
@@ -90,25 +96,40 @@ def assert_feature_files(result, answers):
         assert '    "napari[qt]",' not in pyproject_text
 
 
-def run_generated_tests(plugin_directory):
-    """Run the generated project's test suite via pixi."""
-    if which('pixi') is None:
-        pytest.fail(
-            'pixi must be available in PATH to run generated smoke tests'
-        )
-
-    project_dir = Path(plugin_directory)
+def _generated_project_env():
+    """Return a clean environment for nested tox execution in generated projects."""
     env = os.environ.copy()
-    env.pop('PIXI_PROJECT_MANIFEST', None)
-    env.pop('PIXI_IN_SHELL', None)
+    for key in tuple(env):
+        if key.startswith('TOX_'):
+            env.pop(key)
+    env.pop('VIRTUAL_ENV', None)
+    return env
+
+
+def _current_tox_env():
+    return f'py{sys.version_info.major}{sys.version_info.minor}'
+
+
+def run_generated_tests(plugin_directory):
+    """Run the generated project's test suite via tox and uv."""
+    if which('uv') is None:
+        pytest.skip('uv is not available in PATH for generated smoke tests')
+
     try:
         subprocess.run(
-            ['pixi', 'run', 'test'],
-            cwd=project_dir,
+            [
+                'uvx',
+                '--from',
+                'tox>=4.31',
+                'tox',
+                '-e',
+                _current_tox_env(),
+            ],
+            cwd=Path(plugin_directory),
             check=True,
             capture_output=True,
             text=True,
-            env=env,
+            env=_generated_project_env(),
             timeout=600,
         )
     except subprocess.CalledProcessError as error:
@@ -117,6 +138,49 @@ def run_generated_tests(plugin_directory):
             f'stdout:\n{error.stdout}\n'
             f'stderr:\n{error.stderr}'
         )
+
+
+def run_generated_tox_config_check(plugin_directory):
+    """Validate that the generated tox config loads."""
+    if which('uv') is None:
+        pytest.skip('uv is not available in PATH for generated tox validation')
+
+    result = None
+    try:
+        result = subprocess.run(
+            [
+                'uvx',
+                '--from',
+                'tox>=4.31',
+                'tox',
+                '-l',
+            ],
+            cwd=plugin_directory,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=_generated_project_env(),
+            timeout=600,
+        )
+        assert _current_tox_env() in result.stdout.split()
+    except subprocess.CalledProcessError as error:
+        pytest.fail(
+            'Generated project tox config validation failed:\n'
+            f'stdout:\n{error.stdout}\n'
+            f'stderr:\n{error.stderr}'
+        )
+    except AssertionError:
+        pytest.fail(
+            'Generated project tox config did not expose the expected environment:\n'
+            f'stdout:\n{result.stdout if result is not None else ""}\n'
+            f'stderr:\n{result.stderr if result is not None else ""}'
+        )
+
+
+def _pre_commit_command():
+    if which('uv') is not None:
+        return ['uv', 'tool', 'run', '--with', 'pre-commit', 'pre-commit']
+    return [sys.executable, '-m', 'pre_commit']
 
 
 @pytest.mark.parametrize('overrides', FEATURE_CASES)
@@ -128,19 +192,22 @@ def test_rendered_feature_matrix(copie, overrides):
     assert_generated_layout(
         result, answers['plugin_name'], answers['module_name']
     )
+    assert_generated_ci_workflow(result)
     assert_feature_files(result, answers)
 
 
 def test_generated_project_smoke_tests(copie):
-    """Run a couple of generated projects end to end via pixi."""
+    """Run a couple of generated projects end to end via tox."""
     answers = build_answers()
     result = copie.copy(extra_answers=answers)
 
     assert_generated_layout(
         result, answers['plugin_name'], answers['module_name']
     )
+    assert_generated_ci_workflow(result)
     assert_feature_files(result, answers)
     run_generated_tests(result.project_dir)
+    run_generated_tox_config_check(result.project_dir)
 
 
 def test_run_plugin_tests_with_napari_prefix(copie):
@@ -155,6 +222,7 @@ def test_run_plugin_tests_with_napari_prefix(copie):
     )
 
     assert_generated_layout(result, name, 'napari_foo')
+    assert_generated_ci_workflow(result)
     assert result.project_dir.joinpath('tests', 'test_reader.py').is_file()
 
 
@@ -171,6 +239,7 @@ def test_run_select_plugins(copie):
     )
 
     assert_generated_layout(result, name, name)
+    assert_generated_ci_workflow(result)
     assert result.project_dir.joinpath('tests', 'test_reader.py').is_file()
     assert not result.project_dir.joinpath('src', name, '_widget.py').is_file()
     assert not result.project_dir.joinpath('tests', 'test_widget.py').is_file()
@@ -202,10 +271,11 @@ def test_pre_commit_validity(copie):
     assert result.project_dir.joinpath('pyproject.toml').is_file()
     try:
         subprocess.run(
-            [sys.executable, '-m', 'pre_commit', 'run', '--all-files', '--show-diff-on-failure'],
+            [*_pre_commit_command(), 'run', '--all-files', '--show-diff-on-failure'],
             cwd=str(result.project_dir),
             check=True,
             capture_output=True,
+            env=_generated_project_env(),
         )
     except subprocess.CalledProcessError as error:
         pytest.fail(
