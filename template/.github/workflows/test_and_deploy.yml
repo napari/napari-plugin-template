@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   test:
-    name: ${{ matrix.platform }} py${{ matrix.python-version }}
+    name: ${{ matrix.platform }} ${{ matrix.toxenv }}
     runs-on: ${{ matrix.platform }}
     timeout-minutes: 30
     permissions:
@@ -29,33 +29,48 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        include:
+          - platform: ubuntu-24.04
+            python-version: '3.10'
+            toxenv: py310
+          - platform: ubuntu-24.04
+            python-version: '3.11'
+            toxenv: py311
+          - platform: ubuntu-24.04
+            python-version: '3.12'
+            toxenv: py312
+          - platform: ubuntu-24.04
+            python-version: '3.13'
+            toxenv: py313
+          - platform: ubuntu-24.04
+            python-version: '3.14'
+            toxenv: py314
+          - platform: windows-latest
+            python-version: '3.12'
+            toxenv: py312
+          - platform: macos-latest
+            python-version: '3.12'
+            toxenv: py312
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.2
 
-      - name: Setup python
-        uses: astral-sh/setup-uv@v7
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v8.0.0
         with:
           python-version: ${{ matrix.python-version }}
-          activate-environment: "true"
-      - name: Install Windows OpenGL
+          activate-environment: true
+          enable-cache: true
+
+      - name: Setup headless display
+        if: runner.os == 'Linux'
         uses: pyvista/setup-headless-display-action@v4.3
         with:
           qt: true
           wm: herbstluftwm
 
-
-      # note: if you need dependencies from conda, considering using
-      # setup-miniconda: https://github.com/conda-incubator/setup-miniconda
-      # and
-      # tox-conda: https://github.com/tox-dev/tox-conda
-      # this runs the platform-specific tests declared in tox.ini
-      - name: Test with tox
-        run: uvx --with tox-gh-actions tox
-        env:
-          PLATFORM: ${{ matrix.platform }}
+      - name: Test
+        run: uvx tox -e ${{ matrix.toxenv }}
 
       - name: Coverage
         uses: codecov/codecov-action@v6
@@ -67,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.0
       - uses: hynek/build-and-inspect-python-package@v2
 
   deploy:
@@ -81,7 +96,7 @@ jobs:
       id-token: write
     steps:
       - name: Download built artifact to dist/
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v8.0.1
         with:
           name: Packages
           path: dist

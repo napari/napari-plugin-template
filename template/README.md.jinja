@@ -48,8 +48,26 @@ pip install git+https://github.com/{{github_username_or_organization}}/{{plugin_
 
 ## Contributing
 
-Contributions are very welcome. Tests can be run with [tox], please ensure
-the coverage at least stays the same before you submit a pull request.
+Contributions are very welcome. You can set up a development environment with
+your usual Python tooling:
+
+```bash
+python -m pip install -e .[all] --group dev
+python -m pytest
+```
+
+The generated `pyproject.toml` keeps the [tox] configuration used by CI:
+
+```bash
+python -m tox 
+```
+
+If you prefer `uv` locally, it can call the same tox entry point directly
+(here shown with a specific tox environment):
+
+```bash
+uv run tox -e py314
+```
 
 ## License
 
@@ -72,6 +90,6 @@ If you encounter any problems, please [file an issue] along with a detailed desc
 {% if github_repository_url != 'provide later' %}
 [file an issue]: https://github.com/{{github_username_or_organization}}/{{plugin_name}}/issues
 {% endif %}
-[tox]: https://tox.readthedocs.io/en/latest/
 [pip]: https://pypi.org/project/pip/
 [PyPI]: https://pypi.org/
+[tox]: https://tox.wiki/en/

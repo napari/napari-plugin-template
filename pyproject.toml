@@ -1,0 +1,41 @@
+[project]
+name = "napari-plugin-template"
+version = "0.0.0"
+description = "Development metadata for testing the napari plugin copier template"
+requires-python = ">=3.10"
+dependencies = [
+    "copier",
+    "jinja2-time",
+    "npe2>=0.8.0",
+]
+
+[dependency-groups]
+test = [
+    "copier",
+    "jinja2-time",
+    "npe2>=0.8.0",
+    "pytest>=8",
+    "pytest-copie",
+]
+dev = [
+    "pre-commit",
+    "tox>=4.31",
+    { include-group = "test" },
+]
+
+[tool.tox]
+requires = ["tox>=4.25", "tox-uv>=1"]
+env_list = ["py310", "py311", "py312", "py313", "py314"]
+skip_missing_interpreters = true
+
+[tool.tox.env_run_base]
+description = "Tests with {base_python}"
+package = "skip"
+pass_env = ["DISPLAY", "XAUTHORITY"]
+dependency_groups = ["test"]
+commands = [["pytest", { replace = "posargs", default = [], extend = true }]]
+
+[tool.pytest.ini_options]
+addopts = ["-ra", "--strict-config", "--strict-markers"]
+norecursedirs = ["{{plugin_name}}", ".git", ".venv"]
+testpaths = ["tests"]
