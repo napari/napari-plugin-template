@@ -1,6 +1,5 @@
 import contextlib
 import os
-import shutil
 import subprocess
 import sys
 from argparse import ArgumentParser
@@ -90,8 +89,6 @@ def initialize_new_repository(
     print(Colors.info('Setting up your plugin repository...'))
     print("=" * 50 + "\n")
 
-    pre_commit_command = shutil.which('pre-commit')
-
     try:
         print(Colors.info('Initializing git repository...'))
         subprocess.run(
@@ -128,23 +125,28 @@ def initialize_new_repository(
             github_username_or_organization,
         )
 
+    pre_commit_command = [sys.executable, '-m', 'pre_commit']
+    pre_commit_available = False
+
     if install_precommit is True:
         print(Colors.info('Setting up pre-commit hooks...'))
         try:
-            if pre_commit_command is None:
-                subprocess.run(
-                    [sys.executable, '-m', 'pip', 'install', 'pre-commit'],
-                    check=True,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                )
-                pre_commit_command = shutil.which('pre-commit')
-            if pre_commit_command is None:
-                raise FileNotFoundError('pre-commit executable was not found after installation')
+            subprocess.run(
+                [sys.executable, '-m', 'pip', 'install', 'pre-commit'],
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            subprocess.run(
+                [*pre_commit_command, '--version'],
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            pre_commit_available = True
             print(Colors.success('Pre-commit is available'))
         except (subprocess.CalledProcessError, FileNotFoundError, OSError) as err:
             print(Colors.warning(f'Could not install pre-commit (this is optional): {err}'))
-            pre_commit_command = None
 
     # Create initial commit
     try:
@@ -187,10 +189,10 @@ def initialize_new_repository(
                 stderr=subprocess.DEVNULL,
             )
 
-    if install_precommit is True and pre_commit_command is not None:
+    if install_precommit is True and pre_commit_available:
         try:
             subprocess.run(
-                [pre_commit_command, 'install'],
+                [*pre_commit_command, 'install'],
                 check=True,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
@@ -228,7 +230,7 @@ def _generate_manual_setup_message(
 {Colors.step(3, 4, 'Install your plugin in development mode:')}
     pip install -e .[all] --group dev
 {Colors.info('This installs your plugin with napari and default Qt bindings in editable mode.')}
-{Colors.info('You can also run project commands with pixi, for example: pixi run test. CI uses pixi as well.')}
+{Colors.info('You can run tests directly with pytest, via tox, or via wrapper tools like uv.')}
 
 {Colors.step(4, 4, 'Create and link GitHub repository:')}"""
 
@@ -263,7 +265,7 @@ def _generate_next_steps_message(
     pip install -e .[all] --group dev
 
 {Colors.info('This installs your plugin with napari and default Qt bindings in editable mode.')}
-{Colors.info('You can also run project commands with pixi, for example: pixi run test. CI uses pixi as well.')}
+{Colors.info('You can run tests directly with pytest, via tox, or via wrapper tools like uv.')}
 """
 
     if github_repository_url != 'provide later':
