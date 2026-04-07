@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   test:
-    name: ${{ matrix.platform }} ${{ matrix.environment }}
+    name: ${{ matrix.platform }} ${{ matrix.toxenv }}
     runs-on: ${{ matrix.platform }}
     timeout-minutes: 30
     permissions:
@@ -29,25 +29,48 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, windows-latest, macos-latest]
-        environment: [py310, py311, py312, py313, py314]
+        include:
+          - platform: ubuntu-24.04
+            python-version: '3.10'
+            toxenv: py310
+          - platform: ubuntu-24.04
+            python-version: '3.11'
+            toxenv: py311
+          - platform: ubuntu-24.04
+            python-version: '3.12'
+            toxenv: py312
+          - platform: ubuntu-24.04
+            python-version: '3.13'
+            toxenv: py313
+          - platform: ubuntu-24.04
+            python-version: '3.14'
+            toxenv: py314
+          - platform: windows-latest
+            python-version: '3.12'
+            toxenv: py312
+          - platform: macos-latest
+            python-version: '3.12'
+            toxenv: py312
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.2
 
-      - name: Set up pixi
-        uses: prefix-dev/setup-pixi@a0af7a228712d6121d37aba47adf55c1332c9c2e  # v0.9.4
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v8.0.0
         with:
-          environments: ${{ matrix.environment }}
+          python-version: ${{ matrix.python-version }}
+          activate-environment: true
+          enable-cache: true
 
       - name: Setup headless display
-        uses: pyvista/setup-headless-display-action@v4.2
+        if: runner.os == 'Linux'
+        uses: pyvista/setup-headless-display-action@v4.3
         with:
           qt: true
           wm: herbstluftwm
 
       - name: Test
-        run: pixi run -e ${{ matrix.environment }} test
+        run: uvx tox -e ${{ matrix.toxenv }}
 
       - name: Coverage
         uses: codecov/codecov-action@v5
@@ -59,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.0
       - uses: hynek/build-and-inspect-python-package@v2
 
   deploy:
@@ -73,7 +96,7 @@ jobs:
       id-token: write
     steps:
       - name: Download built artifact to dist/
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v8.0.1
         with:
           name: Packages
           path: dist
