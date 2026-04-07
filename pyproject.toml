@@ -26,7 +26,7 @@ skip_missing_interpreters = true
 [tool.tox.env_run_base]
 description = "Tests with {base_python}"
 package = "skip"
-dependency_groups = ["test"]
+dependency_groups = ["dev"]
 commands = [["pytest", { replace = "posargs", default = [], extend = true }]]
 
 [tool.pytest.ini_options]
