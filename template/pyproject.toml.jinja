@@ -48,41 +48,41 @@ dependencies = [
 all = ["napari[all]"]
 
 [dependency-groups]
-dev = [
+test = [
     "pytest",  # https://docs.pytest.org/en/latest/contents.html
     "pytest-cov",  # https://pytest-cov.readthedocs.io/en/latest/
 {% if include_widget_plugin %}    "pytest-qt",  # https://pytest-qt.readthedocs.io/en/latest/
     "napari[qt]",  # test with napari's default Qt bindings
 {% endif %}]
+dev = [
+    "tox>=4.31",
+    { include-group = "test" },
+]
 
-[tool.pixi.workspace]
-channels = ["conda-forge"]
-platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+[tool.tox]
+requires = ["tox>=4.31"]
+env_list = ["py310", "py311", "py312", "py313", "py314"]
+skip_missing_interpreters = true
 
-[tool.pixi.pypi-dependencies]
-{{plugin_name}} = { path = ".", editable = true }
-
-[tool.pixi.tasks]
-test = "pytest -v --color=yes --cov={{module_name}} --cov-report=xml"
-
-[tool.pixi.feature.py310.dependencies]
-python = "3.10.*"
-[tool.pixi.feature.py311.dependencies]
-python = "3.11.*"
-[tool.pixi.feature.py312.dependencies]
-python = "3.12.*"
-[tool.pixi.feature.py313.dependencies]
-python = "3.13.*"
-[tool.pixi.feature.py314.dependencies]
-python = "3.14.*"
-
-[tool.pixi.environments]
-default = ["dev"]
-py310 = ["dev", "py310"]
-py311 = ["dev", "py311"]
-py312 = ["dev", "py312"]
-py313 = ["dev", "py313"]
-py314 = ["dev", "py314"]
+[tool.tox.env_run_base]
+description = "Tests with {base_python}"
+pass_env = [
+    "CI",
+    "DISPLAY",
+    "GITHUB_ACTIONS",
+    "NUMPY_EXPERIMENTAL_ARRAY_FUNCTION",
+    "PYVISTA_OFF_SCREEN",
+    "XAUTHORITY",
+]
+dependency_groups = ["test"]
+commands = [
+    [
+        "pytest",
+        "--cov={{module_name}}",
+        "--cov-report=xml",
+        { replace = "posargs", default = [], extend = true },
+    ],
+]
 
 [project.entry-points."napari.manifest"]
 {{plugin_name}} = "{{module_name}}:napari.yaml"
@@ -113,8 +113,7 @@ write_to = "src/{{module_name}}/_version.py"
 fallback_version = "0.0.1+nogit"
 
 [tool.pytest.ini_options]
-minversion = "6.0"
-addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
+addopts = ["-ra", "--strict-markers", "--strict-config"]
 xfail_strict = true
 # filterwarnings = ["error"]  # recommended by PP309; deprecation warnings cause failures so leaving for the user to enable if desired
 log_cli_level = "INFO"

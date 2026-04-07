@@ -70,10 +70,8 @@ target/
 venv/
 .vscode/
 
-# Pixi and uv
-pixi.lock
+# uv
 uv.lock
-.pixi/
 .venv/
 
 # IPython Notebook

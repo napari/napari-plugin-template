@@ -10,12 +10,17 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = [
-    "pre-commit",
+test = [
+    "copier",
+    "jinja2-time",
+    "npe2>=0.8.0",
     "pytest>=8",
     "pytest-copie",
-    "tox>=4.25",
-    "tox-uv>=1",
+]
+dev = [
+    "pre-commit",
+    "tox>=4.31",
+    { include-group = "test" },
 ]
 
 [tool.tox]
@@ -26,14 +31,11 @@ skip_missing_interpreters = true
 [tool.tox.env_run_base]
 description = "Tests with {base_python}"
 package = "skip"
-dependency_groups = ["dev"]
+pass_env = ["DISPLAY", "XAUTHORITY"]
+dependency_groups = ["test"]
 commands = [["pytest", { replace = "posargs", default = [], extend = true }]]
 
 [tool.pytest.ini_options]
 addopts = ["-ra", "--strict-config", "--strict-markers"]
-norecursedirs = ["{{plugin_name}}", ".git", ".pixi", ".venv"]
+norecursedirs = ["{{plugin_name}}", ".git", ".venv"]
 testpaths = ["tests"]
-
-[tool.pixi.workspace]
-channels = ["conda-forge"]
-platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
