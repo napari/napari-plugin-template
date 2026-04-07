@@ -35,7 +35,7 @@ to use the latest version in the main or development branch read the
 Using the napari-plugin-template offers the following benefits:
 
 - 🚀 Installable [PyPI] package
-- 🧪 [pixi] tasks for local testing, plus multi-version CI coverage.
+- 🧪 tox-defined multi-version test logic that can be run directly or through wrapper tools like [uv].
 - 🗒️ `README.md` file that contains useful information about your plugin
 - ⚙️ Continuous integration configuration for [github actions] that handles testing
   and deployment of tagged releases
@@ -122,7 +122,7 @@ the [prompts reference](./PROMPTS.md).
 <summary>Configuration prompts</summary>
 
 ```sh
-uv tool run --with jinja2-time --with npe2 --python=3.13 copier copy --trust https://github.com/napari/napari-plugin-template napari-growth-cone-finder
+uv tool run --with jinja2-time --with npe2 --python=3.14 copier copy --trust https://github.com/napari/napari-plugin-template napari-growth-cone-finder
 Installed 40 packages in 1.60s
 
 ===============================================================
@@ -221,7 +221,7 @@ Copying from template version 2.1.0.post30.dev0+c82ffcd
     pip install -e .[all] --group dev
 
 ℹ This installs your plugin with napari and default Qt bindings in editable mode.        
-ℹ You can also run project commands with pixi, for example: pixi run test. CI uses pixi as well.
+ℹ You can run tests directly with pytest, via tox, or via wrapper tools like uv.
 
 [2/5] Create a GitHub repository named 'napari-growth-cone-finder':
     https://github.com/creator/napari-growth-cone-finder
@@ -282,26 +282,16 @@ napari-growth-cone-finder
 ```
 
 
-### Step 4: Initialize a git repository in your source code
+### Step 4: Review the initialized repository
 
-After Step 3, your system has a file tree in a directory with the source files for your package.
+The template initializes a git repository for you, creates an initial
+commit, and sets local line-ending handling so the generated project is ready to
+use immediately.
+
 If you haven't already, be sure to [set up Git](https://docs.github.com/en/get-started/git-basics/set-up-git) so that git can be used from the command line or from a GUI such as Github Desktop or VSCode.
-This step will initialize the file directory as a git repo and commit your files to the repo. 
-When in the command line a single `.` is equivalent to 'perform this action in the current directory'. 
-So, `git add .` would stage the changes (i.e., the new file tree) in the current directory to the newly initalized git repo. 
-This `.` will be used in other steps, too.
 
-NOTE: This is important not only for version management, but also if you want to
-pip install your package locally for testing with `pip install -e .`. (because
-the version of your package is managed using git tags,
-[see below](#automatic-deployment-and-version-management))
-
-```bash
-cd napari-growth-cone-finder
-git init
-git add .
-git commit -m 'initial commit'
-```
+If that automatic setup fails on your machine, copier will print fallback git
+commands at the end of generation.
 
 ### Step 5: Upload your repo to GitHub
 
@@ -330,14 +320,34 @@ The generated project already declares its test dependencies in the
 pyproject.toml `[dependency-groups]` section:
 
 ```bash
-pixi run test
+python -m pip install -e .[all] --group dev
+python -m pytest
 ```
 
-To exercise the pinned Python matrix locally:
+The generated project keeps its tox setup in `pyproject.toml`, so you can run
+the versioned matrix through tox if you prefer:
 
 ```bash
-pixi run -e py314 test
+python -m tox
 ```
+
+GitHub Actions keeps that mapping explicit with a `toxenv` field per matrix
+row, so CI runs the same tox environments you run locally. If you later need
+Qt-backend-specific coverage such as `py312-pyqt6` or `py312-pyside6`, add
+those tox environments and point selected workflow rows at them.
+
+That same tox entry point also works cleanly through `uv` (shown 
+below with a specified tox environment):
+
+```bash
+uvx tox -e py314
+```
+
+CI uses `uvx` rather than `uv run` because `tox` is the tool being provisioned.
+`tox` then creates the actual test environment and installs the dependency
+groups declared in `pyproject.toml`, so CI does not need a separate synced
+project environment just to launch tox.
+
 
 ### Automated testing and coverage
 
@@ -465,7 +475,6 @@ is free and open source software.
 [napari]: https://github.com/napari/napari
 [npe2]: https://github.com/napari/npe2
 [pypi]: https://pypi.org/
-[pixi]: https://pixi.sh/latest/
 [sphinx]: https://www.sphinx-doc.org/en/master/usage/quickstart.html
 [mkdocs]: https://www.mkdocs.org/getting-started/
 [jupyterbook]: https://jupyterbook.org/en/stable/start/your-first-book.html

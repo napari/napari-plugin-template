@@ -49,14 +49,25 @@ pip install git+https://github.com/{{github_username_or_organization}}/{{plugin_
 ## Contributing
 
 Contributions are very welcome. You can set up a development environment with
-your usual Python tooling, and pixi is also available for running project
-commands locally; CI uses pixi as well. For example, to run the test suite:
+your usual Python tooling:
 
 ```bash
-pixi run test
+python -m pip install -e .[all] --group dev
+python -m pytest
 ```
 
-Please ensure the coverage at least stays the same before you submit a pull request.
+The generated `pyproject.toml` keeps the [tox] configuration used by CI:
+
+```bash
+python -m tox 
+```
+
+If you prefer `uv` locally, it can call the same tox entry point directly
+(here shown with a specific tox environment):
+
+```bash
+uv run tox -e py314
+```
 
 ## License
 
@@ -81,3 +92,4 @@ If you encounter any problems, please [file an issue] along with a detailed desc
 {% endif %}
 [pip]: https://pypi.org/project/pip/
 [PyPI]: https://pypi.org/
+[tox]: https://tox.wiki/en/

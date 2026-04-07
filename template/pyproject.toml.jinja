@@ -55,12 +55,13 @@ test = [
     "napari[qt]",  # test with napari's default Qt bindings
 {% endif %}]
 dev = [
-    "tox>=4.31",
+    "tox>=4.25",
+    "tox-uv>=1",
     { include-group = "test" },
 ]
 
 [tool.tox]
-requires = ["tox>=4.31"]
+requires = ["tox>=4.25", "tox-uv>=1"]
 env_list = ["py310", "py311", "py312", "py313", "py314"]
 skip_missing_interpreters = true
 
