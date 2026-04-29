@@ -46,7 +46,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
           activate-environment: "true"
       - name: Setup headless display
-        if: runner.os == 'Linux'
         uses: pyvista/setup-headless-display-action@v4.3
         with:
           qt: true
