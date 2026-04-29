@@ -39,9 +39,8 @@ jobs:
           qt: true
           wm: herbstluftwm
 
-      - name: Install dependencies
-        run: |
-          uv pip install --system -r requirements.txt
-
       - name: Test
-        run: python -m pytest -s -v --color=yes
+        run: >-
+          uvx --from tox>=4.31 --with tox-uv>=1 tox
+          -e ${{ format('py{0}', replace(matrix.python-version, '.', '')) }}
+          -- -s -v --color=yes
