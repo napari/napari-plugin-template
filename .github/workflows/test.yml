@@ -40,7 +40,4 @@ jobs:
           wm: herbstluftwm
 
       - name: Test
-        run: >-
-          uvx --from tox>=4.31 --with tox-uv>=1 tox
-          -e ${{ format('py{0}', replace(matrix.python-version, '.', '')) }}
-          -- -s -v --color=yes
+        run: uvx --from "tox>=4.31" --with "tox-uv>=1" --with "tox-gh-actions" tox
