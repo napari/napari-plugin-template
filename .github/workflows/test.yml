@@ -47,8 +47,4 @@ jobs:
       - name: Test
         run: |
           # Run tox in an ephemeral uv environment, using uv for tox env management
-          uvx \
-            --from "tox>=4.31" \
-            --with "tox-uv>=1" \
-            --with "tox-gh-actions" \
-            tox
+          uvx --from "tox>=4.31" --with "tox-uv>=1" --with "tox-gh-actions" tox
