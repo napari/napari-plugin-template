@@ -40,7 +40,11 @@ import pytest
 # ---------------------------------------------------------------------------
 
 # Base answers applied by default to every generated project.
+<<<<<<< Updated upstream
 # Feature flags (include_*_plugin) are intentionally absent here so that copier 
+=======
+# Feature flags (include_*_plugin) are intentionally absent here so that copier
+>>>>>>> Stashed changes
 # uses its template defaults (all True).
 # Override individual flags via build_answers() to test the disabled paths
 # without repeating all of the boilerplate.
@@ -208,8 +212,8 @@ def test_rendered_feature_matrix(copie, overrides):
 def test_generated_project_smoke_tests(copie):
     """Run one fully-featured generated project end to end via tox.
 
-    Uses the default (all-features) answers so the smoke test exercises the
-    widest possible code path: readers, writers, sample data, *and* widgets.
+    Uses the default (all-features) answers so this exercises the widest
+    possible code path: readers, writers, sample data, *and* widgets.
     This is intentionally the slow test in the suite (~60s on a warm uv
     cache) and serves as the primary integration gate for the template.
     """
