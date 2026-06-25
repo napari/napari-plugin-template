@@ -5,6 +5,7 @@ import subprocess
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
+from urllib.parse import quote
 
 from npe2 import PluginManifest
 from pydantic import ValidationError
@@ -212,9 +213,16 @@ def initialize_new_repository(
 
 
 def _resolved_github_url(plugin_name, github_repository_url, github_username_or_organization):
-    """Return the resolved GitHub repo URL, or None if not yet known."""
+    """Return the resolved GitHub repo URL, or None if not yet known.
+
+    Sanitizes user-supplied components with ``urllib.parse.quote`` to prevent
+    terminal-injection or malformed-URL issues when the values are printed in
+    setup instructions.
+    """
     if github_repository_url != 'provide later':
-        return f'https://github.com/{github_username_or_organization}/{plugin_name}'
+        safe_org = quote(github_username_or_organization, safe='')
+        safe_name = quote(plugin_name, safe='')
+        return f'https://github.com/{safe_org}/{safe_name}'
     return None
 
 
