@@ -204,7 +204,7 @@ def test_rendered_feature_matrix(copie, overrides):
     assert_feature_files(result, answers)
 
 
-def test_generated_project_smoke_tests(copie):
+def test_generated_project_full_test(copie):
     """Run one fully-featured generated project end to end via tox.
 
     Uses the default (all-features) answers so this exercises the widest
