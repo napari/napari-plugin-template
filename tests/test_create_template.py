@@ -40,12 +40,7 @@ import pytest
 # ---------------------------------------------------------------------------
 
 # Base answers applied by default to every generated project.
-<<<<<<< Updated upstream
-# Feature flags (include_*_plugin) are intentionally absent here so that copier 
-=======
-# Feature flags (include_*_plugin) are intentionally absent here so that copier
->>>>>>> Stashed changes
-# uses its template defaults (all True).
+# Feature flags (include_*_plugin) are intentionally absent here so that copier # uses its template defaults (all True).
 # Override individual flags via build_answers() to test the disabled paths
 # without repeating all of the boilerplate.
 DEFAULT_ANSWERS = {
