@@ -39,10 +39,11 @@ import pytest
 # Shared fixture data
 # ---------------------------------------------------------------------------
 
-# Base answers applied to every generated project.  Feature flags
-# (include_*_plugin) are intentionally absent here so that copier uses its
-# template defaults (all True).  Override individual flags via build_answers()
-# to test the disabled paths without repeating all of the boilerplate.
+# Base answers applied by default to every generated project.
+# Feature flags (include_*_plugin) are intentionally absent here so that copier 
+# uses its template defaults (all True).
+# Override individual flags via build_answers() to test the disabled paths
+# without repeating all of the boilerplate.
 DEFAULT_ANSWERS = {
     'plugin_name': 'foo-bar',
     'display_name': 'Foo Bar',
@@ -61,12 +62,12 @@ DEFAULT_ANSWERS = {
 #   • each feature disabled individually   (ensures each conditional works)
 #   • all features disabled simultaneously (ensures nothing breaks when empty)
 FEATURE_CASES = [
-    {},                                          # all features enabled (default)
-    {'include_reader_plugin': False},            # reader absent
-    {'include_writer_plugin': False},            # writer absent
-    {'include_sample_data_plugin': False},       # sample-data absent
-    {'include_widget_plugin': False},            # widget absent
-    {                                            # all features disabled
+    {},                                          # Enable all features (default)
+    {'include_reader_plugin': False},            # Disable reader
+    {'include_writer_plugin': False},            # Disable writer
+    {'include_sample_data_plugin': False},       # Disable sample-data
+    {'include_widget_plugin': False},            # Disable widget
+    {                                            # Disable all features
         'include_reader_plugin': False,
         'include_writer_plugin': False,
         'include_sample_data_plugin': False,
@@ -81,7 +82,7 @@ FEATURE_CASES = [
 
 
 def build_answers(**overrides):
-    """Return a copy of DEFAULT_ANSWERS with keyword overrides applied."""
+    """Compose answers from a copy of DEFAULT_ANSWERS and any keyword overrides."""
     answers = DEFAULT_ANSWERS.copy()
     answers.update(overrides)
     return answers
@@ -142,7 +143,7 @@ def _generated_project_env():
 
 
 def _current_tox_env():
-    """Return the tox environment name matching the currently-running interpreter.
+    """Return the tox environment name matching the currently-running Python interpreter.
 
     The generated template's ``tox.ini`` defines environments using the scheme
     ``py3{10,11,12,13}-{linux,macos,windows}``, so we must select the exact
@@ -182,11 +183,11 @@ def run_generated_tests(plugin_directory):
                 capture_output=True,
                 text=True,
                 env=_generated_project_env(),
-                timeout=600,
+                timeout=600,  # 10 min
             )
         except subprocess.CalledProcessError as error:
             pytest.fail(
-                'Generated project smoke test failed:\n'
+                'Basic project test suite failed:\n'
                 f'stdout:\n{error.stdout}\n'
                 f'stderr:\n{error.stderr}'
             )
