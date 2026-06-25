@@ -18,7 +18,6 @@ if callable(stdout_reconfigure):
 
 class Colors:
     """ANSI color codes for terminal output."""
-
     BLUE = '\033[94m'
     GREEN = '\033[92m'
     YELLOW = '\033[93m'
@@ -66,8 +65,8 @@ def pypi_package_name_compliance(plugin_name):
 
 def validate_manifest(module_name, project_directory):
     """Validate the new plugin repository against napari requirements."""
-    # copier passes _copier_conf.dst_path (absolute); resolve() handles both
-    # absolute and relative paths safely regardless of working directory.
+    # copier passes _copier_conf.dst_path (absolute path).
+    # resolve() handles both absolute and relative paths safely independent of working directory.
     path = Path(project_directory).resolve() / 'src' / module_name / 'napari.yaml'
     try:
         pm = PluginManifest.from_file(path)
@@ -105,8 +104,8 @@ def initialize_new_repository(
         # Use symbolic-ref rather than 'git checkout -b main': the checkout
         # command fails with "branch 'main' already exists" when the user's
         # global init.defaultBranch is already set to 'main' (GitHub's
-        # recommended default).  symbolic-ref writes the HEAD pointer directly
-        # and is idempotent across all git versions.
+        # recommended default).
+        # symbolic-ref writes the HEAD pointer directly and is idempotent across all git versions.
         subprocess.run(
             ['git', 'symbolic-ref', 'HEAD', 'refs/heads/main'],
             check=True,
@@ -148,7 +147,7 @@ def initialize_new_repository(
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        print(Colors.success("Git repository initialized with initial commit"))
+        print(Colors.success("Git repository initialized with first commit"))
     except (subprocess.CalledProcessError, FileNotFoundError, OSError) as err:
         print(Colors.error(f'Error in git initialization: {err}'))
         return _generate_manual_setup_message(
@@ -190,7 +189,7 @@ def initialize_new_repository(
             pre_commit_available = True
             print(Colors.success('Pre-commit is available'))
         except (subprocess.CalledProcessError, FileNotFoundError, OSError) as err:
-            print(Colors.warning(f'Could not install pre-commit (this is optional): {err}'))
+            print(Colors.warning(f'Could not install optional pre-commit tool: {err}'))
 
     if install_precommit is True and pre_commit_available:
         try:
