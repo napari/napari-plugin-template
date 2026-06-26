@@ -175,12 +175,24 @@ def initialize_new_repository(
         # pre-commit is optional: a failure here warns but does not abort.
         print(Colors.info('Setting up pre-commit hooks...'))
         try:
-            subprocess.run(
-                [sys.executable, '-m', 'pip', 'install', 'pre-commit'],
-                check=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
+            # uv-managed environments (e.g. tox-uv) create venvs without pip,
+            # so prefer uv. The --python flag targets the interpreter running
+            # _tasks.py rather than whatever VIRTUAL_ENV points to.
+            # If uv isn't available, fall back to pip.
+            try:
+                subprocess.run(
+                    ['uv', 'pip', 'install', '--python', sys.executable, 'pre-commit'],
+                    check=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+            except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+                subprocess.run(
+                    [sys.executable, '-m', 'pip', 'install', 'pre-commit'],
+                    check=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
             subprocess.run(
                 [*pre_commit_command, '--version'],
                 check=True,
