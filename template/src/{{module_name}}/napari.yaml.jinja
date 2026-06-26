@@ -57,13 +57,6 @@ contributions:
       display_name: Example QWidget
   menus:
     napari/layers/segment:
-      - submenu: {{plugin_name}}/threshold
-    {{plugin_name}}/threshold:
       - command: {{plugin_name}}.make_container_widget
       - command: {{plugin_name}}.make_magic_widget
       - command: {{plugin_name}}.make_function_widget
-    napari/layers/visualize:
-      - command: {{plugin_name}}.make_qwidget
-  submenus:
-    - id: {{plugin_name}}/threshold
-      label: Thresholding{% endif %}
