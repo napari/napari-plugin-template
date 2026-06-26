@@ -12,13 +12,12 @@ from pydantic import ValidationError
 
 # Ensure UTF-8 output on Windows where the default encoding (cp1252) cannot
 # encode the Unicode symbols (✔ ℹ ⚠ ✗ 🚀) used in the output below.
-stdout_reconfigure = getattr(sys.stdout, 'reconfigure', None)
-if callable(stdout_reconfigure):
-    stdout_reconfigure(encoding='utf-8', errors='replace')
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 
 class Colors:
     """ANSI color codes for terminal output."""
+
     BLUE = '\033[94m'
     GREEN = '\033[92m'
     YELLOW = '\033[93m'
@@ -29,23 +28,23 @@ class Colors:
 
     @staticmethod
     def success(msg):
-        return f"{Colors.GREEN}✔ {msg}{Colors.END}"
+        return f'{Colors.GREEN}✔ {msg}{Colors.END}'
 
     @staticmethod
     def info(msg):
-        return f"{Colors.BLUE}ℹ {msg}{Colors.END}"
+        return f'{Colors.BLUE}ℹ {msg}{Colors.END}'
 
     @staticmethod
     def warning(msg):
-        return f"{Colors.YELLOW}⚠ {msg}{Colors.END}"
+        return f'{Colors.YELLOW}⚠ {msg}{Colors.END}'
 
     @staticmethod
     def error(msg):
-        return f"{Colors.RED}✗ {msg}{Colors.END}"
+        return f'{Colors.RED}✗ {msg}{Colors.END}'
 
     @staticmethod
     def step(num, total, msg):
-        return f"{Colors.BOLD}{Colors.CYAN}[{num}/{total}]{Colors.END} {msg}"
+        return f'{Colors.BOLD}{Colors.CYAN}[{num}/{total}]{Colors.END} {msg}'
 
 
 def module_name_pep8_compliance(module_name):
@@ -60,7 +59,11 @@ def module_name_pep8_compliance(module_name):
 def pypi_package_name_compliance(plugin_name):
     """Check there are no underscores in the plugin name"""
     if re.search(r'_', plugin_name):
-        print(Colors.error('PyPI.org and pip discourage package names with underscores.'))
+        print(
+            Colors.error(
+                'PyPI.org and pip discourage package names with underscores.'
+            )
+        )
         sys.exit(1)
 
 
@@ -68,17 +71,27 @@ def validate_manifest(module_name, project_directory):
     """Validate the new plugin repository against napari requirements."""
     # copier passes _copier_conf.dst_path (absolute path).
     # resolve() handles both absolute and relative paths safely independent of working directory.
-    path = Path(project_directory).resolve() / 'src' / module_name / 'napari.yaml'
+    path = (
+        Path(project_directory).resolve() / 'src' / module_name / 'napari.yaml'
+    )
     try:
         pm = PluginManifest.from_file(path)
     except ValidationError as err:
         print(Colors.error(f'Invalid manifest: {err}'))
         sys.exit(1)
     except (FileNotFoundError, PermissionError, OSError) as err:
-        print(Colors.error(f'Failed to read {path!r}. {type(err).__name__}: {err}'))
+        print(
+            Colors.error(
+                f'Failed to read {path!r}. {type(err).__name__}: {err}'
+            )
+        )
         sys.exit(1)
     else:
-        print(Colors.success(f"Manifest for '{pm.display_name or pm.name}' is valid!"))
+        print(
+            Colors.success(
+                f"Manifest for '{pm.display_name or pm.name}' is valid!"
+            )
+        )
 
 
 def initialize_new_repository(
@@ -90,12 +103,12 @@ def initialize_new_repository(
 ):
     """Initialize new plugin repository with git, and optionally pre-commit."""
 
-    print("\n" + "="*50)
-    print(Colors.info("Setting up your plugin repository..."))
-    print("="*50 + "\n")
+    print('\n' + '=' * 50)
+    print(Colors.info('Setting up your plugin repository...'))
+    print('=' * 50 + '\n')
 
     try:
-        print(Colors.info("Initializing git repository..."))
+        print(Colors.info('Initializing git repository...'))
         subprocess.run(
             ['git', 'init', '-q'],
             check=True,
@@ -114,7 +127,12 @@ def initialize_new_repository(
             stderr=subprocess.DEVNULL,
         )
         subprocess.run(
-            ['git', 'config', 'core.autocrlf', 'true' if os.name == 'nt' else 'input'],
+            [
+                'git',
+                'config',
+                'core.autocrlf',
+                'true' if os.name == 'nt' else 'input',
+            ],
             check=True,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
@@ -137,8 +155,10 @@ def initialize_new_repository(
         subprocess.run(
             [
                 'git',
-                '-c', 'user.email=template@napari.org',
-                '-c', 'user.name=napari template',
+                '-c',
+                'user.email=template@napari.org',
+                '-c',
+                'user.name=napari template',
                 'commit',
                 '-q',
                 '-m',
@@ -148,7 +168,7 @@ def initialize_new_repository(
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        print(Colors.success("Git repository initialized with first commit"))
+        print(Colors.success('Git repository initialized with first commit'))
     except (subprocess.CalledProcessError, FileNotFoundError, OSError) as err:
         print(Colors.error(f'Error in git initialization: {err}'))
         return _generate_manual_setup_message(
@@ -181,7 +201,14 @@ def initialize_new_repository(
             # If uv isn't available, fall back to pip.
             try:
                 subprocess.run(
-                    ['uv', 'pip', 'install', '--python', sys.executable, 'pre-commit'],
+                    [
+                        'uv',
+                        'pip',
+                        'install',
+                        '--python',
+                        sys.executable,
+                        'pre-commit',
+                    ],
                     check=True,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
@@ -201,8 +228,16 @@ def initialize_new_repository(
             )
             pre_commit_available = True
             print(Colors.success('Pre-commit is available'))
-        except (subprocess.CalledProcessError, FileNotFoundError, OSError) as err:
-            print(Colors.warning(f'Could not install optional pre-commit tool: {err}'))
+        except (
+            subprocess.CalledProcessError,
+            FileNotFoundError,
+            OSError,
+        ) as err:
+            print(
+                Colors.warning(
+                    f'Could not install optional pre-commit tool: {err}'
+                )
+            )
 
     if install_precommit is True and pre_commit_available:
         try:
@@ -214,7 +249,11 @@ def initialize_new_repository(
             )
             print(Colors.success('Pre-commit hooks installed'))
         except (subprocess.CalledProcessError, FileNotFoundError, OSError):
-            print(Colors.warning('Could not install pre-commit hooks (this is optional)'))
+            print(
+                Colors.warning(
+                    'Could not install pre-commit hooks (this is optional)'
+                )
+            )
 
     return _generate_next_steps_message(
         plugin_name,
@@ -224,7 +263,9 @@ def initialize_new_repository(
     )
 
 
-def _resolved_github_url(plugin_name, github_repository_url, github_username_or_organization):
+def _resolved_github_url(
+    plugin_name, github_repository_url, github_username_or_organization
+):
     """Return the resolved GitHub repo URL, or None if not yet known.
 
     Sanitizes user-supplied components with ``urllib.parse.quote`` to prevent
@@ -246,9 +287,7 @@ def _generate_manual_setup_message(
 ):
     """Generate message for manual setup when git initialization fails."""
     gh_url = _resolved_github_url(
-        plugin_name,
-        github_repository_url,
-        github_username_or_organization
+        plugin_name, github_repository_url, github_username_or_organization
     )
     msg = f"""
 {Colors.warning('Git initialization had issues. Please set up manually:')}
@@ -290,15 +329,13 @@ def _generate_next_steps_message(
 ):
     """Generate the next steps message after successful initialization."""
     gh_url = _resolved_github_url(
-        plugin_name,
-        github_repository_url,
-        github_username_or_organization
+        plugin_name, github_repository_url, github_username_or_organization
     )
 
     msg = f"""
-{"="*50}
+{'=' * 50}
 {Colors.BOLD}{Colors.GREEN}✔ Your plugin template is ready!{Colors.END}
-{"="*50}
+{'=' * 50}
 {Colors.step(1, 5, 'Install your plugin in development mode:')}
     cd {plugin_directory}
     uv pip install -e ".[all]" --group dev
@@ -347,9 +384,9 @@ def _generate_next_steps_message(
     • Customize your hub listing: https://napari.org/stable/plugins/testing_and_publishing/hub_customization.html
 
 
-{"="*50}
+{'=' * 50}
 {Colors.BOLD}{Colors.GREEN}Happy plugin development! 🚀{Colors.END}
-{"="*50}
+{'=' * 50}
 """
     return msg
 
