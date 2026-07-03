@@ -168,46 +168,43 @@ def initialize_new_repository(
                 stderr=subprocess.DEVNULL,
             )
 
-    pre_commit_command = [sys.executable, '-m', 'pre_commit']
     pre_commit_available = False
 
     if install_precommit is True:
         # pre-commit is optional: a failure here warns but does not abort.
         print(Colors.info('Setting up pre-commit hooks...'))
         try:
-            # uv-managed environments (e.g. tox-uv) create venvs without pip,
-            # so prefer uv. The --python flag targets the interpreter running
-            # _tasks.py rather than whatever VIRTUAL_ENV points to.
-            # If uv isn't available, fall back to pip.
+            # Install prek via pip. prek is also available as a standalone
+            # binary, but pip works universally across uv and plain venvs.
             try:
                 subprocess.run(
-                    ['uv', 'pip', 'install', '--python', sys.executable, 'pre-commit'],
+                    ['uv', 'pip', 'install', '--python', sys.executable, 'prek'],
                     check=True,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                 )
             except (subprocess.CalledProcessError, FileNotFoundError, OSError):
                 subprocess.run(
-                    [sys.executable, '-m', 'pip', 'install', 'pre-commit'],
+                    [sys.executable, '-m', 'pip', 'install', 'prek'],
                     check=True,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                 )
             subprocess.run(
-                [*pre_commit_command, '--version'],
+                ['prek', '--version'],
                 check=True,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
             pre_commit_available = True
-            print(Colors.success('Pre-commit is available'))
+            print(Colors.success('pre-commit (prek) is available'))
         except (subprocess.CalledProcessError, FileNotFoundError, OSError) as err:
             print(Colors.warning(f'Could not install optional pre-commit tool: {err}'))
 
     if install_precommit is True and pre_commit_available:
         try:
             subprocess.run(
-                [*pre_commit_command, 'install'],
+                ['prek', 'install', '-f'],
                 check=True,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
@@ -370,7 +367,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--install_precommit',
         dest='install_precommit',
-        help='Install pre-commit',
+        help='Install prek (pre-commit)',
         default='False',
     )
     parser.add_argument(

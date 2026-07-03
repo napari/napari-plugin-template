@@ -78,7 +78,7 @@ include_widget_plugin:
     type: bool
 install_precommit:
     default: true
-    help: Install pre-commit? (Code formatting checks)
+    help: Install prek? (Code formatting and linting via prek, a fast drop-in replacement for pre-commit)
     type: bool
 install_dependabot:
     default: true
