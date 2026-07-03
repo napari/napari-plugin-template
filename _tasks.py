@@ -66,9 +66,15 @@ def pypi_package_name_compliance(plugin_name):
 
 def validate_manifest(module_name, project_directory):
     """Validate the new plugin repository against napari requirements."""
-    # copier passes _copier_conf.dst_path (absolute path).
-    # resolve() handles both absolute and relative paths safely independent of working directory.
-    path = Path(project_directory).resolve() / 'src' / module_name / 'napari.yaml'
+    project_path = Path(project_directory)
+    current_directory = Path.cwd()
+    if (
+        not project_path.is_absolute()
+        and current_directory.name == project_path.name
+    ):
+        project_path = current_directory
+
+    path = project_path.resolve() / 'src' / module_name / 'napari.yaml'
     try:
         pm = PluginManifest.from_file(path)
     except ValidationError as err:

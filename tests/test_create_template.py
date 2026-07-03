@@ -34,6 +34,8 @@ from pathlib import Path
 
 import pytest
 
+from _tasks import validate_manifest
+
 
 # ---------------------------------------------------------------------------
 # Shared fixture data
@@ -235,6 +237,26 @@ def test_run_plugin_tests_with_napari_prefix(copie):
 
     assert_generated_layout(result, name, 'napari_foo')
     assert result.project_dir.joinpath('tests', 'test_reader.py').is_file()
+
+
+def test_validate_manifest_with_relative_project_directory_from_project_root(
+    copie, monkeypatch
+):
+    """Copier may run tasks from inside a relative destination directory."""
+    name = 'napari-tests'
+    module_name = 'napari_tests'
+    result = copie.copy(
+        extra_answers=build_answers(
+            plugin_name=name,
+            display_name='napari Tests',
+            module_name=module_name,
+        )
+    )
+
+    assert_generated_layout(result, name, module_name)
+
+    monkeypatch.chdir(result.project_dir)
+    validate_manifest(module_name, result.project_dir.name)
 
 
 def test_run_select_plugins(copie):
