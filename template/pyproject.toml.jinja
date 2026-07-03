@@ -52,7 +52,8 @@ dev = [
     "tox-uv",
     "pytest",  # https://docs.pytest.org/en/latest/contents.html
     "pytest-cov",  # https://pytest-cov.readthedocs.io/en/latest/
-{% if include_widget_plugin %}    "pytest-qt",  # https://pytest-qt.readthedocs.io/en/latest/
+{% if install_precommit %}    "prek",  # fast drop-in replacement for pre-commit
+{% endif %}{% if include_widget_plugin %}    "pytest-qt",  # https://pytest-qt.readthedocs.io/en/latest/
     "napari[qt]",  # test with napari's default Qt bindings
 {% endif %}]
 
