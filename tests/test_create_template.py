@@ -13,8 +13,8 @@ Test strategy
   (all plugins enabled) and runs its test suite via tox end to end.
 - ``test_run_plugin_tests_with_napari_prefix``: Exercises the ``napari-``
   naming path (module-name inference, directory layout).
-- ``test_run_select_plugins`` / ``test_pre_commit_validity``: Targeted checks
-  for copier boolean-prompt handling and pre-commit hook validity.
+- ``test_run_select_plugins`` / ``test_prek_validity``: Targeted checks
+  for copier boolean-prompt handling and prek hook validity.
 
 Running
 ~~~~~~~
@@ -257,10 +257,10 @@ def test_run_select_plugins(copie):
     assert not result.project_dir.joinpath('tests', 'test_writer.py').is_file()
 
 
-def test_pre_commit_validity(copie):
-    """Verify pre-commit passes on a fully-featured generated plugin.
+def test_prek_validity(copie):
+    """Verify prek passes on a fully-featured generated plugin.
 
-    Pre-commit validity doesn't vary with the plugin-type combination flags.
+    Prek validity doesn't vary with the plugin-type combination flags.
     Run the richest case once instead of every feature combination.
     """
     result = copie.copy(
@@ -280,9 +280,7 @@ def test_pre_commit_validity(copie):
     try:
         subprocess.run(
             [
-                sys.executable,
-                '-m',
-                'pre_commit',
+                'prek',
                 'run',
                 '--all-files',
                 '--show-diff-on-failure',
@@ -294,6 +292,6 @@ def test_pre_commit_validity(copie):
         )
     except subprocess.CalledProcessError as error:
         pytest.fail(
-            f'pre-commit failed with output:\n{error.stdout.decode()}\n'
+            f'prek failed with output:\n{error.stdout.decode()}\n'
             f'error:\n{error.stderr.decode()}'
         )
