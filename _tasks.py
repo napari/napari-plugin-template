@@ -64,11 +64,18 @@ def pypi_package_name_compliance(plugin_name):
         sys.exit(1)
 
 
-def validate_manifest(module_name, project_directory):
-    """Validate the new plugin repository against napari requirements."""
-    # copier passes _copier_conf.dst_path (absolute path).
-    # resolve() handles both absolute and relative paths safely independent of working directory.
-    path = Path(project_directory).resolve() / 'src' / module_name / 'napari.yaml'
+def validate_manifest(module_name):
+    """Validate the new plugin repository against napari requirements.
+
+    Copier always CWDs into the project directory before running task
+    scripts (see ``copier._main.Worker._execute_tasks``), so
+    ``Path.cwd()`` reliably points to the project root regardless of
+    whether the user typed a relative name (``my-plugin``) or an
+    absolute path (``/home/user/my-plugin``) on the command line.
+    We therefore use ``Path.cwd()`` — not the ``project_directory`` from
+    copier's context — to locate the generated manifest.
+    """
+    path = Path.cwd().resolve() / 'src' / module_name / 'napari.yaml'
     try:
         pm = PluginManifest.from_file(path)
     except ValidationError as err:
@@ -390,7 +397,7 @@ if __name__ == '__main__':
     install_precommit = str(args.install_precommit).lower() == 'true'
     module_name_pep8_compliance(args.module_name)
     pypi_package_name_compliance(args.plugin_name)
-    validate_manifest(args.module_name, args.project_directory)
+    validate_manifest(args.module_name)
     msg = initialize_new_repository(
         install_precommit=install_precommit,
         plugin_name=args.plugin_name,
