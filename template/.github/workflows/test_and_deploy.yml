@@ -6,13 +6,11 @@ on:
   push:
     branches:
       - main
-      - npe2
     tags:
       - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
   pull_request:
     branches:
       - main
-      - npe2
   workflow_dispatch:
 
 concurrency:
@@ -38,7 +36,7 @@ jobs:
             python-version: "3.12"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Setup python
         uses: astral-sh/setup-uv@v7
@@ -63,7 +61,7 @@ jobs:
           PLATFORM: ${{ matrix.platform }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           use_oidc: true  # reliable tokenless codecov uploads
 
@@ -72,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: hynek/build-and-inspect-python-package@v2
 
   deploy:

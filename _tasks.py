@@ -67,13 +67,18 @@ def pypi_package_name_compliance(plugin_name):
         sys.exit(1)
 
 
-def validate_manifest(module_name, project_directory):
-    """Validate the new plugin repository against napari requirements."""
-    # copier passes _copier_conf.dst_path (absolute path).
-    # resolve() handles both absolute and relative paths safely independent of working directory.
-    path = (
-        Path(project_directory).resolve() / 'src' / module_name / 'napari.yaml'
-    )
+def validate_manifest(module_name):
+    """Validate the new plugin repository against napari requirements.
+
+    Copier always CWDs into the project directory before running task
+    scripts (see ``copier._main.Worker._execute_tasks``), so
+    ``Path.cwd()`` reliably points to the project root regardless of
+    whether the user typed a relative name (``my-plugin``) or an
+    absolute path (``/home/user/my-plugin``) on the command line.
+    We therefore use ``Path.cwd()`` — not the ``project_directory`` from
+    copier's context — to locate the generated manifest.
+    """
+    path = Path.cwd().resolve() / 'src' / module_name / 'napari.yaml'
     try:
         pm = PluginManifest.from_file(path)
     except ValidationError as err:
@@ -87,11 +92,7 @@ def validate_manifest(module_name, project_directory):
         )
         sys.exit(1)
     else:
-        print(
-            Colors.success(
-                f"Manifest for '{pm.display_name or pm.name}' is valid!"
-            )
-        )
+        print(Colors.success(f"Manifest for '{pm.display_name or pm.name}' is valid!"))
 
 
 def initialize_new_repository(
@@ -103,12 +104,12 @@ def initialize_new_repository(
 ):
     """Initialize new plugin repository with git, and optionally pre-commit."""
 
-    print('\n' + '=' * 50)
-    print(Colors.info('Setting up your plugin repository...'))
-    print('=' * 50 + '\n')
+    print("\n" + "="*50)
+    print(Colors.info("Setting up your plugin repository..."))
+    print("="*50 + "\n")
 
     try:
-        print(Colors.info('Initializing git repository...'))
+        print(Colors.info("Initializing git repository..."))
         subprocess.run(
             ['git', 'init', '-q'],
             check=True,
@@ -127,12 +128,7 @@ def initialize_new_repository(
             stderr=subprocess.DEVNULL,
         )
         subprocess.run(
-            [
-                'git',
-                'config',
-                'core.autocrlf',
-                'true' if os.name == 'nt' else 'input',
-            ],
+            ['git', 'config', 'core.autocrlf', 'true' if os.name == 'nt' else 'input'],
             check=True,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
@@ -155,10 +151,8 @@ def initialize_new_repository(
         subprocess.run(
             [
                 'git',
-                '-c',
-                'user.email=template@napari.org',
-                '-c',
-                'user.name=napari template',
+                '-c', 'user.email=template@napari.org',
+                '-c', 'user.name=napari template',
                 'commit',
                 '-q',
                 '-m',
@@ -168,7 +162,7 @@ def initialize_new_repository(
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        print(Colors.success('Git repository initialized with first commit'))
+        print(Colors.success("Git repository initialized with first commit"))
     except (subprocess.CalledProcessError, FileNotFoundError, OSError) as err:
         print(Colors.error(f'Error in git initialization: {err}'))
         return _generate_manual_setup_message(
@@ -201,14 +195,7 @@ def initialize_new_repository(
             # If uv isn't available, fall back to pip.
             try:
                 subprocess.run(
-                    [
-                        'uv',
-                        'pip',
-                        'install',
-                        '--python',
-                        sys.executable,
-                        'pre-commit',
-                    ],
+                    ['uv', 'pip', 'install', '--python', sys.executable, 'pre-commit'],
                     check=True,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
@@ -228,16 +215,8 @@ def initialize_new_repository(
             )
             pre_commit_available = True
             print(Colors.success('Pre-commit is available'))
-        except (
-            subprocess.CalledProcessError,
-            FileNotFoundError,
-            OSError,
-        ) as err:
-            print(
-                Colors.warning(
-                    f'Could not install optional pre-commit tool: {err}'
-                )
-            )
+        except (subprocess.CalledProcessError, FileNotFoundError, OSError) as err:
+            print(Colors.warning(f'Could not install optional pre-commit tool: {err}'))
 
     if install_precommit is True and pre_commit_available:
         try:
@@ -263,9 +242,7 @@ def initialize_new_repository(
     )
 
 
-def _resolved_github_url(
-    plugin_name, github_repository_url, github_username_or_organization
-):
+def _resolved_github_url(plugin_name, github_repository_url, github_username_or_organization):
     """Return the resolved GitHub repo URL, or None if not yet known.
 
     Sanitizes user-supplied components with ``urllib.parse.quote`` to prevent
@@ -287,7 +264,9 @@ def _generate_manual_setup_message(
 ):
     """Generate message for manual setup when git initialization fails."""
     gh_url = _resolved_github_url(
-        plugin_name, github_repository_url, github_username_or_organization
+        plugin_name,
+        github_repository_url,
+        github_username_or_organization
     )
     msg = f"""
 {Colors.warning('Git initialization had issues. Please set up manually:')}
@@ -329,7 +308,9 @@ def _generate_next_steps_message(
 ):
     """Generate the next steps message after successful initialization."""
     gh_url = _resolved_github_url(
-        plugin_name, github_repository_url, github_username_or_organization
+        plugin_name,
+        github_repository_url,
+        github_username_or_organization
     )
 
     msg = f"""
@@ -427,7 +408,7 @@ if __name__ == '__main__':
     install_precommit = str(args.install_precommit).lower() == 'true'
     module_name_pep8_compliance(args.module_name)
     pypi_package_name_compliance(args.plugin_name)
-    validate_manifest(args.module_name, args.project_directory)
+    validate_manifest(args.module_name)
     msg = initialize_new_repository(
         install_precommit=install_precommit,
         plugin_name=args.plugin_name,
