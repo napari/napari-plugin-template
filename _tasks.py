@@ -60,9 +60,7 @@ def pypi_package_name_compliance(plugin_name):
     """Check there are no underscores in the plugin name"""
     if re.search(r'_', plugin_name):
         print(
-            Colors.error(
-                'PyPI.org and pip discourage package names with underscores.'
-            )
+            Colors.error('PyPI.org and pip discourage package names with underscores.')
         )
         sys.exit(1)
 
@@ -85,11 +83,7 @@ def validate_manifest(module_name):
         print(Colors.error(f'Invalid manifest: {err}'))
         sys.exit(1)
     except (FileNotFoundError, PermissionError, OSError) as err:
-        print(
-            Colors.error(
-                f'Failed to read {path!r}. {type(err).__name__}: {err}'
-            )
-        )
+        print(Colors.error(f'Failed to read {path!r}. {type(err).__name__}: {err}'))
         sys.exit(1)
     else:
         print(Colors.success(f"Manifest for '{pm.display_name or pm.name}' is valid!"))
@@ -104,12 +98,12 @@ def initialize_new_repository(
 ):
     """Initialize new plugin repository with git, and optionally pre-commit."""
 
-    print("\n" + "="*50)
-    print(Colors.info("Setting up your plugin repository..."))
-    print("="*50 + "\n")
+    print('\n' + '=' * 50)
+    print(Colors.info('Setting up your plugin repository...'))
+    print('=' * 50 + '\n')
 
     try:
-        print(Colors.info("Initializing git repository..."))
+        print(Colors.info('Initializing git repository...'))
         subprocess.run(
             ['git', 'init', '-q'],
             check=True,
@@ -151,8 +145,10 @@ def initialize_new_repository(
         subprocess.run(
             [
                 'git',
-                '-c', 'user.email=template@napari.org',
-                '-c', 'user.name=napari template',
+                '-c',
+                'user.email=template@napari.org',
+                '-c',
+                'user.name=napari template',
                 'commit',
                 '-q',
                 '-m',
@@ -162,7 +158,7 @@ def initialize_new_repository(
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        print(Colors.success("Git repository initialized with first commit"))
+        print(Colors.success('Git repository initialized with first commit'))
     except (subprocess.CalledProcessError, FileNotFoundError, OSError) as err:
         print(Colors.error(f'Error in git initialization: {err}'))
         return _generate_manual_setup_message(
@@ -182,46 +178,43 @@ def initialize_new_repository(
                 stderr=subprocess.DEVNULL,
             )
 
-    pre_commit_command = [sys.executable, '-m', 'pre_commit']
     pre_commit_available = False
 
     if install_precommit is True:
         # pre-commit is optional: a failure here warns but does not abort.
         print(Colors.info('Setting up pre-commit hooks...'))
         try:
-            # uv-managed environments (e.g. tox-uv) create venvs without pip,
-            # so prefer uv. The --python flag targets the interpreter running
-            # _tasks.py rather than whatever VIRTUAL_ENV points to.
-            # If uv isn't available, fall back to pip.
+            # Install prek via pip. prek is also available as a standalone
+            # binary, but pip works universally across uv and plain venvs.
             try:
                 subprocess.run(
-                    ['uv', 'pip', 'install', '--python', sys.executable, 'pre-commit'],
+                    ['uv', 'pip', 'install', '--python', sys.executable, 'prek'],
                     check=True,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                 )
             except (subprocess.CalledProcessError, FileNotFoundError, OSError):
                 subprocess.run(
-                    [sys.executable, '-m', 'pip', 'install', 'pre-commit'],
+                    [sys.executable, '-m', 'pip', 'install', 'prek'],
                     check=True,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                 )
             subprocess.run(
-                [*pre_commit_command, '--version'],
+                ['prek', '--version'],
                 check=True,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
             pre_commit_available = True
-            print(Colors.success('Pre-commit is available'))
+            print(Colors.success('pre-commit (prek) is available'))
         except (subprocess.CalledProcessError, FileNotFoundError, OSError) as err:
             print(Colors.warning(f'Could not install optional pre-commit tool: {err}'))
 
     if install_precommit is True and pre_commit_available:
         try:
             subprocess.run(
-                [*pre_commit_command, 'install'],
+                ['prek', 'install', '-f'],
                 check=True,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
@@ -229,9 +222,7 @@ def initialize_new_repository(
             print(Colors.success('Pre-commit hooks installed'))
         except (subprocess.CalledProcessError, FileNotFoundError, OSError):
             print(
-                Colors.warning(
-                    'Could not install pre-commit hooks (this is optional)'
-                )
+                Colors.warning('Could not install pre-commit hooks (this is optional)')
             )
 
     return _generate_next_steps_message(
@@ -242,7 +233,9 @@ def initialize_new_repository(
     )
 
 
-def _resolved_github_url(plugin_name, github_repository_url, github_username_or_organization):
+def _resolved_github_url(
+    plugin_name, github_repository_url, github_username_or_organization
+):
     """Return the resolved GitHub repo URL, or None if not yet known.
 
     Sanitizes user-supplied components with ``urllib.parse.quote`` to prevent
@@ -264,9 +257,7 @@ def _generate_manual_setup_message(
 ):
     """Generate message for manual setup when git initialization fails."""
     gh_url = _resolved_github_url(
-        plugin_name,
-        github_repository_url,
-        github_username_or_organization
+        plugin_name, github_repository_url, github_username_or_organization
     )
     msg = f"""
 {Colors.warning('Git initialization had issues. Please set up manually:')}
@@ -308,9 +299,7 @@ def _generate_next_steps_message(
 ):
     """Generate the next steps message after successful initialization."""
     gh_url = _resolved_github_url(
-        plugin_name,
-        github_repository_url,
-        github_username_or_organization
+        plugin_name, github_repository_url, github_username_or_organization
     )
 
     msg = f"""
@@ -377,9 +366,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--plugin_name', dest='plugin_name', help='The name of your plugin'
     )
-    parser.add_argument(
-        '--module_name', dest='module_name', help='Plugin module name'
-    )
+    parser.add_argument('--module_name', dest='module_name', help='Plugin module name')
     parser.add_argument(
         '--project_directory',
         dest='project_directory',
@@ -388,7 +375,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--install_precommit',
         dest='install_precommit',
-        help='Install pre-commit',
+        help='Install prek (pre-commit)',
         default='False',
     )
     parser.add_argument(

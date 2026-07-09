@@ -154,7 +154,7 @@ https://github.com/napari/napari-plugin-template/blob/main/PROMPTS.md
    Yes
 🎤 Include widget plugin?
    Yes
-🎤 Install pre-commit? (Code formatting checks)
+🎤 Install prek? (Code formatting and linting via prek, a fast drop-in replacement for pre-commit)
    Yes
 🎤 Install dependabot? (Automatic security updates of dependency versions)
    Yes
@@ -209,11 +209,10 @@ Copying from template version 0.0.0.post126.dev0+95d5ece
  > Running task 1 of 1: ['/Users/creator/Code/repos-napari/.venv/bin/python3', '/private/var/folders/hg/l3v3xynd45sbvd141f3rqh600000gn/T/copier.vcs.clone.i5ou6e_q/_tasks.py', '--plugin_name=napari-growth-cone-finder', '--module_name=napari_growth_cone_finder', '--project_directory=napari-growth-cone-finder', '--install_precommit=True', '--github_repository_url=https://github.com/creator/napari-growth-cone-finder', '--github_username_or_organization=creator']
 INFO:pre_gen_project:b"\xe2\x9c\x94 Manifest for 'Growth Cone Finder' valid!"
 Switched to a new branch 'main'
-install pre-commit ...
-/Users/creator/Code/repos-napari/.venv/bin/python: No module named pip
-updating pre-commit...
-install pre-commit hook...
-pre-commit installed at .git/hooks/pre-commit
+install prek ...
+updating prek...
+install prek hook...
+prek installed at .git/hooks/pre-commit
 
 Your plugin template is ready!  Next steps:
 1. `cd` into your new directory
@@ -397,21 +396,34 @@ and available for pip install with:
 pip install napari-growth-cone-finder
 ```
 
-### Check code style with Pre-commit
+### Check code style with prek
 
-This template includes a default yaml configuration for [pre-commit](https://pre-commit.com/).
-Among other things, it includes checks for best practices in napari plugins.
-You may edit the config at `.pre-commit-config.yaml`
+This template includes a default configuration for [prek](https://github.com/j178/prek)
+(a fast, drop-in replacement for [pre-commit](https://pre-commit.com/) written in Rust)
+at `.pre-commit-config.yaml`.  Among other things, it includes checks for
+[ruff](https://docs.astral.sh/ruff/) linting and formatting, napari-specific
+plugin checks, and general file hygiene.
 
-To use it run:
+To enable prek in your local clone:
 
 ```bash
-pip install pre-commit
-pre-commit install
+pip install prek
+prek install
 ```
 
-You can also have these checks run automatically for you when you push to github
-by installing [pre-commit ci](https://pre-commit.ci/) on your repository.
+prek will then run the configured hooks automatically on every `git commit`.
+If a hook reports an issue, look up the error code in the
+[ruff rules documentation](https://docs.astral.sh/ruff/rules/) or pass it to
+your AI assistant for help.
+
+To temporarily skip hooks for a single commit:
+
+```bash
+git commit --no-verify -m "your message"
+```
+
+⚠️ Use `--no-verify` sparingly — your code may not meet quality standards
+when reviewed or published.
 
 ### Receive Dependabot notifications about dependencies
 

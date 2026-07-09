@@ -120,8 +120,32 @@ more information on dock widgets see the
 
 The default for this prompt is `"y"`.
 
-If you choose "y" for this prompt, then [pre-commit](ttps://pre-commit.com/) will be installed.
-Among other things, it includes checks for code linting and best practices in napari plugins.
+If you choose "y" for this prompt, then [prek](https://github.com/j178/prek) will be
+installed — a fast drop-in replacement for pre-commit, written in Rust.
+
+prek runs a set of configured [pre-commit](https://pre-commit.com/) hooks on every
+`git commit` to automatically check for code quality issues. The default
+configuration includes:
+
+- **ruff linting** — checks Python code for common errors and style issues
+  (see the [ruff rules documentation](https://docs.astral.sh/ruff/rules/)
+  to understand specific error codes)
+- **ruff formatting** — auto-formats Python code
+- **napari-specific checks** — validates your plugin manifest and structure
+- **General file checks** — trailing whitespace, end-of-file fixer, YAML
+  validation, docstring presence
+
+If a hook blocks your commit, you can:
+
+1. **Fix the issue** — the hook output shows exactly which file and line
+   to address. Lint errors include a rule code (e.g., `F401`, `SIM108`)
+   that you can look up in the [ruff rules docs](https://docs.astral.sh/ruff/rules/)
+   or ask an AI assistant about.
+2. **Skip hooks temporarily** — use `git commit --no-verify` to bypass
+   prek for a single commit.
+
+⚠️ If you skip hooks, your code may not meet quality standards when
+reviewed or published. Use `--no-verify` sparingly.
 
 ## install_dependabot
 

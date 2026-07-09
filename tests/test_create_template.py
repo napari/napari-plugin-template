@@ -13,8 +13,8 @@ Test strategy
   (all plugins enabled) and runs its test suite via tox end to end.
 - ``test_run_plugin_tests_with_napari_prefix``: Exercises the ``napari-``
   naming path (module-name inference, directory layout).
-- ``test_run_select_plugins`` / ``test_pre_commit_validity``: Targeted checks
-  for copier boolean-prompt handling and pre-commit hook validity.
+- ``test_run_select_plugins`` / ``test_prek_validity``: Targeted checks
+  for copier boolean-prompt handling and prek hook validity.
 
 Running
 ~~~~~~~
@@ -91,9 +91,7 @@ def assert_generated_layout(result, plugin_name, module_name):
     assert result.exception is None
     assert result.project_dir.is_dir()
     assert result.project_dir.joinpath('src').is_dir()
-    assert result.project_dir.joinpath(
-        'src', module_name, '__init__.py'
-    ).is_file()
+    assert result.project_dir.joinpath('src', module_name, '__init__.py').is_file()
     with open(result.project_dir / 'README.md', encoding='utf-8') as handle:
         assert handle.readline() == f'# {plugin_name}\n'
 
@@ -197,9 +195,7 @@ def test_rendered_feature_matrix(copie, overrides):
     answers = build_answers(**overrides)
     result = copie.copy(extra_answers=answers)
 
-    assert_generated_layout(
-        result, answers['plugin_name'], answers['module_name']
-    )
+    assert_generated_layout(result, answers['plugin_name'], answers['module_name'])
     assert_feature_files(result, answers)
 
 
@@ -214,9 +210,7 @@ def test_generated_project_full_test(copie):
     answers = build_answers()  # all features enabled
     result = copie.copy(extra_answers=answers)
 
-    assert_generated_layout(
-        result, answers['plugin_name'], answers['module_name']
-    )
+    assert_generated_layout(result, answers['plugin_name'], answers['module_name'])
     assert_feature_files(result, answers)
     run_generated_tests(str(result.project_dir))
 
@@ -256,10 +250,10 @@ def test_run_select_plugins(copie):
     assert not result.project_dir.joinpath('tests', 'test_writer.py').is_file()
 
 
-def test_pre_commit_validity(copie):
-    """Verify pre-commit passes on a fully-featured generated plugin.
+def test_prek_validity(copie):
+    """Verify prek passes on a fully-featured generated plugin.
 
-    Pre-commit validity doesn't vary with the plugin-type combination flags.
+    Prek validity doesn't vary with the plugin-type combination flags.
     Run the richest case once instead of every feature combination.
     """
     result = copie.copy(
@@ -279,9 +273,7 @@ def test_pre_commit_validity(copie):
     try:
         subprocess.run(
             [
-                sys.executable,
-                '-m',
-                'pre_commit',
+                'prek',
                 'run',
                 '--all-files',
                 '--show-diff-on-failure',
@@ -293,6 +285,6 @@ def test_pre_commit_validity(copie):
         )
     except subprocess.CalledProcessError as error:
         pytest.fail(
-            f'pre-commit failed with output:\n{error.stdout.decode()}\n'
+            f'prek failed with output:\n{error.stdout.decode()}\n'
             f'error:\n{error.stderr.decode()}'
         )
