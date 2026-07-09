@@ -1,4 +1,4 @@
-line-length = 79
+line-length = 88
 fix = true
 
 # Treat .py.jinja files as Python for formatting/linting,

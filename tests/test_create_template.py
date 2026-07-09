@@ -91,9 +91,7 @@ def assert_generated_layout(result, plugin_name, module_name):
     assert result.exception is None
     assert result.project_dir.is_dir()
     assert result.project_dir.joinpath('src').is_dir()
-    assert result.project_dir.joinpath(
-        'src', module_name, '__init__.py'
-    ).is_file()
+    assert result.project_dir.joinpath('src', module_name, '__init__.py').is_file()
     with open(result.project_dir / 'README.md', encoding='utf-8') as handle:
         assert handle.readline() == f'# {plugin_name}\n'
 
@@ -197,9 +195,7 @@ def test_rendered_feature_matrix(copie, overrides):
     answers = build_answers(**overrides)
     result = copie.copy(extra_answers=answers)
 
-    assert_generated_layout(
-        result, answers['plugin_name'], answers['module_name']
-    )
+    assert_generated_layout(result, answers['plugin_name'], answers['module_name'])
     assert_feature_files(result, answers)
 
 
@@ -214,9 +210,7 @@ def test_generated_project_full_test(copie):
     answers = build_answers()  # all features enabled
     result = copie.copy(extra_answers=answers)
 
-    assert_generated_layout(
-        result, answers['plugin_name'], answers['module_name']
-    )
+    assert_generated_layout(result, answers['plugin_name'], answers['module_name'])
     assert_feature_files(result, answers)
     run_generated_tests(str(result.project_dir))
 
