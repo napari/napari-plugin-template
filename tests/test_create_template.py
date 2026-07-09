@@ -34,7 +34,6 @@ from pathlib import Path
 
 import pytest
 
-
 # ---------------------------------------------------------------------------
 # Shared fixture data
 # ---------------------------------------------------------------------------
@@ -61,12 +60,12 @@ DEFAULT_ANSWERS = {
 #   • each feature disabled individually   (ensures each conditional works)
 #   • all features disabled simultaneously (ensures nothing breaks when empty)
 FEATURE_CASES = [
-    {},                                          # Enable all features (default)
-    {'include_reader_plugin': False},            # Disable reader
-    {'include_writer_plugin': False},            # Disable writer
-    {'include_sample_data_plugin': False},       # Disable sample-data
-    {'include_widget_plugin': False},            # Disable widget
-    {                                            # Disable all features
+    {},  # Enable all features (default)
+    {'include_reader_plugin': False},  # Disable reader
+    {'include_writer_plugin': False},  # Disable writer
+    {'include_sample_data_plugin': False},  # Disable sample-data
+    {'include_widget_plugin': False},  # Disable widget
+    {  # Disable all features
         'include_reader_plugin': False,
         'include_writer_plugin': False,
         'include_sample_data_plugin': False,

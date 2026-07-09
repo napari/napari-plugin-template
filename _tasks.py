@@ -12,13 +12,12 @@ from pydantic import ValidationError
 
 # Ensure UTF-8 output on Windows where the default encoding (cp1252) cannot
 # encode the Unicode symbols (✔ ℹ ⚠ ✗ 🚀) used in the output below.
-stdout_reconfigure = getattr(sys.stdout, 'reconfigure', None)
-if callable(stdout_reconfigure):
-    stdout_reconfigure(encoding='utf-8', errors='replace')
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 
 class Colors:
     """ANSI color codes for terminal output."""
+
     BLUE = '\033[94m'
     GREEN = '\033[92m'
     YELLOW = '\033[93m'
@@ -29,23 +28,23 @@ class Colors:
 
     @staticmethod
     def success(msg):
-        return f"{Colors.GREEN}✔ {msg}{Colors.END}"
+        return f'{Colors.GREEN}✔ {msg}{Colors.END}'
 
     @staticmethod
     def info(msg):
-        return f"{Colors.BLUE}ℹ {msg}{Colors.END}"
+        return f'{Colors.BLUE}ℹ {msg}{Colors.END}'
 
     @staticmethod
     def warning(msg):
-        return f"{Colors.YELLOW}⚠ {msg}{Colors.END}"
+        return f'{Colors.YELLOW}⚠ {msg}{Colors.END}'
 
     @staticmethod
     def error(msg):
-        return f"{Colors.RED}✗ {msg}{Colors.END}"
+        return f'{Colors.RED}✗ {msg}{Colors.END}'
 
     @staticmethod
     def step(num, total, msg):
-        return f"{Colors.BOLD}{Colors.CYAN}[{num}/{total}]{Colors.END} {msg}"
+        return f'{Colors.BOLD}{Colors.CYAN}[{num}/{total}]{Colors.END} {msg}'
 
 
 def module_name_pep8_compliance(module_name):
@@ -60,7 +59,11 @@ def module_name_pep8_compliance(module_name):
 def pypi_package_name_compliance(plugin_name):
     """Check there are no underscores in the plugin name"""
     if re.search(r'_', plugin_name):
-        print(Colors.error('PyPI.org and pip discourage package names with underscores.'))
+        print(
+            Colors.error(
+                'PyPI.org and pip discourage package names with underscores.'
+            )
+        )
         sys.exit(1)
 
 
@@ -82,7 +85,11 @@ def validate_manifest(module_name):
         print(Colors.error(f'Invalid manifest: {err}'))
         sys.exit(1)
     except (FileNotFoundError, PermissionError, OSError) as err:
-        print(Colors.error(f'Failed to read {path!r}. {type(err).__name__}: {err}'))
+        print(
+            Colors.error(
+                f'Failed to read {path!r}. {type(err).__name__}: {err}'
+            )
+        )
         sys.exit(1)
     else:
         print(Colors.success(f"Manifest for '{pm.display_name or pm.name}' is valid!"))
@@ -221,7 +228,11 @@ def initialize_new_repository(
             )
             print(Colors.success('Pre-commit hooks installed'))
         except (subprocess.CalledProcessError, FileNotFoundError, OSError):
-            print(Colors.warning('Could not install pre-commit hooks (this is optional)'))
+            print(
+                Colors.warning(
+                    'Could not install pre-commit hooks (this is optional)'
+                )
+            )
 
     return _generate_next_steps_message(
         plugin_name,
@@ -303,9 +314,9 @@ def _generate_next_steps_message(
     )
 
     msg = f"""
-{"="*50}
+{'=' * 50}
 {Colors.BOLD}{Colors.GREEN}✔ Your plugin template is ready!{Colors.END}
-{"="*50}
+{'=' * 50}
 {Colors.step(1, 5, 'Install your plugin in development mode:')}
     cd {plugin_directory}
     uv pip install -e ".[all]" --group dev
@@ -354,9 +365,9 @@ def _generate_next_steps_message(
     • Customize your hub listing: https://napari.org/stable/plugins/testing_and_publishing/hub_customization.html
 
 
-{"="*50}
+{'=' * 50}
 {Colors.BOLD}{Colors.GREEN}Happy plugin development! 🚀{Colors.END}
-{"="*50}
+{'=' * 50}
 """
     return msg
 
