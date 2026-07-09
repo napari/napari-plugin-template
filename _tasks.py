@@ -12,13 +12,12 @@ from pydantic import ValidationError
 
 # Ensure UTF-8 output on Windows where the default encoding (cp1252) cannot
 # encode the Unicode symbols (✔ ℹ ⚠ ✗ 🚀) used in the output below.
-stdout_reconfigure = getattr(sys.stdout, 'reconfigure', None)
-if callable(stdout_reconfigure):
-    stdout_reconfigure(encoding='utf-8', errors='replace')
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 
 class Colors:
     """ANSI color codes for terminal output."""
+
     BLUE = '\033[94m'
     GREEN = '\033[92m'
     YELLOW = '\033[93m'
@@ -29,23 +28,23 @@ class Colors:
 
     @staticmethod
     def success(msg):
-        return f"{Colors.GREEN}✔ {msg}{Colors.END}"
+        return f'{Colors.GREEN}✔ {msg}{Colors.END}'
 
     @staticmethod
     def info(msg):
-        return f"{Colors.BLUE}ℹ {msg}{Colors.END}"
+        return f'{Colors.BLUE}ℹ {msg}{Colors.END}'
 
     @staticmethod
     def warning(msg):
-        return f"{Colors.YELLOW}⚠ {msg}{Colors.END}"
+        return f'{Colors.YELLOW}⚠ {msg}{Colors.END}'
 
     @staticmethod
     def error(msg):
-        return f"{Colors.RED}✗ {msg}{Colors.END}"
+        return f'{Colors.RED}✗ {msg}{Colors.END}'
 
     @staticmethod
     def step(num, total, msg):
-        return f"{Colors.BOLD}{Colors.CYAN}[{num}/{total}]{Colors.END} {msg}"
+        return f'{Colors.BOLD}{Colors.CYAN}[{num}/{total}]{Colors.END} {msg}'
 
 
 def module_name_pep8_compliance(module_name):
@@ -60,22 +59,37 @@ def module_name_pep8_compliance(module_name):
 def pypi_package_name_compliance(plugin_name):
     """Check there are no underscores in the plugin name"""
     if re.search(r'_', plugin_name):
-        print(Colors.error('PyPI.org and pip discourage package names with underscores.'))
+        print(
+            Colors.error(
+                'PyPI.org and pip discourage package names with underscores.'
+            )
+        )
         sys.exit(1)
 
 
-def validate_manifest(module_name, project_directory):
-    """Validate the new plugin repository against napari requirements."""
-    # copier passes _copier_conf.dst_path (absolute path).
-    # resolve() handles both absolute and relative paths safely independent of working directory.
-    path = Path(project_directory).resolve() / 'src' / module_name / 'napari.yaml'
+def validate_manifest(module_name):
+    """Validate the new plugin repository against napari requirements.
+
+    Copier always CWDs into the project directory before running task
+    scripts (see ``copier._main.Worker._execute_tasks``), so
+    ``Path.cwd()`` reliably points to the project root regardless of
+    whether the user typed a relative name (``my-plugin``) or an
+    absolute path (``/home/user/my-plugin``) on the command line.
+    We therefore use ``Path.cwd()`` — not the ``project_directory`` from
+    copier's context — to locate the generated manifest.
+    """
+    path = Path.cwd().resolve() / 'src' / module_name / 'napari.yaml'
     try:
         pm = PluginManifest.from_file(path)
     except ValidationError as err:
         print(Colors.error(f'Invalid manifest: {err}'))
         sys.exit(1)
     except (FileNotFoundError, PermissionError, OSError) as err:
-        print(Colors.error(f'Failed to read {path!r}. {type(err).__name__}: {err}'))
+        print(
+            Colors.error(
+                f'Failed to read {path!r}. {type(err).__name__}: {err}'
+            )
+        )
         sys.exit(1)
     else:
         print(Colors.success(f"Manifest for '{pm.display_name or pm.name}' is valid!"))
@@ -211,7 +225,11 @@ def initialize_new_repository(
             )
             print(Colors.success('Pre-commit hooks installed'))
         except (subprocess.CalledProcessError, FileNotFoundError, OSError):
-            print(Colors.warning('Could not install pre-commit hooks (this is optional)'))
+            print(
+                Colors.warning(
+                    'Could not install pre-commit hooks (this is optional)'
+                )
+            )
 
     return _generate_next_steps_message(
         plugin_name,
@@ -293,9 +311,9 @@ def _generate_next_steps_message(
     )
 
     msg = f"""
-{"="*50}
+{'=' * 50}
 {Colors.BOLD}{Colors.GREEN}✔ Your plugin template is ready!{Colors.END}
-{"="*50}
+{'=' * 50}
 {Colors.step(1, 5, 'Install your plugin in development mode:')}
     cd {plugin_directory}
     uv pip install -e ".[all]" --group dev
@@ -344,9 +362,9 @@ def _generate_next_steps_message(
     • Customize your hub listing: https://napari.org/stable/plugins/testing_and_publishing/hub_customization.html
 
 
-{"="*50}
+{'=' * 50}
 {Colors.BOLD}{Colors.GREEN}Happy plugin development! 🚀{Colors.END}
-{"="*50}
+{'=' * 50}
 """
     return msg
 
@@ -387,7 +405,7 @@ if __name__ == '__main__':
     install_precommit = str(args.install_precommit).lower() == 'true'
     module_name_pep8_compliance(args.module_name)
     pypi_package_name_compliance(args.plugin_name)
-    validate_manifest(args.module_name, args.project_directory)
+    validate_manifest(args.module_name)
     msg = initialize_new_repository(
         install_precommit=install_precommit,
         plugin_name=args.plugin_name,

@@ -28,7 +28,7 @@ jobs:
       fail-fast: false
       matrix:
         platform: [ubuntu-latest]
-        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
         include:
           - platform: windows-latest
             python-version: "3.12"
@@ -36,7 +36,7 @@ jobs:
             python-version: "3.12"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Setup python
         uses: astral-sh/setup-uv@v7
@@ -61,7 +61,7 @@ jobs:
           PLATFORM: ${{ matrix.platform }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           use_oidc: true  # reliable tokenless codecov uploads
 
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: hynek/build-and-inspect-python-package@v2
 
   deploy:
