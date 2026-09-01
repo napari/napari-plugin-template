@@ -44,7 +44,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           activate-environment: "true"
       - name: Setup headless display
-        uses: pyvista/setup-headless-display-action@v4.3
+        uses: pyvista/setup-headless-display-action@v5.0
         with:
           qt: true
           wm: herbstluftwm
@@ -71,7 +71,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-      - uses: hynek/build-and-inspect-python-package@v2.18.0
+      - uses: hynek/build-and-inspect-python-package@v3.0.1
 
   deploy:
     # this will run when you have tagged a commit, starting with "v*"
