@@ -44,7 +44,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           activate-environment: "true"
       - name: Setup headless display
-        uses: pyvista/setup-headless-display-action@v5.0
+        uses: pyvista/setup-headless-display-action@v5.1
         with:
           qt: true
           wm: herbstluftwm
