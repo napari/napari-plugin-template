@@ -3,6 +3,8 @@
 name: tests
 
 on:
+  schedule:
+  - cron: "0 0 * * TUE" # every week on Tuesday at midnight
   push:
     branches:
       - main
