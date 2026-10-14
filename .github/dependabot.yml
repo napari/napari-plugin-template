@@ -3,14 +3,6 @@
 # https://til.simonwillison.net/github/dependabot-python-setup
 version: 2
 updates:
-- package-ecosystem: pip
-  directory: "/"
-  schedule:
-    interval: monthly
-  groups:
-    python-packages:
-      patterns:
-        - "*"
 - package-ecosystem: "github-actions"
   directories:
     # project root gh actions workflows
